@@ -1,17 +1,17 @@
 {
-    "name": ":vendor_slug/:package_slug",
-    "description": ":package_description",
+    "name": "keepsuit/laravel-temporal",
+    "description": "Laravel temporal.io",
     "keywords": [
-        ":vendor_name",
+        "keepsuit",
         "laravel",
-        ":package_slug"
+        "laravel-temporal"
     ],
-    "homepage": "https://github.com/:vendor_slug/:package_slug",
+    "homepage": "https://github.com/keepsuit/laravel-temporal",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": "author@domain.com",
+            "name": "Fabio Capucci",
+            "email": "f.capucci@keepsuit.com",
             "role": "Developer"
         }
     ],
@@ -30,36 +30,41 @@
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan-deprecation-rules": "^1.0",
         "phpstan/phpstan-phpunit": "^1.0",
-        "phpunit/phpunit": "^9.5",
-        "spatie/laravel-ray": "^1.26"
+        "spatie/laravel-ray": "^1.26",
+        "rector/rector": "^0.14"
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\Skeleton\\": "src",
-            "VendorName\\Skeleton\\Database\\Factories\\": "database/factories"
+            "Keepsuit\\LaravelTemporal\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests"
+            "Keepsuit\\LaravelTemporal\\Tests\\": "tests"
         }
     },
     "scripts": {
-        "analyse": "vendor/bin/phpstan analyse",
-        "test": "vendor/bin/pest",
-        "test-coverage": "vendor/bin/pest --coverage",
-        "format": "vendor/bin/pint"
+        "analyse": "phpstan analyse",
+        "test": "pest",
+        "test-coverage": "pest --coverage",
+        "format": "pint",
+        "lint": "pint && rector process --dry-run",
+        "lint:fix": "pint && rector process"
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\Skeleton\\SkeletonServiceProvider"
+                "Keepsuit\\LaravelTemporal\\LaravelTemporalServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "VendorName\\Skeleton\\Facades\\Skeleton"
+                "Temporal": "Keepsuit\\LaravelTemporal\\Facades\\Temporal"
             }
         }
     },

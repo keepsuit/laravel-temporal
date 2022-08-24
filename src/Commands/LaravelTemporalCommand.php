@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Keepsuit\LaravelTemporal\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class LaravelTemporalCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'laravel-temporal';
 
     public $description = 'My command';
 
