@@ -1,6 +1,6 @@
 <?php
 
-namespace Keepsuit\LaravelTemporal;
+namespace Keepsuit\LaravelTemporal\Support;
 
 use RuntimeException;
 use Symfony\Component\Process\Process;

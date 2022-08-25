@@ -11,3 +11,5 @@ parameters:
     checkModelProperties: true
     checkMissingIterableValueType: false
 
+    ignoreErrors:
+        - '#Unable to resolve the template type TMergeRecursiveValue in call to method Illuminate\\Support\\Collection.*::mergeRecursive#'

@@ -2,15 +2,16 @@
 <?php
 declare(strict_types=1);
 
-use Keepsuit\LaravelTemporal\ApplicationFactory;
+use Keepsuit\LaravelTemporal\Support\ApplicationFactory;
+use Keepsuit\LaravelTemporal\TemporalDiscovery;
 use Temporal\WorkerFactory;
 
 $basePath = require __DIR__.'/bootstrap.php';
 
 $app = (new ApplicationFactory($basePath))->createApplication();
 
-$config = $app->make('config');
-
+/** @var TemporalDiscovery $discovery */
+$discovery = $app->make(TemporalDiscovery::class);
 
 // factory initiates and runs task queue specific activity and workflow workers
 $factory = WorkerFactory::create();
@@ -20,11 +21,11 @@ $worker = $factory->newWorker(
     taskQueue: env('TEMPORAL_QUEUE')
 );
 
-foreach ($config->get('temporal.workflows', []) as $workflow) {
+foreach ($discovery->getWorkflows() as $workflow) {
     $worker->registerWorkflowTypes($workflow);
 }
 
-foreach ($config->get('temporal.activities', []) as $activity) {
+foreach ($discovery->getActivities() as $activity) {
     $worker->registerActivity($activity, fn (ReflectionClass $class) => $app->make($class->getName()));
 }
 

@@ -1,0 +1,57 @@
+<?php
+
+namespace Keepsuit\LaravelTemporal\Support;
+
+use Illuminate\Support\Str;
+use Symfony\Component\Finder\Finder;
+use Temporal\Workflow\WorkflowInterface;
+
+class DiscoverWorkflows
+{
+    /**
+     * Get all of the workflows by searching the given workflow directory.
+     */
+    public static function within(string $workflowPath, string $basePath): array
+    {
+        $workflows = [];
+
+        $files = (new Finder)->files()->in($workflowPath);
+
+        foreach ($files as $file) {
+            try {
+                $workflow = new \ReflectionClass(
+                    static::classFromFile($file, $basePath)
+                );
+            } catch (\ReflectionException) {
+                continue;
+            }
+
+            if (! $workflow->isInstantiable()) {
+                continue;
+            }
+
+            foreach ($workflow->getInterfaces() as $interface) {
+                if ($interface->getAttributes(WorkflowInterface::class) !== []) {
+                    $workflows[] = $workflow->getName();
+                    break;
+                }
+            }
+        }
+
+        return $workflows;
+    }
+
+    /**
+     * Extract the class name from the given file path.
+     */
+    protected static function classFromFile(\SplFileInfo $file, string $basePath): string
+    {
+        $class = trim(Str::replaceFirst($basePath, '', $file->getRealPath()), DIRECTORY_SEPARATOR);
+
+        return str_replace(
+            [DIRECTORY_SEPARATOR, ucfirst(basename(app()->path())).'\\'],
+            ['\\', app()->getNamespace()],
+            ucfirst(Str::replaceLast('.php', '', $class))
+        );
+    }
+}

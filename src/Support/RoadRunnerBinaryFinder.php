@@ -1,6 +1,6 @@
 <?php
 
-namespace Keepsuit\LaravelTemporal;
+namespace Keepsuit\LaravelTemporal\Support;
 
 use Illuminate\Support\Str;
 use Symfony\Component\Process\ExecutableFinder;

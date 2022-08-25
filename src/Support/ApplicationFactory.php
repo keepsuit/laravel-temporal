@@ -1,6 +1,6 @@
 <?php
 
-namespace Keepsuit\LaravelTemporal;
+namespace Keepsuit\LaravelTemporal\Support;
 
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Foundation\Application;

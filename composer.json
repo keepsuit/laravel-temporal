@@ -68,10 +68,7 @@
         "laravel": {
             "providers": [
                 "Keepsuit\\LaravelTemporal\\LaravelTemporalServiceProvider"
-            ],
-            "aliases": {
-                "Temporal": "Keepsuit\\LaravelTemporal\\Facades\\Temporal"
-            }
+            ]
         }
     },
     "minimum-stability": "dev",

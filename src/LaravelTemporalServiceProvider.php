@@ -4,6 +4,7 @@ namespace Keepsuit\LaravelTemporal;
 
 use Illuminate\Foundation\Application;
 use Keepsuit\LaravelTemporal\Commands\WorkCommand;
+use Keepsuit\LaravelTemporal\Support\ServerStateFile;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
