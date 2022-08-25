@@ -1,0 +1,31 @@
+#!/usr/bin/env php
+<?php
+declare(strict_types=1);
+
+use Keepsuit\LaravelTemporal\ApplicationFactory;
+use Temporal\WorkerFactory;
+
+$basePath = require __DIR__.'/bootstrap.php';
+
+$app = (new ApplicationFactory($basePath))->createApplication();
+
+$config = $app->make('config');
+
+
+// factory initiates and runs task queue specific activity and workflow workers
+$factory = WorkerFactory::create();
+
+// Worker that listens on a Task Queue and hosts both workflow and activity implementations.
+$worker = $factory->newWorker(
+    taskQueue: env('TEMPORAL_QUEUE')
+);
+
+foreach ($config->get('temporal.workflows', []) as $workflow) {
+    $worker->registerWorkflowTypes($workflow);
+}
+
+foreach ($config->get('temporal.activities', []) as $activity) {
+    $worker->registerActivity($activity, fn (ReflectionClass $class) => $app->make($class->getName()));
+}
+
+$factory->run();

@@ -2,7 +2,8 @@
 
 namespace Keepsuit\LaravelTemporal;
 
-use Keepsuit\LaravelTemporal\Commands\LaravelTemporalCommand;
+use Illuminate\Foundation\Application;
+use Keepsuit\LaravelTemporal\Commands\WorkCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -15,6 +16,15 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasViews()
             ->hasMigration('create_laravel-temporal_table')
-            ->hasCommand(LaravelTemporalCommand::class);
+            ->hasCommands([
+                WorkCommand::class,
+            ]);
+    }
+
+    public function registeringPackage(): void
+    {
+        $this->app->bind(ServerStateFile::class, fn (Application $app) => new ServerStateFile(
+            $app['config']->get('temporal.state_file', storage_path('logs/temporal-server-state.json'))
+        ));
     }
 }

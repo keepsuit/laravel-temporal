@@ -17,8 +17,11 @@
     ],
     "require": {
         "php": "^8.1",
+        "illuminate/contracts": "^9.0",
         "spatie/laravel-package-tools": "^1.9.2",
-        "illuminate/contracts": "^9.0"
+        "spiral/roadrunner": "^2.8",
+        "symfony/process": "^6.0",
+        "temporal/sdk": "^2.0"
     },
     "require-dev": {
         "laravel/pint": "^1.0",
@@ -43,6 +46,9 @@
             "Keepsuit\\LaravelTemporal\\Tests\\": "tests"
         }
     },
+    "bin": [
+        "bin/roadrunner-temporal-worker"
+    ],
     "scripts": {
         "analyse": "phpstan analyse",
         "test": "pest",
