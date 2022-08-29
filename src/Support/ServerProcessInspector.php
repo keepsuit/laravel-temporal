@@ -2,9 +2,6 @@
 
 namespace Keepsuit\LaravelTemporal\Support;
 
-use RuntimeException;
-use Symfony\Component\Process\Process;
-
 class ServerProcessInspector
 {
     public function __construct(
@@ -34,7 +31,7 @@ class ServerProcessInspector
     {
         [
             'state' => [
-                'host' => $host,
+                'rpcHost' => $rpcHost,
                 'rpcPort' => $rpcPort,
             ],
         ] = $this->serverStateFile->read();
@@ -43,18 +40,20 @@ class ServerProcessInspector
             $this->roadRunnerFinder->binaryPath(),
             'reset',
             '-o',
-            sprintf('rpc.listen=tcp://%s:%s', $host, $rpcPort),
+            sprintf('rpc.listen=tcp://%s:%s', $rpcHost, $rpcPort),
         ], base_path());
 
         $process->start();
 
-        $process->waitUntil(function ($type, $buffer): bool {
-            if ($type === Process::ERR) {
-                throw new RuntimeException('Cannot reload RoadRunner: '.$buffer);
-            }
-
-            return true;
-        });
+        // $process->waitUntil(function ($type, $buffer): bool {
+        // The type is ERR even when reload is success
+        //
+        // if ($type === Process::ERR) {
+        //     throw new RuntimeException('Cannot reload RoadRunner: '.$buffer);
+        // }
+        //
+        // return true;
+        // });
     }
 
     /**

@@ -1,0 +1,14 @@
+<?php
+
+namespace {{ namespace }};
+
+use Temporal\Activity\ActivityMethod;
+use Temporal\Activity\ActivityInterface;
+
+#[ActivityInterface]
+interface {{ class }}
+{
+    #[ActivityMethod]
+    public function handle();
+}
+

@@ -1,0 +1,13 @@
+<?php
+
+namespace {{ namespace }};
+
+use Temporal\Workflow\WorkflowInterface;
+use Temporal\Workflow\WorkflowMethod;
+
+#[WorkflowInterface]
+interface {{ class }}
+{
+    #[WorkflowMethod]
+    public function handle(): \Generator;
+}

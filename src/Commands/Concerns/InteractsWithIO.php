@@ -25,7 +25,8 @@ trait InteractsWithIO
      */
     protected array $ignoreMessages = [
         'worker is allocated',
-        'worker stopped',
+        'worker destroyed',
+        'stderr',
     ];
 
     /**

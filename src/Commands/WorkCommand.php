@@ -20,6 +20,7 @@ class WorkCommand extends Command
 
     protected $signature = 'temporal:work
                         {queue? : The name of the task queue to work}
+                        {--rpc-host= : The RPC host the server should be available on}
                         {--rpc-port= : The RPC port the server should be available on}
                         {--workers=auto : The number of workers that should be available to handle requests}
                         {--max-jobs=500 : The number of jobs to process before reloading the server}
@@ -50,7 +51,7 @@ class WorkCommand extends Command
             ...['-o', sprintf('temporal.address=%s', config('temporal.address'))],
             ...$this->option('workers') === 'auto' ? [] : ['-o', sprintf('temporal.activities.num_workers=%s', $this->option('workers'))],
             ...$this->option('max-jobs') === '0' ? [] : ['-o', sprintf('temporal.activities.max_jobs=%s', $this->option('max-jobs'))],
-            ...['-o', sprintf('rpc.listen=tcp://127.0.0.1:%d', $this->rpcPort())],
+            ...['-o', sprintf('rpc.listen=tcp://%s:%d', $this->rpcHost(), $this->rpcPort())],
             ...['-o', 'logs.mode=production'],
             ...['-o', app()->environment('local') ? 'logs.level=debug' : 'logs.level=warn'],
             ...['-o', 'logs.output=stdout'],
@@ -87,10 +88,19 @@ class WorkCommand extends Command
     {
         $serverStateFile->writeState([
             'appName' => config('app.name', 'Laravel'),
+            'rpcHost' => $this->rpcHost(),
             'rpcPort' => $this->rpcPort(),
             'workers' => $this->workerCount(),
             'config' => config('temporal'),
         ]);
+    }
+
+    /**
+     * Get the RPC host the server should be available on.
+     */
+    protected function rpcHost(): string
+    {
+        return $this->option('rpc-host') ?: '127.0.0.1';
     }
 
     /**
@@ -256,9 +266,11 @@ class WorkCommand extends Command
             ->explode("\n")
             ->filter()
             ->each(function ($output): void {
-                if (! Str::contains($output, ['DEBUG', 'INFO', 'WARN'])) {
-                    $this->components->error($output);
-                }
+                // Only unusable output is provided
+
+                // if (! Str::contains($output, ['DEBUG', 'INFO', 'WARN'])) {
+                //     $this->components->error($output);
+                // }
             });
     }
 }

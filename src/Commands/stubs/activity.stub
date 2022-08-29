@@ -1,0 +1,16 @@
+<?php
+
+namespace {{ namespace }};
+
+class {{ class }} implements {{ class }}Interface
+{
+    public function __construct()
+    {
+        //
+    }
+
+    public function handle()
+    {
+        //
+    }
+}
