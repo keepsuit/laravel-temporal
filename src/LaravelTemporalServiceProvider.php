@@ -8,11 +8,19 @@ use Keepsuit\LaravelTemporal\Commands\ActivityMakeCommand;
 use Keepsuit\LaravelTemporal\Commands\WorkCommand;
 use Keepsuit\LaravelTemporal\Commands\WorkflowInterfaceMakeCommand;
 use Keepsuit\LaravelTemporal\Commands\WorkflowMakeCommand;
+use Keepsuit\LaravelTemporal\DataConverter\LaravelPayloadConverter;
 use Keepsuit\LaravelTemporal\Support\ServerStateFile;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Temporal\Client\GRPC\ServiceClient;
 use Temporal\Client\GRPC\ServiceClientInterface;
+use Temporal\Client\WorkflowClient;
+use Temporal\Client\WorkflowClientInterface;
+use Temporal\DataConverter\BinaryConverter;
+use Temporal\DataConverter\DataConverter;
+use Temporal\DataConverter\DataConverterInterface;
+use Temporal\DataConverter\NullConverter;
+use Temporal\DataConverter\ProtoJsonConverter;
 
 class LaravelTemporalServiceProvider extends PackageServiceProvider
 {
@@ -37,5 +45,17 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
         ));
 
         $this->app->bind(ServiceClientInterface::class, fn (Application $app) => ServiceClient::create(config('temporal.address')));
+
+        $this->app->bind(DataConverterInterface::class, fn (Application $app) => new DataConverter(
+            new NullConverter(),
+            new BinaryConverter(),
+            new ProtoJsonConverter(),
+            new LaravelPayloadConverter()
+        ));
+
+        $this->app->bind(WorkflowClientInterface::class, fn (Application $app) => WorkflowClient::create(
+            serviceClient: $app->make(ServiceClientInterface::class),
+            converter: $app->make(DataConverterInterface::class)
+        ));
     }
 }
