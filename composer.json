@@ -33,8 +33,9 @@
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan-deprecation-rules": "^1.0",
         "phpstan/phpstan-phpunit": "^1.0",
-        "spatie/laravel-ray": "^1.26",
-        "rector/rector": "^0.14"
+        "rector/rector": "^0.14",
+        "spatie/laravel-data": "^2.0",
+        "spatie/laravel-ray": "^1.26"
     },
     "autoload": {
         "psr-4": {
