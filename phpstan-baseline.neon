@@ -1,0 +1,6 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Method Keepsuit\\\\LaravelTemporal\\\\Contracts\\\\TemporalSerializable\\:\\:fromTemporalPayload\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Contracts/TemporalSerializable.php

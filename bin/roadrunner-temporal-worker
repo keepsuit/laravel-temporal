@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 use Keepsuit\LaravelTemporal\Support\ApplicationFactory;
 use Keepsuit\LaravelTemporal\TemporalDiscovery;
+use Keepsuit\LaravelTemporal\DataConverter\LaravelPayloadConverter;
+use Temporal\DataConverter\BinaryConverter;
+use Temporal\DataConverter\DataConverter;
+use Temporal\DataConverter\NullConverter;
+use Temporal\DataConverter\ProtoJsonConverter;
 use Temporal\WorkerFactory;
 
 $basePath = require __DIR__.'/bootstrap.php';
@@ -14,7 +19,14 @@ $app = (new ApplicationFactory($basePath))->createApplication();
 $discovery = $app->make(TemporalDiscovery::class);
 
 // factory initiates and runs task queue specific activity and workflow workers
-$factory = WorkerFactory::create();
+$factory = WorkerFactory::create(
+    converter: new DataConverter(
+        new NullConverter(),
+        new BinaryConverter(),
+        new ProtoJsonConverter(),
+        new LaravelPayloadConverter()
+    )
+);
 
 // Worker that listens on a Task Queue and hosts both workflow and activity implementations.
 $worker = $factory->newWorker(
