@@ -9,7 +9,7 @@ it('can discovery workflows', function () {
     class_alias(DemoWorkflowInterface::class, 'Tests\Fixtures\WorkflowDiscovery\Workflows\DemoWorkflowInterface');
 
     $workflows = DiscoverWorkflows::within(
-        __DIR__.'/Fixtures/WorkflowDiscovery/Workflows',
+        __DIR__.'/../../Fixtures/WorkflowDiscovery/Workflows',
         getcwd()
     );
 

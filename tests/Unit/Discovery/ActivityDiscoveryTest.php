@@ -9,7 +9,7 @@ it('can discovery activities', function () {
     class_alias(DemoActivityInterface::class, 'Tests\Fixtures\WorkflowDiscovery\Activities\DemoActivityInterface');
 
     $activities = DiscoverActivities::within(
-        __DIR__.'/Fixtures/WorkflowDiscovery/Activities',
+        __DIR__.'/../../Fixtures/WorkflowDiscovery/Activities',
         getcwd()
     );
 
