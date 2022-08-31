@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Keepsuit\LaravelTemporal\Integrations\LaravelData;
 
+use Illuminate\Support\Arr;
 use Keepsuit\LaravelTemporal\Contracts\TemporalSerializable;
 use Spatie\LaravelData\Casts\Cast;
 use Spatie\LaravelData\Casts\Uncastable;
@@ -18,7 +19,8 @@ class TemporalSerializableCast implements Cast
 
     public function cast(DataProperty $property, mixed $value, array $context): mixed
     {
-        $type = $this->type ?? $property->type->findAcceptedTypeForBaseType(TemporalSerializable::class);
+        $acceptedType = $property->type->findAcceptedTypeForBaseType(TemporalSerializable::class);
+        $type = $this->type ?? $acceptedType;
 
         if (! class_exists($type)) {
             return Uncastable::create();
@@ -30,6 +32,10 @@ class TemporalSerializableCast implements Cast
 
         if (! is_array($value)) {
             return Uncastable::create();
+        }
+
+        if ($acceptedType === null && $property->type->acceptsType('array')) {
+            return Arr::map($value, fn($data) => $type::fromTemporalPayload($data));
         }
 
         /** @var class-string<TemporalSerializable> $type */

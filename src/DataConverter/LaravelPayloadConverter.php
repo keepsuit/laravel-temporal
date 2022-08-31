@@ -8,6 +8,7 @@ use JsonSerializable;
 use Keepsuit\LaravelTemporal\Contracts\TemporalSerializable;
 use ReflectionClass;
 use ReflectionException;
+use Spatie\LaravelData\Contracts\BaseData;
 use Spatie\LaravelData\Data;
 use Temporal\Api\Common\V1\Payload;
 use Temporal\DataConverter\JsonConverter;
@@ -60,8 +61,8 @@ class LaravelPayloadConverter extends JsonConverter
                 return $class::fromTemporalPayload($data);
             }
 
-            if ($reflection->isSubclassOf(Data::class)) {
-                /** @var class-string<Data> $class */
+            if ($reflection->implementsInterface(BaseData::class)) {
+                /** @var class-string<BaseData> $class */
                 $class = $reflection->getName();
 
                 return $class::from($data);
