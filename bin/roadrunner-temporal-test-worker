@@ -1,0 +1,37 @@
+#!/usr/bin/env php
+<?php
+declare(strict_types=1);
+
+use Keepsuit\LaravelTemporal\Support\ApplicationFactory;
+use Keepsuit\LaravelTemporal\TemporalDiscovery;
+use Temporal\DataConverter\DataConverterInterface;
+use Temporal\Testing\WorkerFactory;
+use Temporal\Worker\Transport\Goridge;
+
+$basePath = require __DIR__.'/bootstrap.php';
+
+$app = (new ApplicationFactory($basePath))->createApplication();
+
+/** @var TemporalDiscovery $discovery */
+$discovery = $app->make(TemporalDiscovery::class);
+
+// factory initiates and runs task queue specific activity and workflow workers
+$factory = new WorkerFactory(
+    dataConverter: $app->make(DataConverterInterface::class),
+    rpc: Goridge::create()
+);
+
+// Worker that listens on a Task Queue and hosts both workflow and activity implementations.
+$worker = $factory->newWorker(
+    taskQueue: env('TEMPORAL_QUEUE')
+);
+
+foreach ($discovery->getWorkflows() as $workflow) {
+    $worker->registerWorkflowTypes($workflow);
+}
+
+foreach ($discovery->getActivities() as $activity) {
+    $worker->registerActivity($activity, fn (ReflectionClass $class) => $app->make($class->getName()));
+}
+
+$factory->run();
