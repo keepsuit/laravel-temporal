@@ -26,16 +26,29 @@ $factory = WorkerFactory::create(
 );
 
 // Worker that listens on a Task Queue and hosts both workflow and activity implementations.
-$worker = $factory->newWorker(
+$mainWorker = $factory->newWorker(
     taskQueue: env('TEMPORAL_QUEUE')
 );
 
+$additionalWorkers = array_map(
+    fn($additionalQueue) => $factory->newWorker(taskQueue: $additionalQueue),
+    $app->make('config')->get('temporal.testing.queues', [])
+);
+
 foreach ($discovery->getWorkflows() as $workflow) {
-    $worker->registerWorkflowTypes($workflow);
+    $mainWorker->registerWorkflowTypes($workflow);
+
+    foreach ($additionalWorkers as $worker) {
+        $worker->registerWorkflowTypes($workflow);
+    }
 }
 
 foreach ($discovery->getActivities() as $activity) {
-    $worker->registerActivity($activity, fn (ReflectionClass $class) => $app->make($class->getName()));
+    $mainWorker->registerActivity($activity, fn (ReflectionClass $class) => $app->make($class->getName()));
+
+    foreach ($additionalWorkers as $worker) {
+        $worker->registerActivity($activity);
+    }
 }
 
 $factory->run();
