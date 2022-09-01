@@ -2,6 +2,7 @@
 
 namespace Keepsuit\LaravelTemporal\Support;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Symfony\Component\Finder\Finder;
 use Temporal\Workflow\WorkflowInterface;
@@ -13,7 +14,7 @@ class DiscoverWorkflows
      */
     public static function within(string $workflowPath, string $basePath): array
     {
-        $workflows = [];
+        $workflows = Collection::make([]);
 
         $files = (new Finder)->files()->in($workflowPath);
 
@@ -26,19 +27,23 @@ class DiscoverWorkflows
                 continue;
             }
 
-            if (! $workflow->isInstantiable()) {
-                continue;
-            }
+            /** @var \ReflectionClass[] $interfaces */
+            $interfaces = array_merge(
+                $workflow->getInterfaces(),
+                $workflow->isInterface() ? [$workflow->getName() => $workflow] : []
+            );
 
-            foreach ($workflow->getInterfaces() as $interface) {
+            foreach ($interfaces as $interface) {
                 if ($interface->getAttributes(WorkflowInterface::class) !== []) {
-                    $workflows[] = $workflow->getName();
+                    if (! $workflow->isInterface() || ! $workflows->has($interface->getName())) {
+                        $workflows->put($interface->getName(), $workflow->isInterface() ? null : $workflow->getName());
+                    }
                     break;
                 }
             }
         }
 
-        return $workflows;
+        return $workflows->map(fn($value, $key) => $value === null ? $key : $value)->values()->all();
     }
 
     /**

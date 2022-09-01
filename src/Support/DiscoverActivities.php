@@ -2,6 +2,7 @@
 
 namespace Keepsuit\LaravelTemporal\Support;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Symfony\Component\Finder\Finder;
 use Temporal\Activity\ActivityInterface;
@@ -13,7 +14,7 @@ class DiscoverActivities
      */
     public static function within(string $activitiesPath, string $basePath): array
     {
-        $activities = [];
+        $activities = Collection::make([]);
 
         $files = (new Finder)->files()->in($activitiesPath);
 
@@ -26,21 +27,25 @@ class DiscoverActivities
                 continue;
             }
 
-            if (! $activity->isInstantiable()) {
-                continue;
-            }
+            /** @var \ReflectionClass[] $interfaces */
+            $interfaces = array_merge(
+                $activity->getInterfaces(),
+                $activity->isInterface() ? [$activity->getName() => $activity] : []
+            );
 
-            foreach ($activity->getInterfaces() as $interface) {
+            foreach ($interfaces as $interface) {
                 foreach ($interface->getAttributes() as $attribute) {
                     if ($attribute->newInstance() instanceof ActivityInterface) {
-                        $activities[] = $activity->getName();
+                        if (! $activity->isInterface() || ! $activities->has($interface->getName())) {
+                            $activities->put($interface->getName(), $activity->isInterface() ? null : $activity->getName());
+                        }
                         break 2;
                     }
                 }
             }
         }
 
-        return $activities;
+        return $activities->map(fn($value, $key) => $value === null ? $key : $value)->values()->all();
     }
 
     /**
