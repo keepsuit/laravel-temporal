@@ -38,6 +38,11 @@ final class WorkflowBuilder
         return new WorkflowBuilder();
     }
 
+    public static function newChild(): ChildWorkflowBuilder
+    {
+        return new ChildWorkflowBuilder();
+    }
+
     public function withRunId(?string $runId): self
     {
         $self = clone $this;

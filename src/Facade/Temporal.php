@@ -4,14 +4,16 @@ namespace Keepsuit\LaravelTemporal\Facade;
 
 use Illuminate\Support\Facades\Facade;
 use Keepsuit\LaravelTemporal\Builder\ActivityBuilder;
+use Keepsuit\LaravelTemporal\Builder\ChildWorkflowBuilder;
 use Keepsuit\LaravelTemporal\Builder\LocalActivityBuilder;
 use Keepsuit\LaravelTemporal\Builder\WorkflowBuilder;
 use Keepsuit\LaravelTemporal\Testing\ActivityMocker;
 
 /**
+ * @method static WorkflowBuilder newWorkflow()
+ * @method static ChildWorkflowBuilder newChildWorkflow()
  * @method static ActivityBuilder newActivity()
  * @method static LocalActivityBuilder newLocalActivity()
- * @method static WorkflowBuilder newWorkflow()
  */
 class Temporal extends Facade
 {
