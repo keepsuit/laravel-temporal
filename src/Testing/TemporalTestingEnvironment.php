@@ -87,7 +87,7 @@ class TemporalTestingEnvironment
         );
 
         $this->temporalServerProcess = (new SymfonyProcessFactory())->createProcess(
-            command: [$this->systemInfo->temporalServerExecutable, $temporalPort, '--enable-time-skipping'],
+            command: [$this->systemInfo->temporalServerExecutable, (string) $temporalPort, '--enable-time-skipping'],
             timeout: 10
         );
         $this->temporalServerProcess->start();

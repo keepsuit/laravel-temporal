@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 use Keepsuit\LaravelTemporal\Support\ApplicationFactory;
 use Keepsuit\LaravelTemporal\TemporalDiscovery;
+use Keepsuit\LaravelTemporal\Testing\Internal\RoadRunnerActivityInvocationCache;
+use Keepsuit\LaravelTemporal\Testing\Internal\WorkerFactory;
 use Temporal\DataConverter\DataConverterInterface;
-use Temporal\Testing\WorkerFactory;
 use Temporal\Worker\Transport\Goridge;
 
 $basePath = require __DIR__.'/bootstrap.php';
@@ -15,10 +16,13 @@ $app = (new ApplicationFactory($basePath))->createApplication();
 /** @var TemporalDiscovery $discovery */
 $discovery = $app->make(TemporalDiscovery::class);
 
+$dataConverter = $app->make(DataConverterInterface::class);
+
 // factory initiates and runs task queue specific activity and workflow workers
-$factory = new WorkerFactory(
-    dataConverter: $app->make(DataConverterInterface::class),
-    rpc: Goridge::create()
+$factory = WorkerFactory::create(
+    dataConverter: $dataConverter,
+    rpc: Goridge::create(),
+    activityCache: RoadRunnerActivityInvocationCache::create(dataConverter: $dataConverter)
 );
 
 // Worker that listens on a Task Queue and hosts both workflow and activity implementations.

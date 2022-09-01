@@ -9,7 +9,6 @@ use Keepsuit\LaravelTemporal\Contracts\TemporalSerializable;
 use ReflectionClass;
 use ReflectionException;
 use Spatie\LaravelData\Contracts\BaseData;
-use Spatie\LaravelData\Data;
 use Temporal\Api\Common\V1\Payload;
 use Temporal\DataConverter\JsonConverter;
 use Temporal\DataConverter\Type;
