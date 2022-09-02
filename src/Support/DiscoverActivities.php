@@ -14,6 +14,9 @@ class DiscoverActivities
      */
     public static function within(string $activitiesPath, string $basePath): array
     {
+        /**
+         * @var Collection<class-string,class-string|null>
+         */
         $activities = Collection::make([]);
 
         $files = (new Finder)->files()->in($activitiesPath);
@@ -45,7 +48,7 @@ class DiscoverActivities
             }
         }
 
-        return $activities->map(fn($value, $key) => $value === null ? $key : $value)->values()->all();
+        return $activities->map(fn ($value, $key) => $value === null ? $key : $value)->values()->all();
     }
 
     /**

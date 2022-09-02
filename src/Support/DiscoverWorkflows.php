@@ -14,6 +14,9 @@ class DiscoverWorkflows
      */
     public static function within(string $workflowPath, string $basePath): array
     {
+        /**
+         * @var Collection<class-string,class-string|null>
+         */
         $workflows = Collection::make([]);
 
         $files = (new Finder)->files()->in($workflowPath);
@@ -43,7 +46,7 @@ class DiscoverWorkflows
             }
         }
 
-        return $workflows->map(fn($value, $key) => $value === null ? $key : $value)->values()->all();
+        return $workflows->map(fn ($value, $key) => $value === null ? $key : $value)->values()->all();
     }
 
     /**
