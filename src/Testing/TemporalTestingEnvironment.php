@@ -52,13 +52,20 @@ class TemporalTestingEnvironment
         register_shutdown_function(fn () => $env->stop());
     }
 
+    public function setDebugOutput(bool $debug): self
+    {
+        $this->debug = $debug;
+
+        return $this;
+    }
+
     public function start(bool $onlyWorker = false): void
     {
         if (! $onlyWorker) {
             $temporalAddress = config('temporal.address', '127.0.0.1:7233');
             $temporalPort = parse_url($temporalAddress, PHP_URL_PORT);
 
-            $this->temporalServer->start($temporalPort);
+            $this->temporalServer->setDebugOutput($this->debug)->start($temporalPort);
         }
 
         $this->downloadRoadRunnerBinary();

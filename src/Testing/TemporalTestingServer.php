@@ -67,13 +67,15 @@ class TemporalTestingServer
 
         $this->temporalServerProcess->start();
 
-        $this->debugOutput('<info>done.</info>');
+        sleep(1);
 
         if (! $this->temporalServerProcess->isRunning()) {
             $this->output->writeln('<error>error</error>');
             $this->output->writeln('Error starting Temporal server: '.$this->temporalServerProcess->getErrorOutput());
             exit(1);
         }
+
+        $this->debugOutput('<info>done.</info>');
     }
 
     protected function downloadTemporalServerExecutable(): void
