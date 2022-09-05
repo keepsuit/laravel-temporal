@@ -2,11 +2,11 @@
 
 namespace Keepsuit\LaravelTemporal\Testing;
 
-trait WithTemporal
+trait WithTemporalServer
 {
     protected static ?TemporalTestingEnvironment $temporalEnvironment = null;
 
-    protected function setUpWithTemporal()
+    protected function setUpWithTemporalServer()
     {
         if (static::$temporalEnvironment !== null) {
             return;
@@ -14,7 +14,7 @@ trait WithTemporal
 
         static::$temporalEnvironment = TemporalTestingEnvironment::create();
 
-        static::$temporalEnvironment->start();
+        static::$temporalEnvironment->start(onlyWorker: ! env('TEMPORAL_TESTING_SERVER', true));
 
         register_shutdown_function(fn () => static::$temporalEnvironment->stop());
     }

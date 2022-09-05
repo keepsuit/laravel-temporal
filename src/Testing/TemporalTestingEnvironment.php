@@ -25,17 +25,19 @@ class TemporalTestingEnvironment
         protected Output $output,
         protected Downloader $downloader,
         protected SystemInfo $systemInfo,
-        protected RoadRunnerBinaryHelper $roadRunnerBinary
+        protected RoadRunnerBinaryHelper $roadRunnerBinary,
+        protected bool $debug = false
     ) {
     }
 
-    public static function create(): self
+    public static function create(bool $debug = false): self
     {
         return new self(
             new ConsoleOutput(),
             new Downloader(new Filesystem(), HttpClient::create()),
             SystemInfo::detect(),
-            new RoadRunnerBinaryHelper()
+            new RoadRunnerBinaryHelper(),
+            $debug
         );
     }
 
@@ -74,7 +76,7 @@ class TemporalTestingEnvironment
         $temporalAddress = config('temporal.address', '127.0.0.1:7233');
         $temporalPort = parse_url($temporalAddress, PHP_URL_PORT);
 
-        $this->output->write('Starting Temporal test server... ');
+        $this->debugOutput('Starting Temporal test server... ', newLine: false);
 
         $this->temporalServerProcess = new Process(
             [$this->systemInfo->temporalServerExecutable, $temporalPort, '--enable-time-skipping']
@@ -86,9 +88,7 @@ class TemporalTestingEnvironment
         );
         $this->temporalServerProcess->start();
 
-        $this->output->writeln('<info>done.</info>');
-
-        sleep(1);
+        $this->debugOutput('<info>done.</info>');
 
         if (! $this->temporalServerProcess->isRunning()) {
             $this->output->writeln('<error>error</error>');
@@ -122,7 +122,7 @@ class TemporalTestingEnvironment
             ])
         );
 
-        $this->output->write('Starting RoadRunner... ');
+        $this->debugOutput('Starting RoadRunner... ', newLine: false);
 
         $this->roadRunnerProcess->start();
 
@@ -142,7 +142,7 @@ class TemporalTestingEnvironment
             exit(1);
         }
 
-        $this->output->writeln('<info>done.</info>');
+        $this->debugOutput('<info>done.</info>');
     }
 
     protected function downloadTemporalServerExecutable(): void
@@ -151,11 +151,11 @@ class TemporalTestingEnvironment
             return;
         }
 
-        $this->output->write('Download temporal test server... ');
+        $this->debugOutput('Download temporal test server... ', newLine: false);
 
         $this->downloader->download($this->systemInfo);
 
-        $this->output->writeln('<info>done.</info>');
+        $this->debugOutput('<info>done.</info>');
     }
 
     protected function downloadRoadRunnerBinary(): void
@@ -164,10 +164,23 @@ class TemporalTestingEnvironment
             return;
         }
 
-        $this->output->write('Download roadrunner binary... ');
+        $this->debugOutput('Download roadrunner binary... ', newLine: false);
 
         $this->roadRunnerBinary->download();
 
-        $this->output->writeln('<info>done.</info>');
+        $this->debugOutput('<info>done.</info>');
+    }
+
+    protected function debugOutput(string $message, bool $newLine = true): void
+    {
+        if (! $this->debug) {
+            return;
+        }
+
+        if ($newLine) {
+            $this->output->writeln($message);
+        } else {
+            $this->output->write($message);
+        }
     }
 }
