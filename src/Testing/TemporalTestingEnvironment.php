@@ -129,6 +129,8 @@ class TemporalTestingEnvironment
 
     protected function downloadRoadRunnerBinary(): void
     {
+        $this->roadRunnerBinary->ensureConfigFileExists();
+
         if ($this->roadRunnerBinary->binaryPath() !== null) {
             return;
         }

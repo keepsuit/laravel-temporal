@@ -47,4 +47,11 @@ class RoadRunnerBinaryHelper
 
         $process->mustRun();
     }
+
+    public function ensureConfigFileExists(): void
+    {
+        if (! file_exists(base_path('.rr.yaml'))) {
+            touch(base_path('.rr.yaml'));
+        }
+    }
 }
