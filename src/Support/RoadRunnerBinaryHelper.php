@@ -4,8 +4,10 @@ namespace Keepsuit\LaravelTemporal\Support;
 
 use Illuminate\Support\Str;
 use Symfony\Component\Process\ExecutableFinder;
+use Symfony\Component\Process\PhpExecutableFinder;
+use Symfony\Component\Process\Process;
 
-class RoadRunnerBinaryFinder
+class RoadRunnerBinaryHelper
 {
     /**
      * Find the RoadRunner binary used by the application.
@@ -27,5 +29,24 @@ class RoadRunnerBinaryFinder
         }
 
         return $roadRunnerBinary;
+    }
+
+    public function download(bool $force = false): void
+    {
+        if (! $force && $this->binaryPath() !== null) {
+            return;
+        }
+
+        $process = new Process(array_filter([
+            (new PhpExecutableFinder())->find(),
+            './vendor/bin/rr',
+            'get-binary',
+            '-n',
+            '--ansi',
+        ]), base_path(), null, null, null);
+
+        $process->mustRun();
+
+        chmod(base_path('rr'), 755);
     }
 }

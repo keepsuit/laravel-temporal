@@ -6,7 +6,7 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
-use Keepsuit\LaravelTemporal\Support\RoadRunnerBinaryFinder;
+use Keepsuit\LaravelTemporal\Support\RoadRunnerBinaryHelper;
 use Keepsuit\LaravelTemporal\Support\ServerProcessInspector;
 use Keepsuit\LaravelTemporal\Support\ServerStateFile;
 use Symfony\Component\Process\ExecutableFinder;
@@ -35,7 +35,7 @@ class WorkCommand extends Command
     public function handle(
         ServerStateFile $serverStateFile,
         ServerProcessInspector $inspector,
-        RoadRunnerBinaryFinder $roadRunnerBinaryFinder
+        RoadRunnerBinaryHelper $roadRunnerBinaryFinder
     ): ?int {
         $roadRunnerBinary = $roadRunnerBinaryFinder->binaryPath();
 

@@ -8,7 +8,7 @@ class ServerProcessInspector
         protected ServerStateFile $serverStateFile,
         protected SymfonyProcessFactory $processFactory,
         protected PosixExtension $posix,
-        protected RoadRunnerBinaryFinder $roadRunnerFinder
+        protected RoadRunnerBinaryHelper $roadRunnerFinder
     ) {
     }
 

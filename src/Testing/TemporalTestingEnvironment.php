@@ -4,6 +4,7 @@ namespace Keepsuit\LaravelTemporal\Testing;
 
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Foundation\Application;
+use Keepsuit\LaravelTemporal\Support\RoadRunnerBinaryHelper;
 use Keepsuit\LaravelTemporal\Support\SymfonyProcessFactory;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\Output;
@@ -23,7 +24,8 @@ class TemporalTestingEnvironment
     public function __construct(
         protected Output $output,
         protected Downloader $downloader,
-        protected SystemInfo $systemInfo
+        protected SystemInfo $systemInfo,
+        protected RoadRunnerBinaryHelper $roadRunnerBinary
     ) {
     }
 
@@ -33,6 +35,7 @@ class TemporalTestingEnvironment
             new ConsoleOutput(),
             new Downloader(new Filesystem(), HttpClient::create()),
             SystemInfo::detect(),
+            new RoadRunnerBinaryHelper()
         );
     }
 
@@ -55,20 +58,9 @@ class TemporalTestingEnvironment
             $this->startTemporalServer();
         }
 
+        $this->downloadRoadRunnerBinary();
+
         $this->startTemporalWorker();
-    }
-
-    protected function downloadTemporalServerExecutable(): void
-    {
-        if ($this->downloader->check($this->systemInfo->temporalServerExecutable)) {
-            return;
-        }
-
-        $this->output->write('Download temporal test server... ');
-
-        $this->downloader->download($this->systemInfo);
-
-        $this->output->writeln('<info>done.</info>');
     }
 
     public function stop(): void
@@ -109,7 +101,7 @@ class TemporalTestingEnvironment
     {
         $this->roadRunnerProcess = (new SymfonyProcessFactory())->createProcess(
             command: [
-                $this->systemInfo->rrExecutable,
+                $this->roadRunnerBinary->binaryPath(),
                 ...['-o', 'version=2.7'],
                 ...['-o', sprintf('server.command=%s ./vendor/bin/roadrunner-temporal-test-worker', (new PhpExecutableFinder())->find())],
                 ...['-o', sprintf('temporal.address=%s', config('temporal.address'))],
@@ -149,6 +141,32 @@ class TemporalTestingEnvironment
             $this->output->writeln('Error starting RoadRunner: '.$this->roadRunnerProcess->getErrorOutput());
             exit(1);
         }
+
+        $this->output->writeln('<info>done.</info>');
+    }
+
+    protected function downloadTemporalServerExecutable(): void
+    {
+        if ($this->downloader->check($this->systemInfo->temporalServerExecutable)) {
+            return;
+        }
+
+        $this->output->write('Download temporal test server... ');
+
+        $this->downloader->download($this->systemInfo);
+
+        $this->output->writeln('<info>done.</info>');
+    }
+
+    protected function downloadRoadRunnerBinary(): void
+    {
+        if ($this->roadRunnerBinary->binaryPath() !== null) {
+            return;
+        }
+
+        $this->output->write('Download roadrunner binary... ');
+
+        $this->roadRunnerBinary->download();
 
         $this->output->writeln('<info>done.</info>');
     }
