@@ -5,6 +5,7 @@ namespace Keepsuit\LaravelTemporal;
 use Illuminate\Foundation\Application;
 use Keepsuit\LaravelTemporal\Commands\ActivityInterfaceMakeCommand;
 use Keepsuit\LaravelTemporal\Commands\ActivityMakeCommand;
+use Keepsuit\LaravelTemporal\Commands\TestServerCommand;
 use Keepsuit\LaravelTemporal\Commands\WorkCommand;
 use Keepsuit\LaravelTemporal\Commands\WorkflowInterfaceMakeCommand;
 use Keepsuit\LaravelTemporal\Commands\WorkflowMakeCommand;
@@ -33,6 +34,7 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasCommands([
                 WorkCommand::class,
+                TestServerCommand::class,
                 WorkflowInterfaceMakeCommand::class,
                 WorkflowMakeCommand::class,
                 ActivityInterfaceMakeCommand::class,

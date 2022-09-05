@@ -5,7 +5,6 @@ namespace Keepsuit\LaravelTemporal\Testing;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Foundation\Application;
 use Keepsuit\LaravelTemporal\Support\RoadRunnerBinaryHelper;
-use Keepsuit\LaravelTemporal\Support\SymfonyProcessFactory;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\Output;
 use Symfony\Component\Filesystem\Filesystem;
@@ -17,7 +16,7 @@ use Temporal\Testing\SystemInfo;
 
 class TemporalTestingEnvironment
 {
-    protected ?Process $temporalServerProcess = null;
+    protected TemporalTestingServer $temporalServer;
 
     protected ?Process $roadRunnerProcess = null;
 
@@ -28,6 +27,7 @@ class TemporalTestingEnvironment
         protected RoadRunnerBinaryHelper $roadRunnerBinary,
         protected bool $debug = false
     ) {
+        $this->temporalServer = TemporalTestingServer::create();
     }
 
     public static function create(bool $debug = false): self
@@ -55,9 +55,10 @@ class TemporalTestingEnvironment
     public function start(bool $onlyWorker = false): void
     {
         if (! $onlyWorker) {
-            $this->downloadTemporalServerExecutable();
+            $temporalAddress = config('temporal.address', '127.0.0.1:7233');
+            $temporalPort = parse_url($temporalAddress, PHP_URL_PORT);
 
-            $this->startTemporalServer();
+            $this->temporalServer->start($temporalPort);
         }
 
         $this->downloadRoadRunnerBinary();
@@ -67,39 +68,13 @@ class TemporalTestingEnvironment
 
     public function stop(): void
     {
-        $this->temporalServerProcess?->stop();
+        $this->temporalServer->stop();
         $this->roadRunnerProcess?->stop();
-    }
-
-    protected function startTemporalServer(): void
-    {
-        $temporalAddress = config('temporal.address', '127.0.0.1:7233');
-        $temporalPort = parse_url($temporalAddress, PHP_URL_PORT);
-
-        $this->debugOutput('Starting Temporal test server... ', newLine: false);
-
-        $this->temporalServerProcess = new Process(
-            [$this->systemInfo->temporalServerExecutable, $temporalPort, '--enable-time-skipping']
-        );
-
-        $this->temporalServerProcess = (new SymfonyProcessFactory())->createProcess(
-            command: [$this->systemInfo->temporalServerExecutable, (string) $temporalPort, '--enable-time-skipping'],
-            timeout: 10
-        );
-        $this->temporalServerProcess->start();
-
-        $this->debugOutput('<info>done.</info>');
-
-        if (! $this->temporalServerProcess->isRunning()) {
-            $this->output->writeln('<error>error</error>');
-            $this->output->writeln('Error starting Temporal server: '.$this->temporalServerProcess->getErrorOutput());
-            exit(1);
-        }
     }
 
     protected function startTemporalWorker(): void
     {
-        $this->roadRunnerProcess = (new SymfonyProcessFactory())->createProcess(
+        $this->roadRunnerProcess = new Process(
             command: [
                 $this->roadRunnerBinary->binaryPath(),
                 ...['-o', 'version=2.7'],
@@ -141,19 +116,6 @@ class TemporalTestingEnvironment
             $this->output->writeln('Error starting RoadRunner: '.$this->roadRunnerProcess->getErrorOutput());
             exit(1);
         }
-
-        $this->debugOutput('<info>done.</info>');
-    }
-
-    protected function downloadTemporalServerExecutable(): void
-    {
-        if ($this->downloader->check($this->systemInfo->temporalServerExecutable)) {
-            return;
-        }
-
-        $this->debugOutput('Download temporal test server... ', newLine: false);
-
-        $this->downloader->download($this->systemInfo);
 
         $this->debugOutput('<info>done.</info>');
     }

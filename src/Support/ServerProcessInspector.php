@@ -2,11 +2,12 @@
 
 namespace Keepsuit\LaravelTemporal\Support;
 
+use Symfony\Component\Process\Process;
+
 class ServerProcessInspector
 {
     public function __construct(
         protected ServerStateFile $serverStateFile,
-        protected SymfonyProcessFactory $processFactory,
         protected PosixExtension $posix,
         protected RoadRunnerBinaryHelper $roadRunnerFinder
     ) {
@@ -36,12 +37,15 @@ class ServerProcessInspector
             ],
         ] = $this->serverStateFile->read();
 
-        $process = $this->processFactory->createProcess([
-            $this->roadRunnerFinder->binaryPath(),
-            'reset',
-            '-o',
-            sprintf('rpc.listen=tcp://%s:%s', $rpcHost, $rpcPort),
-        ], base_path());
+        $process = new Process(
+            command: [
+                $this->roadRunnerFinder->binaryPath(),
+                'reset',
+                '-o',
+                sprintf('rpc.listen=tcp://%s:%s', $rpcHost, $rpcPort),
+            ],
+            cwd: base_path()
+        );
 
         $process->start();
 
