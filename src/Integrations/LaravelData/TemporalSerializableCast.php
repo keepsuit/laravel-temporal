@@ -35,7 +35,13 @@ class TemporalSerializableCast implements Cast
         }
 
         if ($acceptedType === null && $property->type->acceptsType('array')) {
-            return Arr::map($value, fn ($data) => $type::fromTemporalPayload($data));
+            return Arr::map($value, function ($data) use ($type) {
+                if ($data instanceof $type) {
+                    return $data;
+                }
+
+                return $type::fromTemporalPayload($data);
+            });
         }
 
         /** @var class-string<TemporalSerializable> $type */
