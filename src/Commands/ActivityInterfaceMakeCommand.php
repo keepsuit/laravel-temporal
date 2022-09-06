@@ -12,7 +12,7 @@ class ActivityInterfaceMakeCommand extends GeneratorCommand
 
     protected $description = 'Create a temporal activity interface';
 
-    protected $type = 'Workflow';
+    protected $type = 'Activity';
 
     protected $hidden = true;
 
