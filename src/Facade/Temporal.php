@@ -7,44 +7,26 @@ use Keepsuit\LaravelTemporal\Builder\ActivityBuilder;
 use Keepsuit\LaravelTemporal\Builder\ChildWorkflowBuilder;
 use Keepsuit\LaravelTemporal\Builder\LocalActivityBuilder;
 use Keepsuit\LaravelTemporal\Builder\WorkflowBuilder;
-use Keepsuit\LaravelTemporal\Testing\ActivityMocker;
+use Keepsuit\LaravelTemporal\Testing\Fakes\TemporalFake;
 
 /**
  * @method static WorkflowBuilder newWorkflow()
  * @method static ChildWorkflowBuilder newChildWorkflow()
  * @method static ActivityBuilder newActivity()
  * @method static LocalActivityBuilder newLocalActivity()
+ * @method static void mockWorkflows(array $workflowMocks)
+ * @method static void mockActivities(array $activitiesMocks)
+ * @method static void assertWorkflowDispatched(string $workflowName, \Closure|int|null $callback = null)
+ * @method static void assertWorkflowDispatchedTimes(string $workflowName, int $times = 1)
+ * @method static void assertWorkflowNotDispatched(string $workflowName, \Closure|null $callback = null)
  */
 class Temporal extends Facade
 {
-    public static function fakeActivities(array $fakedActivities): void
+    public static function fake(): TemporalFake
     {
-        static::getActivityMocker()->clear();
+        static::swap($instance = new TemporalFake(static::$app));
 
-        foreach ($fakedActivities as $activityName => $activityResult) {
-            if ($activityResult instanceof \Closure || is_callable($activityResult)) {
-                try {
-                    static::getActivityMocker()->expectCompletion($activityName, $activityResult());
-                } catch (\Exception $exception) {
-                    static::getActivityMocker()->expectFailure($activityName, $exception);
-                }
-
-                continue;
-            }
-
-            if ($activityResult instanceof \Throwable) {
-                static::getActivityMocker()->expectFailure($activityName, $activityResult);
-
-                continue;
-            }
-
-            static::getActivityMocker()->expectCompletion($activityName, $activityResult);
-        }
-    }
-
-    protected static function getActivityMocker(): ActivityMocker
-    {
-        return static::$app->make(ActivityMocker::class);
+        return $instance;
     }
 
     protected static function getFacadeAccessor(): string

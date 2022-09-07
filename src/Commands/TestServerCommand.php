@@ -25,7 +25,7 @@ class TestServerCommand extends Command
             $this->temporalServer->setDebugOutput(true);
         }
 
-        $this->temporalServer->start($this->option('port'));
+        $this->temporalServer->start((int) $this->option('port'));
 
         $this->writeServerRunningMessage();
 
