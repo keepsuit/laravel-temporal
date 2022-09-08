@@ -28,9 +28,24 @@ class Temporal extends Facade
 {
     public static function fake(): TemporalFake
     {
-        static::swap($instance = new TemporalFake(static::$app));
+        static::swap($instance = (new TemporalFake(static::$app)));
+
+        $instance->init();
 
         return $instance;
+    }
+
+    public static function initFakeWorker(): void
+    {
+        if (static::$app->environment() === 'production') {
+            return;
+        }
+
+        if (! env('LARAVEL_TEMPORAL') || ! env('TEMPORAL_TESTING_ENV')) {
+            throw new \RuntimeException('This method can be called only from temporal test worker');
+        }
+
+        static::swap((new TemporalFake(static::$app)));
     }
 
     /**

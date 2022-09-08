@@ -33,8 +33,6 @@ class TemporalFake extends Temporal
 
     public function mockWorkflows(array $workflowMocks): void
     {
-        $this->initCache();
-
         foreach ($workflowMocks as $workflowName => $workflowResult) {
             $this->temporalMocker->mockWorkflowResult($workflowName, $workflowResult);
         }
@@ -42,8 +40,6 @@ class TemporalFake extends Temporal
 
     public function mockActivities(array $activityMocks): void
     {
-        $this->initCache();
-
         foreach ($activityMocks as $activityName => $activityResult) {
             $this->temporalMocker->mockActivityResult($activityName, $activityResult);
         }
@@ -149,5 +145,10 @@ class TemporalFake extends Temporal
         }
 
         $this->activityCacheCleared = true;
+    }
+
+    public function init()
+    {
+        $this->initCache();
     }
 }
