@@ -101,7 +101,7 @@ class TemporalTestingEnvironment
                 'APP_BASE_PATH' => base_path(),
                 'LARAVEL_TEMPORAL' => 1,
                 'TEMPORAL_QUEUE' => config('temporal.queue'),
-                'TEMPORAL_TESTING_ENV' => 1
+                'TEMPORAL_TESTING_ENV' => 1,
             ])
         );
 
