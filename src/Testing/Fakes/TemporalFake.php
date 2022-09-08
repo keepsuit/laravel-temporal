@@ -90,6 +90,47 @@ class TemporalFake extends Temporal
         );
     }
 
+    public function assertActivityDispatched(string $activityName, Closure|int|null $callback = null): void
+    {
+        if (is_int($callback)) {
+            $this->assertActivityDispatchedTimes($activityName, $callback);
+
+            return;
+        }
+
+        PHPUnit::assertTrue(
+            $this->activityDispatched($activityName, $callback)->count() > 0,
+            "The expected [{$activityName}] activity was not dispatched."
+        );
+    }
+
+    public function assertActivityDispatchedTimes(string $activityName, int $times = 1): void
+    {
+        $count = $this->activityDispatched($activityName)->count();
+
+        PHPUnit::assertSame(
+            $times, $count,
+            "The expected [{$activityName}] activity was dispatched {$count} times instead of {$times} times."
+        );
+    }
+
+    public function assertActivityNotDispatched(string $activityName, Closure|null $callback = null): void
+    {
+        PHPUnit::assertCount(
+            0, $this->activityDispatched($activityName, $callback),
+            "The unexpected [{$activityName}] activity was dispatched."
+        );
+    }
+
+    protected function activityDispatched(string $activityName, Closure $callback = null): Collection
+    {
+        $callback = $callback ?: fn () => true;
+
+        return collect($this->temporalMocker->getActivityDispatches($activityName))->filter(
+            fn ($arguments) => $callback(...$arguments)
+        );
+    }
+
     public function getTemporalContext(): mixed
     {
         $currentContext = Workflow::getCurrentContext();

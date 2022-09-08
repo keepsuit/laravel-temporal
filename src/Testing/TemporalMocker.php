@@ -3,12 +3,10 @@
 namespace Keepsuit\LaravelTemporal\Testing;
 
 use Closure;
-use Keepsuit\LaravelTemporal\Testing\Internal\RoadRunnerActivityInvocationCache;
-use Throwable;
 
 class TemporalMocker
 {
-    public function __construct(protected RoadRunnerActivityInvocationCache $cache)
+    public function __construct(protected TemporalMockerCache $cache)
     {
     }
 
@@ -19,7 +17,7 @@ class TemporalMocker
 
     public function mockWorkflowResult(string $workflowName, mixed $workflowResult): void
     {
-        $result = $workflowResult instanceof Closure ? $workflowResult : fn () => $workflowResult;
+        $result = $workflowResult instanceof Closure ? $workflowResult() : $workflowResult;
 
         $this->cache->saveWorkflowMock($workflowName, $result);
     }
@@ -31,23 +29,14 @@ class TemporalMocker
 
     public function mockActivityResult(string $activityName, mixed $activityResult): void
     {
-        if ($activityResult instanceof Closure || is_callable($activityResult)) {
-            try {
-                $this->cache->saveCompletion($activityName, $activityResult());
-            } catch (\Exception $exception) {
-                $this->cache->saveFailure($activityName, $exception);
-            }
+        $result = $activityResult instanceof Closure ? $activityResult() : $activityResult;
 
-            return;
-        }
+        $this->cache->saveActivityMock($activityName, $result);
+    }
 
-        if ($activityResult instanceof Throwable) {
-            $this->cache->saveFailure($activityName, $activityResult);
-
-            return;
-        }
-
-        $this->cache->saveCompletion($activityName, $activityResult);
+    public function getActivityResult(string $activityName): ?Closure
+    {
+        return $this->cache->getActivityMock($activityName);
     }
 
     public function recordWorkflowDispatch(string $workflowName, array $args): void
@@ -58,5 +47,15 @@ class TemporalMocker
     public function getWorkflowDispatches(string $workflowName): array
     {
         return $this->cache->getWorkflowDispatches($workflowName);
+    }
+
+    public function recordActivityDispatch(string $activityName, array $args): void
+    {
+        $this->cache->recordActivityDispatch($activityName, $args);
+    }
+
+    public function getActivityDispatches(string $activityName): array
+    {
+        return $this->cache->getActivityDispatches($activityName);
     }
 }

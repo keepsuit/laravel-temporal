@@ -4,10 +4,10 @@ namespace Keepsuit\LaravelTemporal\Builder;
 
 use DateInterval;
 use InvalidArgumentException;
+use Keepsuit\LaravelTemporal\Facade\Temporal;
 use Temporal\Activity\ActivityOptions;
 use Temporal\Common\RetryOptions;
 use Temporal\Internal\Workflow\ActivityProxy;
-use Temporal\Workflow;
 use Temporal\Workflow\ActivityStubInterface;
 
 /**
@@ -47,12 +47,12 @@ final class ActivityBuilder
      */
     public function build(string $class)
     {
-        return Workflow::newActivityStub($class, $this->activityOptions);
+        return Temporal::getTemporalContext()->newActivityStub($class, $this->activityOptions);
     }
 
     public function buildUntyped(): ActivityStubInterface
     {
-        return Workflow::newUntypedActivityStub($this->activityOptions);
+        return Temporal::getTemporalContext()->newUntypedActivityStub($this->activityOptions);
     }
 
     public function __call(string $name, array $arguments): self

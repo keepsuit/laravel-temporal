@@ -5,6 +5,7 @@ namespace Keepsuit\LaravelTemporal\Testing\Fakes;
 use React\Promise\PromiseInterface;
 use Temporal\Activity\ActivityOptionsInterface;
 use Temporal\DataConverter\ValuesInterface;
+use Temporal\Internal\Workflow\ActivityProxy;
 use Temporal\Internal\Workflow\ChildWorkflowProxy;
 use Temporal\Worker\Transport\Command\RequestInterface;
 use Temporal\Workflow\ActivityStubInterface;
@@ -152,12 +153,25 @@ class FakeWorkflowContext implements WorkflowContextInterface
 
     public function newActivityStub(string $class, ActivityOptionsInterface $options = null): object
     {
-        return $this->context->newActivityStub($class, $options);
+        /** @var ActivityProxy $activityProxy */
+        $activityProxy = $this->context->newActivityStub($class, $options);
+
+        $reflection = new \ReflectionClass($activityProxy);
+        $properties = collect($reflection->getProperties())
+            ->each(fn (\ReflectionProperty $property) => $property->setAccessible(true))
+            ->mapWithKeys(fn (\ReflectionProperty $property) => [$property->getName() => $property->getValue($activityProxy)]);
+
+        return new ActivityProxy(
+            $properties->get('class'),
+            $properties->get('activities'),
+            $properties->get('options'),
+            $this
+        );
     }
 
     public function newUntypedActivityStub(ActivityOptionsInterface $options = null): ActivityStubInterface
     {
-        return $this->context->newUntypedActivityStub($options);
+        return new FakeActivityStub($this->context->newUntypedActivityStub($options));
     }
 
     public function await(...$conditions): PromiseInterface

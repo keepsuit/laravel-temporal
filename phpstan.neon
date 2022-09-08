@@ -17,3 +17,4 @@ parameters:
 
     ignoreErrors:
         - '#Unable to resolve the template type TMergeRecursiveValue in call to method Illuminate\\Support\\Collection.*::mergeRecursive#'
+        - '#Parameter \#2 \$needles of static method Illuminate\\Support\\Str::startsWith\(\) expects \(Illuminate\\Support\\Enumerable<\(int\|string\), string>\&iterable<string>\)\|string, array<string> given#'

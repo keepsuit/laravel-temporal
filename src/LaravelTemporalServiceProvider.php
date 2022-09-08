@@ -11,8 +11,8 @@ use Keepsuit\LaravelTemporal\Commands\WorkflowInterfaceMakeCommand;
 use Keepsuit\LaravelTemporal\Commands\WorkflowMakeCommand;
 use Keepsuit\LaravelTemporal\DataConverter\LaravelPayloadConverter;
 use Keepsuit\LaravelTemporal\Support\ServerStateFile;
-use Keepsuit\LaravelTemporal\Testing\Internal\RoadRunnerActivityInvocationCache;
 use Keepsuit\LaravelTemporal\Testing\TemporalMocker;
+use Keepsuit\LaravelTemporal\Testing\TemporalMockerCache;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Temporal\Client\GRPC\ServiceClient;
@@ -64,7 +64,7 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
 
         if (! $this->app->environment('production')) {
             $this->app->singleton(TemporalMocker::class, fn (Application $app) => new TemporalMocker(
-                cache: RoadRunnerActivityInvocationCache::create(dataConverter: $app->make(DataConverterInterface::class))
+                cache: TemporalMockerCache::create()
             ));
         }
     }
