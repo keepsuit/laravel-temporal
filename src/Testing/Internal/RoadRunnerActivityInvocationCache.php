@@ -2,6 +2,7 @@
 
 namespace Keepsuit\LaravelTemporal\Testing\Internal;
 
+use Laravel\SerializableClosure\SerializableClosure;
 use React\Promise\PromiseInterface;
 use function React\Promise\reject;
 use function React\Promise\resolve;
@@ -34,22 +35,52 @@ final class RoadRunnerActivityInvocationCache implements ActivityInvocationCache
         $this->cache->clear();
     }
 
-    public static function create(
-        string $host = 'tcp://127.0.0.1:6001',
-        string $cacheName = self::CACHE_NAME,
-        DataConverterInterface $dataConverter = null
-    ): self {
-        return new self($host, $cacheName, $dataConverter);
+    public static function create(DataConverterInterface $dataConverter = null): self
+    {
+        return new self('tcp://127.0.0.1:6001', self::CACHE_NAME, $dataConverter);
+    }
+
+    public function recordWorkflowDispatch(string $workflowName, array $args)
+    {
+        $cacheKey = sprintf('workflow_dispatch::%s', $workflowName);
+
+        /** @var array $dispatches */
+        $dispatches = $this->cache->get($cacheKey, []);
+
+        $dispatches[] = $args;
+
+        $this->cache->set($cacheKey, $dispatches);
+    }
+
+    public function getWorkflowDispatches(string $workflowName): array
+    {
+        return $this->cache->get(sprintf('workflow_dispatch::%s', $workflowName), []);
+    }
+
+    public function saveWorkflowMock(string $workflowName, \Closure $value): void
+    {
+        $this->cache->set(sprintf('workflow::%s', $workflowName), new SerializableClosure($value));
+    }
+
+    public function getWorkflowMock(string $workflowName): ?\Closure
+    {
+        $value = $this->cache->get(sprintf('workflow::%s', $workflowName));
+
+        if ($value instanceof SerializableClosure) {
+            return $value->getClosure();
+        }
+
+        return null;
     }
 
     public function saveCompletion(string $activityMethodName, $value): void
     {
-        $this->cache->set($activityMethodName, ActivityInvocationResult::fromValue($value, $this->dataConverter));
+        $this->cache->set(sprintf('activity::%s', $activityMethodName), ActivityInvocationResult::fromValue($value, $this->dataConverter));
     }
 
     public function saveFailure(string $activityMethodName, \Throwable $error): void
     {
-        $this->cache->set($activityMethodName, ActivityInvocationFailure::fromThrowable($error));
+        $this->cache->set(sprintf('activity::%s', $activityMethodName), ActivityInvocationFailure::fromThrowable($error));
     }
 
     public function canHandle(RequestInterface $request): bool
@@ -60,13 +91,13 @@ final class RoadRunnerActivityInvocationCache implements ActivityInvocationCache
 
         $activityMethodName = $request->getOptions()['name'] ?? '';
 
-        return $this->cache->has($activityMethodName);
+        return $this->cache->has(sprintf('activity::%s', $activityMethodName));
     }
 
     public function execute(RequestInterface $request): PromiseInterface
     {
         $activityMethodName = $request->getOptions()['name'];
-        $value = $this->cache->get($activityMethodName);
+        $value = $this->cache->get(sprintf('activity::%s', $activityMethodName));
 
         if ($value instanceof ActivityInvocationFailure) {
             return reject($value->toThrowable());

@@ -4,9 +4,9 @@ namespace Keepsuit\LaravelTemporal\Builder;
 
 use DateInterval;
 use InvalidArgumentException;
+use Keepsuit\LaravelTemporal\Facade\Temporal;
 use Temporal\Common\RetryOptions;
 use Temporal\Internal\Workflow\ChildWorkflowProxy;
-use Temporal\Workflow;
 use Temporal\Workflow\ChildWorkflowOptions;
 use Temporal\Workflow\ChildWorkflowStubInterface;
 
@@ -47,12 +47,12 @@ final class ChildWorkflowBuilder
      */
     public function build(string $class)
     {
-        return Workflow::newChildWorkflowStub($class, $this->workflowOptions);
+        return Temporal::getTemporalContext()->newChildWorkflowStub($class, $this->workflowOptions);
     }
 
     public function buildUntyped(string $workflowType): ChildWorkflowStubInterface
     {
-        return Workflow::newUntypedChildWorkflowStub($workflowType, $this->workflowOptions);
+        return Temporal::getTemporalContext()->newUntypedChildWorkflowStub($workflowType, $this->workflowOptions);
     }
 
     public function __call(string $name, array $arguments): self

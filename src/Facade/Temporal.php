@@ -8,6 +8,7 @@ use Keepsuit\LaravelTemporal\Builder\ChildWorkflowBuilder;
 use Keepsuit\LaravelTemporal\Builder\LocalActivityBuilder;
 use Keepsuit\LaravelTemporal\Builder\WorkflowBuilder;
 use Keepsuit\LaravelTemporal\Testing\Fakes\TemporalFake;
+use Temporal\Workflow;
 
 /**
  * @method static WorkflowBuilder newWorkflow()
@@ -27,6 +28,20 @@ class Temporal extends Facade
         static::swap($instance = new TemporalFake(static::$app));
 
         return $instance;
+    }
+
+    /**
+     * @return Workflow\WorkflowContextInterface|Workflow\ScopedContextInterface|object
+     */
+    public static function getTemporalContext(): object
+    {
+        $instance = static::getFacadeRoot();
+
+        if (method_exists($instance, 'getTemporalContext')) {
+            return $instance->getTemporalContext();
+        }
+
+        return Workflow::getCurrentContext();
     }
 
     protected static function getFacadeAccessor(): string

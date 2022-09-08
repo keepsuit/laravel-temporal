@@ -3,75 +3,49 @@
 namespace Keepsuit\LaravelTemporal\Testing\Fakes;
 
 use Closure;
-use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Collection;
 use Keepsuit\LaravelTemporal\Temporal;
-use Keepsuit\LaravelTemporal\Testing\ActivityMocker;
+use Keepsuit\LaravelTemporal\Testing\TemporalMocker;
 use PHPUnit\Framework\Assert as PHPUnit;
 use Temporal\Client\WorkflowClientInterface;
-use Throwable;
+use Temporal\Workflow;
 
 class TemporalFake extends Temporal
 {
-    protected FakeWorkflowClient $workflowClient;
+    protected bool $activityCacheCleared = false;
 
-    protected ActivityMocker $activityMocker;
-
-    /**
-     * @var array<string,mixed[]>
-     */
-    protected array $dispatchedWorkflows = [];
+    protected TemporalMocker $temporalMocker;
 
     public function __construct(protected Application $app)
     {
-        $this->workflowClient = $this->swapWorkflowClient();
-        $this->activityMocker = $this->app->make(ActivityMocker::class);
-
-        $this->activityMocker->clear();
+        $this->temporalMocker = $this->app->make(TemporalMocker::class);
+        $this->swapWorkflowClient();
     }
 
-    protected function swapWorkflowClient(): FakeWorkflowClient
+    protected function swapWorkflowClient(): void
     {
         /** @var FakeWorkflowClient $instance */
         $instance = $this->app->make(FakeWorkflowClient::class);
 
-        $instance->onWorkflowStart(function (string $workflowName, ...$args) {
-            $this->dispatchedWorkflows[$workflowName][] = $args;
-        });
-
         $this->app->instance(WorkflowClientInterface::class, $instance);
-
-        return $instance;
     }
 
     public function mockWorkflows(array $workflowMocks): void
     {
+        $this->initCache();
+
         foreach ($workflowMocks as $workflowName => $workflowResult) {
-            $this->workflowClient->mockWorkflow($workflowName, $workflowResult);
+            $this->temporalMocker->mockWorkflowResult($workflowName, $workflowResult);
         }
     }
 
     public function mockActivities(array $activityMocks): void
     {
+        $this->initCache();
+
         foreach ($activityMocks as $activityName => $activityResult) {
-            if ($activityResult instanceof Closure || is_callable($activityResult)) {
-                try {
-                    $this->activityMocker->expectCompletion($activityName, $activityResult());
-                } catch (Exception $exception) {
-                    $this->activityMocker->expectFailure($activityName, $exception);
-                }
-
-                continue;
-            }
-
-            if ($activityResult instanceof Throwable) {
-                $this->activityMocker->expectFailure($activityName, $activityResult);
-
-                continue;
-            }
-
-            $this->activityMocker->expectCompletion($activityName, $activityResult);
+            $this->temporalMocker->mockActivityResult($activityName, $activityResult);
         }
     }
 
@@ -109,19 +83,30 @@ class TemporalFake extends Temporal
 
     protected function workflowDispatched(string $workflowName, Closure $callback = null): Collection
     {
-        if (! $this->hasDispatchedWorkflow($workflowName)) {
-            return Collection::make();
-        }
-
         $callback = $callback ?: fn () => true;
 
-        return collect($this->dispatchedWorkflows[$workflowName])->filter(
+        return collect($this->temporalMocker->getWorkflowDispatches($workflowName))->filter(
             fn ($arguments) => $callback(...$arguments)
         );
     }
 
-    protected function hasDispatchedWorkflow(string $workflowName): bool
+    public function getTemporalContext(): mixed
     {
-        return isset($this->dispatchedWorkflows[$workflowName]) && ! empty($this->dispatchedWorkflows[$workflowName]);
+        $currentContext = Workflow::getCurrentContext();
+
+        return match (true) {
+            $currentContext instanceof Workflow\ScopedContextInterface => new FakeScopeContext($currentContext),
+            $currentContext instanceof Workflow\WorkflowContextInterface => new FakeWorkflowContext($currentContext),
+            default => $currentContext
+        };
+    }
+
+    protected function initCache(): void
+    {
+        if (! $this->activityCacheCleared) {
+            $this->temporalMocker->clear();
+        }
+
+        $this->activityCacheCleared = true;
     }
 }
