@@ -85,7 +85,7 @@ class TemporalTestingEnvironment
             command: [
                 $this->roadRunnerBinary->binaryPath(),
                 ...['-o', 'version=2.7'],
-                ...['-o', sprintf('server.command=%s ./vendor/bin/roadrunner-temporal-test-worker', (new PhpExecutableFinder())->find())],
+                ...['-o', sprintf('server.command=%s ./vendor/bin/roadrunner-temporal-worker', (new PhpExecutableFinder())->find())],
                 ...['-o', sprintf('temporal.address=%s', config('temporal.address'))],
                 ...['-o', sprintf('temporal.activities.num_workers=%s', 1)],
                 ...['-o', sprintf('rpc.listen=tcp://127.0.0.1:%d', 6001)],
@@ -101,6 +101,7 @@ class TemporalTestingEnvironment
                 'APP_BASE_PATH' => base_path(),
                 'LARAVEL_TEMPORAL' => 1,
                 'TEMPORAL_QUEUE' => config('temporal.queue'),
+                'TEMPORAL_TESTING_ENV' => 1
             ])
         );
 

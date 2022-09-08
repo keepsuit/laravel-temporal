@@ -49,8 +49,7 @@
         }
     },
     "bin": [
-        "bin/roadrunner-temporal-worker",
-        "bin/roadrunner-temporal-test-worker"
+        "bin/roadrunner-temporal-worker"
     ],
     "scripts": {
         "analyse": "phpstan analyse",

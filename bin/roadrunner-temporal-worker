@@ -11,6 +11,10 @@ $basePath = require __DIR__.'/bootstrap.php';
 
 $app = (new ApplicationFactory($basePath))->createApplication();
 
+if ($app->environment() !== 'production' && env('TEMPORAL_TESTING_ENV')) {
+    \Keepsuit\LaravelTemporal\Facade\Temporal::fake();
+}
+
 /** @var TemporalDiscovery $discovery */
 $discovery = $app->make(TemporalDiscovery::class);
 

@@ -26,14 +26,4 @@ return [
         'app',
         'config',
     ],
-
-    /**
-     * Options for test workers
-     */
-    'testing' => [
-        /**
-         * Additional queue to register the worker (required for mocking activities)
-         */
-        'queues' => [],
-    ],
 ];
