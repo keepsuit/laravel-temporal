@@ -20,9 +20,9 @@ use Temporal\Workflow;
  * @method static void assertWorkflowDispatched(string $workflowName, \Closure|int|null $callback = null)
  * @method static void assertWorkflowDispatchedTimes(string $workflowName, int $times = 1)
  * @method static void assertWorkflowNotDispatched(string $workflowName, \Closure|null $callback = null)
- * @method static void assertActivityDispatched(string $activityName, \Closure|int|null $callback = null)
- * @method static void assertActivityDispatchedTimes(string $activityName, int $times = 1)
- * @method static void assertActivityNotDispatched(string $activityName, \Closure|null $callback = null)
+ * @method static void assertActivityDispatched(string|array $activityName, \Closure|int|null $callback = null)
+ * @method static void assertActivityDispatchedTimes(string|array $activityName, int $times = 1)
+ * @method static void assertActivityNotDispatched(string|array $activityName, \Closure|null $callback = null)
  */
 class Temporal extends Facade
 {
