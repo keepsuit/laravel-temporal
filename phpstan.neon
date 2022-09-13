@@ -12,8 +12,5 @@ parameters:
     checkMissingIterableValueType: false
     checkGenericClassInNonGenericObjectType: false
 
-    excludePaths:
-        - src/Testing/Internal/*
-
     ignoreErrors:
         - '#Unable to resolve the template type TMergeRecursiveValue in call to method Illuminate\\Support\\Collection.*::mergeRecursive#'

@@ -19,13 +19,13 @@ class FakeWorkflowClient extends WorkflowClient
     {
         $workflowStub = WorkflowStubConverter::fromWorkflow($workflow);
 
-        $workflowMock = $this->getTemporalMocker()->getWorkflowResult($workflowStub->getWorkflowType());
+        $workflowMock = $this->getTemporalMocker()->getWorkflowResult($workflowStub->getWorkflowType(), $workflowStub->getOptions()->taskQueue);
 
         if (! ($workflowMock instanceof \Closure)) {
             return parent::start($workflow, ...$args);
         }
 
-        $this->getTemporalMocker()->recordWorkflowDispatch($workflowStub->getWorkflowType(), $args);
+        $this->getTemporalMocker()->recordWorkflowDispatch($workflowStub->getWorkflowType(), $workflowStub->getOptions()->taskQueue, $args);
 
         $execution = new WorkflowExecution(Str::uuid(), Str::uuid());
 

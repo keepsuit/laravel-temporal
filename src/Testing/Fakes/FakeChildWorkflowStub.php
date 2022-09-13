@@ -42,13 +42,13 @@ class FakeChildWorkflowStub implements ChildWorkflowStubInterface
 
     public function start(...$args): PromiseInterface
     {
-        $mock = $this->getTemporalMocker()->getWorkflowResult($this->stub->getChildWorkflowType());
+        $mock = $this->getTemporalMocker()->getWorkflowResult($this->stub->getChildWorkflowType(), $this->stub->getOptions()->taskQueue);
 
         if (! $mock instanceof \Closure) {
             return $this->stub->start(...$args);
         }
 
-        $this->getTemporalMocker()->recordWorkflowDispatch($this->stub->getChildWorkflowType(), $args);
+        $this->getTemporalMocker()->recordWorkflowDispatch($this->stub->getChildWorkflowType(), $this->stub->getOptions()->taskQueue, $args);
 
         $this->result = $mock->__invoke(...$args);
 

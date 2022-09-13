@@ -3,6 +3,7 @@
 namespace Keepsuit\LaravelTemporal\Testing;
 
 use Closure;
+use Illuminate\Support\Arr;
 use Spiral\Goridge\RPC\RPC;
 use Spiral\RoadRunner\KeyValue\Factory;
 use Spiral\RoadRunner\KeyValue\StorageInterface;
@@ -28,46 +29,71 @@ final class TemporalMockerCache
         $this->cache->clear();
     }
 
-    public function saveWorkflowMock(string $workflowName, mixed $value): void
+    public function saveWorkflowMock(string $workflowName, mixed $value, ?string $taskQueue = null): void
     {
-        $this->cache->set(sprintf('workflow::%s', $workflowName), $value === null ? 'null' : $value);
+        $this->cache->set(sprintf('workflow::%s', $workflowName), [
+            'mock' => $value === null ? 'null' : $value,
+            'taskQueue' => $taskQueue,
+        ]);
     }
 
-    public function getWorkflowMock(string $workflowName): ?Closure
+    public function getWorkflowMock(string $workflowName, string $taskQueue): ?Closure
     {
         $value = $this->cache->get(sprintf('workflow::%s', $workflowName));
 
-        return match ($value) {
+        if (! is_array($value) || ! Arr::has($value, 'mock')) {
+            return null;
+        }
+
+        if (Arr::get($value, 'taskQueue') !== null && $value['taskQueue'] !== $taskQueue) {
+            return null;
+        }
+
+        return match (Arr::get($value, 'mock')) {
             'null' => fn () => null,
             null => null,
-            default => fn () => $value
+            default => fn () => $value['mock']
         };
     }
 
-    public function saveActivityMock(string $activityName, mixed $value): void
+    public function saveActivityMock(string $activityName, mixed $value, ?string $taskQueue = null): void
     {
-        $this->cache->set(sprintf('activity::%s', $activityName), $value === null ? 'null' : $value);
+        $this->cache->set(sprintf('activity::%s', $activityName), [
+            'mock' => $value === null ? 'null' : $value,
+            'taskQueue' => $taskQueue,
+        ]);
     }
 
-    public function getActivityMock(string $activityName): ?Closure
+    public function getActivityMock(string $activityName, string $taskQueue): ?Closure
     {
         $value = $this->cache->get(sprintf('activity::%s', $activityName));
 
-        return match ($value) {
+        if (! is_array($value) || ! Arr::has($value, 'mock')) {
+            return null;
+        }
+
+        if (Arr::get($value, 'taskQueue') !== null && $value['taskQueue'] !== $taskQueue) {
+            return null;
+        }
+
+        return match (Arr::get($value, 'mock')) {
             'null' => fn () => null,
             null => null,
-            default => fn () => $value
+            default => fn () => $value['mock']
         };
     }
 
-    public function recordWorkflowDispatch(string $workflowName, array $args): void
+    public function recordWorkflowDispatch(string $workflowName, string $taskQueue, array $args): void
     {
         $cacheKey = sprintf('workflow_dispatch::%s', $workflowName);
 
         /** @var array $dispatches */
         $dispatches = $this->cache->get($cacheKey, []);
 
-        $dispatches[] = $args;
+        $dispatches[] = [
+            'taskQueue' => $taskQueue,
+            'args' => $args,
+        ];
 
         $this->cache->set($cacheKey, $dispatches);
     }
@@ -77,14 +103,17 @@ final class TemporalMockerCache
         return $this->cache->get(sprintf('workflow_dispatch::%s', $workflowName), []);
     }
 
-    public function recordActivityDispatch(string $activityName, array $args): void
+    public function recordActivityDispatch(string $activityName, string $taskQueue, array $args): void
     {
         $cacheKey = sprintf('activity_dispatch::%s', $activityName);
 
         /** @var array $dispatches */
         $dispatches = $this->cache->get($cacheKey, []);
 
-        $dispatches[] = $args;
+        $dispatches[] = [
+            'taskQueue' => $taskQueue,
+            'args' => $args,
+        ];
 
         $this->cache->set($cacheKey, $dispatches);
     }

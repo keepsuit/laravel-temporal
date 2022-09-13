@@ -38,19 +38,19 @@ class TemporalFake extends Temporal
         $this->app->instance(WorkflowClientInterface::class, $instance);
     }
 
-    public function mockWorkflows(array $workflowMocks): void
+    public function mockWorkflows(array $workflowMocks, ?string $taskQueue = null): void
     {
         foreach ($workflowMocks as $workflowName => $workflowResult) {
-            $this->temporalMocker->mockWorkflowResult($this->normalizeWorkflowName($workflowName), $workflowResult);
+            $this->temporalMocker->mockWorkflowResult($this->normalizeWorkflowName($workflowName), $workflowResult, $taskQueue);
         }
     }
 
-    public function mockActivities(array $activityMocks): void
+    public function mockActivities(array $activityMocks, ?string $taskQueue = null): void
     {
         $activityMocks = $this->normalizeActivityMocks($activityMocks);
 
         foreach ($activityMocks as $activityName => $activityResult) {
-            $this->temporalMocker->mockActivityResult($activityName, $activityResult);
+            $this->temporalMocker->mockActivityResult($activityName, $activityResult, $taskQueue);
         }
     }
 
@@ -91,7 +91,7 @@ class TemporalFake extends Temporal
         $callback = $callback ?: fn () => true;
 
         return collect($this->temporalMocker->getWorkflowDispatches($this->normalizeWorkflowName($workflowName)))->filter(
-            fn ($arguments) => $callback(...$arguments)
+            fn (array $data) => $callback(...[...$data['args'], $data['taskQueue']])
         );
     }
 
@@ -140,7 +140,7 @@ class TemporalFake extends Temporal
         $callback = $callback ?: fn () => true;
 
         return collect($this->temporalMocker->getActivityDispatches($activityName))->filter(
-            fn ($arguments) => $callback(...$arguments)
+            fn (array $data) => $callback(...[...$data['args'], $data['taskQueue']])
         );
     }
 

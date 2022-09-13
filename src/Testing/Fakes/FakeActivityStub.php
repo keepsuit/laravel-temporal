@@ -5,6 +5,7 @@ namespace Keepsuit\LaravelTemporal\Testing\Fakes;
 use Keepsuit\LaravelTemporal\Testing\TemporalMocker;
 use React\Promise\Promise;
 use React\Promise\PromiseInterface;
+use Temporal\Activity\ActivityOptions;
 use Temporal\Activity\ActivityOptionsInterface;
 use Temporal\DataConverter\EncodedValues;
 use Temporal\Workflow\ActivityStubInterface;
@@ -24,13 +25,16 @@ class FakeActivityStub implements ActivityStubInterface
 
     public function execute(string $name, array $args = [], $returnType = null, bool $isLocalActivity = false): PromiseInterface
     {
-        $mock = $this->getTemporalMocker()->getActivityResult($name);
+        /** @var ActivityOptions $options */
+        $options = $this->getOptions();
+
+        $mock = $this->getTemporalMocker()->getActivityResult($name, $options->taskQueue);
 
         if (! $mock instanceof \Closure) {
             return $this->stub->execute($name, $args, $returnType, $isLocalActivity);
         }
 
-        $this->getTemporalMocker()->recordActivityDispatch($name, $args);
+        $this->getTemporalMocker()->recordActivityDispatch($name, $options->taskQueue, $args);
 
         $this->result = $mock->__invoke(...$args);
 
