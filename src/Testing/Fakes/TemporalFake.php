@@ -125,6 +125,8 @@ class TemporalFake extends Temporal
 
     public function assertActivityNotDispatched(string|array $activityName, Closure|null $callback = null): void
     {
+        $activityName = $this->normalizeActivityName($activityName);
+
         PHPUnit::assertCount(
             0, $this->activityDispatched($activityName, $callback),
             "The unexpected [{$activityName}] activity was dispatched."
