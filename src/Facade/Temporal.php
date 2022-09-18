@@ -7,7 +7,9 @@ use Keepsuit\LaravelTemporal\Builder\ActivityBuilder;
 use Keepsuit\LaravelTemporal\Builder\ChildWorkflowBuilder;
 use Keepsuit\LaravelTemporal\Builder\LocalActivityBuilder;
 use Keepsuit\LaravelTemporal\Builder\WorkflowBuilder;
+use Keepsuit\LaravelTemporal\Testing\ActivityMockBuilder;
 use Keepsuit\LaravelTemporal\Testing\Fakes\TemporalFake;
+use Keepsuit\LaravelTemporal\Testing\WorkflowMockBuilder;
 use Temporal\Workflow;
 
 /**
@@ -16,12 +18,14 @@ use Temporal\Workflow;
  * @method static ActivityBuilder newActivity()
  * @method static LocalActivityBuilder newLocalActivity()
  * @method static void mockWorkflows(array $workflowMocks, ?string $taskQueue = null)
+ * @method static WorkflowMockBuilder mockWorkflow(string $workflowName)
  * @method static void mockActivities(array $activitiesMocks, ?string $taskQueue = null)
+ * @method static ActivityMockBuilder mockActivity(string|array $activityName)
  * @method static void assertWorkflowDispatched(string $workflowName, \Closure|int|null $callback = null)
- * @method static void assertWorkflowDispatchedTimes(string $workflowName, int $times = 1)
+ * @method static void assertWorkflowDispatchedTimes(string $workflowName, int $times = 1, \Closure|null $callback = null)
  * @method static void assertWorkflowNotDispatched(string $workflowName, \Closure|null $callback = null)
  * @method static void assertActivityDispatched(string|array $activityName, \Closure|int|null $callback = null)
- * @method static void assertActivityDispatchedTimes(string|array $activityName, int $times = 1)
+ * @method static void assertActivityDispatchedTimes(string|array $activityName, int $times = 1, \Closure|null $callback = null)
  * @method static void assertActivityNotDispatched(string|array $activityName, \Closure|null $callback = null)
  */
 class Temporal extends Facade

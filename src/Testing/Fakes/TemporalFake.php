@@ -7,7 +7,9 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Keepsuit\LaravelTemporal\Temporal;
+use Keepsuit\LaravelTemporal\Testing\ActivityMockBuilder;
 use Keepsuit\LaravelTemporal\Testing\TemporalMocker;
+use Keepsuit\LaravelTemporal\Testing\WorkflowMockBuilder;
 use PHPUnit\Framework\Assert as PHPUnit;
 use Spiral\Attributes\AttributeReader;
 use Temporal\Activity\ActivityInterface;
@@ -45,6 +47,11 @@ class TemporalFake extends Temporal
         }
     }
 
+    public function mockWorkflow(string $workflowName): WorkflowMockBuilder
+    {
+        return new WorkflowMockBuilder($this->normalizeWorkflowName($workflowName));
+    }
+
     public function mockActivities(array $activityMocks, ?string $taskQueue = null): void
     {
         $activityMocks = $this->normalizeActivityMocks($activityMocks);
@@ -52,6 +59,11 @@ class TemporalFake extends Temporal
         foreach ($activityMocks as $activityName => $activityResult) {
             $this->temporalMocker->mockActivityResult($activityName, $activityResult, $taskQueue);
         }
+    }
+
+    public function mockActivity(string|array $activityName): ActivityMockBuilder
+    {
+        return new ActivityMockBuilder($this->normalizeActivityName($activityName));
     }
 
     public function assertWorkflowDispatched(string $workflowName, Closure|int|null $callback = null): void
@@ -68,9 +80,9 @@ class TemporalFake extends Temporal
         );
     }
 
-    public function assertWorkflowDispatchedTimes(string $workflowName, int $times = 1): void
+    public function assertWorkflowDispatchedTimes(string $workflowName, int $times = 1, Closure|null $callback = null): void
     {
-        $count = $this->workflowDispatched($workflowName)->count();
+        $count = $this->workflowDispatched($workflowName, $callback)->count();
 
         PHPUnit::assertSame(
             $times, $count,
@@ -111,11 +123,11 @@ class TemporalFake extends Temporal
         );
     }
 
-    public function assertActivityDispatchedTimes(string|array $activityName, int $times = 1): void
+    public function assertActivityDispatchedTimes(string|array $activityName, int $times = 1, Closure|null $callback = null): void
     {
         $activityName = $this->normalizeActivityName($activityName);
 
-        $count = $this->activityDispatched($activityName)->count();
+        $count = $this->activityDispatched($activityName, $callback)->count();
 
         PHPUnit::assertSame(
             $times, $count,
