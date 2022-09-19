@@ -41,13 +41,13 @@ class TemporalTestingEnvironment
         );
     }
 
-    public static function bootstrap(Application $app, bool $onlyWorker = false): void
+    public static function bootstrap(Application $app): void
     {
         $app->make(Kernel::class)->bootstrap();
 
         $env = static::create();
 
-        $env->start($onlyWorker);
+        $env->start(!env('TEMPORAL_TESTING_SERVER', true));
 
         register_shutdown_function(fn () => $env->stop());
     }
