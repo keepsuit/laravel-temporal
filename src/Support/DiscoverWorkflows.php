@@ -14,9 +14,7 @@ class DiscoverWorkflows
      */
     public static function within(string $workflowPath, string $basePath): array
     {
-        /**
-         * @var Collection<class-string,class-string|null>
-         */
+        /** @var Collection<class-string,class-string|null> $workflows */
         $workflows = Collection::make([]);
 
         $files = (new Finder)->files()->in($workflowPath);
@@ -41,12 +39,13 @@ class DiscoverWorkflows
                     if (! $workflow->isInterface() || ! $workflows->has($interface->getName())) {
                         $workflows->put($interface->getName(), $workflow->isInterface() ? null : $workflow->getName());
                     }
+
                     break;
                 }
             }
         }
 
-        return $workflows->map(fn ($value, $key) => $value === null ? $key : $value)->values()->all();
+        return $workflows->map(fn ($value, $key) => $value ?? $key)->values()->all();
     }
 
     /**

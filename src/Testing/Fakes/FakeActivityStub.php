@@ -38,7 +38,7 @@ class FakeActivityStub implements ActivityStubInterface
 
         $this->result = $mock->__invoke(...$args);
 
-        $request = new Promise(function (callable $resolve) {
+        $request = new Promise(function (callable $resolve): void {
             $resolve($this->result);
         });
 

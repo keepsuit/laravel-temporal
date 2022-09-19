@@ -55,7 +55,7 @@ class Temporal extends Facade
     /**
      * @return Workflow\WorkflowContextInterface|Workflow\ScopedContextInterface|object
      */
-    public static function getTemporalContext(): object
+    public static function getTemporalContext(): mixed
     {
         $instance = static::getFacadeRoot();
 

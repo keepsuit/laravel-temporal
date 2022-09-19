@@ -8,17 +8,12 @@ use Temporal\Workflow\WorkflowRunInterface;
 
 class FakeWorkflowRun implements WorkflowRunInterface
 {
-    /**
-     * @param  WorkflowStubInterface  $stub
-     * @param  mixed  $returnValue
-     */
-    public function __construct(protected WorkflowStubInterface $stub, protected $returnValue = null)
-    {
+    public function __construct(
+        protected WorkflowStubInterface $stub,
+        protected mixed $returnValue = null
+    ) {
     }
 
-    /**
-     * @return WorkflowExecution
-     */
     public function getExecution(): WorkflowExecution
     {
         return $this->stub->getExecution();

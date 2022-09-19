@@ -10,9 +10,12 @@ use Spiral\RoadRunner\KeyValue\StorageInterface;
 
 final class TemporalMockerCache
 {
+    /**
+     * @var string
+     */
     private const CACHE_NAME = 'test';
 
-    private StorageInterface $cache;
+    private readonly StorageInterface $cache;
 
     public function __construct(string $host, string $cacheName)
     {
@@ -32,7 +35,7 @@ final class TemporalMockerCache
     public function saveWorkflowMock(string $workflowName, mixed $value, ?string $taskQueue = null): void
     {
         $this->cache->set(sprintf('workflow::%s', $workflowName), [
-            'mock' => $value === null ? 'null' : $value,
+            'mock' => $value ?? 'null',
             'taskQueue' => $taskQueue,
         ]);
     }
@@ -40,8 +43,10 @@ final class TemporalMockerCache
     public function getWorkflowMock(string $workflowName, string $taskQueue): ?Closure
     {
         $value = $this->cache->get(sprintf('workflow::%s', $workflowName));
-
-        if (! is_array($value) || ! Arr::has($value, 'mock')) {
+        if (! is_array($value)) {
+            return null;
+        }
+        if (! Arr::has($value, 'mock')) {
             return null;
         }
 
@@ -59,7 +64,7 @@ final class TemporalMockerCache
     public function saveActivityMock(string $activityName, mixed $value, ?string $taskQueue = null): void
     {
         $this->cache->set(sprintf('activity::%s', $activityName), [
-            'mock' => $value === null ? 'null' : $value,
+            'mock' => $value ?? 'null',
             'taskQueue' => $taskQueue,
         ]);
     }
@@ -67,8 +72,10 @@ final class TemporalMockerCache
     public function getActivityMock(string $activityName, string $taskQueue): ?Closure
     {
         $value = $this->cache->get(sprintf('activity::%s', $activityName));
-
-        if (! is_array($value) || ! Arr::has($value, 'mock')) {
+        if (! is_array($value)) {
+            return null;
+        }
+        if (! Arr::has($value, 'mock')) {
             return null;
         }
 

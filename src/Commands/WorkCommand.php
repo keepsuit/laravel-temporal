@@ -41,7 +41,7 @@ class WorkCommand extends Command
 
         $this->writeServerStateFile($serverStateFile);
 
-        $this->queue = $this->argument('queue') ?: $this->laravel['config']['temporal.queue'] ?: WorkerFactory::DEFAULT_TASK_QUEUE;
+        $this->queue = ($this->argument('queue') ?: $this->laravel['config']['temporal.queue']) ?: WorkerFactory::DEFAULT_TASK_QUEUE;
 
         $server = new Process([
             $roadRunnerBinary,

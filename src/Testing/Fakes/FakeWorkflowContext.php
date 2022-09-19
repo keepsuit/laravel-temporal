@@ -19,11 +19,8 @@ use Temporal\Workflow\WorkflowInfo;
 
 class FakeWorkflowContext implements WorkflowContextInterface
 {
-    protected WorkflowContextInterface $context;
-
-    public function __construct(WorkflowContextInterface $context)
+    public function __construct(protected WorkflowContextInterface $context)
     {
-        $this->context = $context;
     }
 
     public function now(): \DateTimeInterface

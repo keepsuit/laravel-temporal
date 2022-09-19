@@ -76,7 +76,7 @@ class TemporalFake extends Temporal
 
         PHPUnit::assertTrue(
             $this->workflowDispatched($workflowName, $callback)->count() > 0,
-            "The expected [{$workflowName}] workflow was not dispatched."
+            sprintf('The expected [%s] workflow was not dispatched.', $workflowName)
         );
     }
 
@@ -86,7 +86,7 @@ class TemporalFake extends Temporal
 
         PHPUnit::assertSame(
             $times, $count,
-            "The expected [{$workflowName}] workflow was dispatched {$count} times instead of {$times} times."
+            sprintf('The expected [%s] workflow was dispatched %d times instead of %d times.', $workflowName, $count, $times)
         );
     }
 
@@ -94,7 +94,7 @@ class TemporalFake extends Temporal
     {
         PHPUnit::assertCount(
             0, $this->workflowDispatched($workflowName, $callback),
-            "The unexpected [{$workflowName}] workflow was dispatched."
+            sprintf('The unexpected [%s] workflow was dispatched.', $workflowName)
         );
     }
 
@@ -119,7 +119,7 @@ class TemporalFake extends Temporal
 
         PHPUnit::assertTrue(
             $this->activityDispatched($activityName, $callback)->count() > 0,
-            "The expected [{$activityName}] activity was not dispatched."
+            sprintf('The expected [%s] activity was not dispatched.', $activityName)
         );
     }
 
@@ -131,7 +131,7 @@ class TemporalFake extends Temporal
 
         PHPUnit::assertSame(
             $times, $count,
-            "The expected [{$activityName}] activity was dispatched {$count} times instead of {$times} times."
+            sprintf('The expected [%s] activity was dispatched %d times instead of %d times.', $activityName, $count, $times)
         );
     }
 
@@ -141,7 +141,7 @@ class TemporalFake extends Temporal
 
         PHPUnit::assertCount(
             0, $this->activityDispatched($activityName, $callback),
-            "The unexpected [{$activityName}] activity was dispatched."
+            sprintf('The unexpected [%s] activity was dispatched.', $activityName)
         );
     }
 
@@ -197,7 +197,7 @@ class TemporalFake extends Temporal
     protected function normalizeActivityMocks(array $activityMocks): array
     {
         return Collection::make($activityMocks)
-            ->mapWithKeys(function (mixed $mocks, string $activity) {
+            ->mapWithKeys(function (mixed $mocks, string $activity): array {
                 if (interface_exists($activity) && is_array($mocks)) {
                     return Collection::make($mocks)
                         ->mapWithKeys(function (mixed $value, string $method) use ($activity) {

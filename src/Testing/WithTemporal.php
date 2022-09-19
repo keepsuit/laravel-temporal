@@ -19,7 +19,7 @@ trait WithTemporal
 
         $GLOBALS['_temporal_environment'] = $temporalEnvironment;
 
-        register_shutdown_function(function () use ($temporalEnvironment) {
+        register_shutdown_function(function () use ($temporalEnvironment): void {
             $temporalEnvironment->stop();
             $GLOBALS['_temporal_environment'] = null;
         });

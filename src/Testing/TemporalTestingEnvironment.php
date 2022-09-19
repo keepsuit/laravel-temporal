@@ -4,6 +4,7 @@ namespace Keepsuit\LaravelTemporal\Testing;
 
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Str;
 use Keepsuit\LaravelTemporal\Support\RoadRunnerBinaryHelper;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\Output;
@@ -63,7 +64,7 @@ class TemporalTestingEnvironment
     {
         if (! $onlyWorker) {
             $temporalAddress = config('temporal.address', '127.0.0.1:7233');
-            $temporalPort = parse_url($temporalAddress, PHP_URL_PORT);
+            $temporalPort = parse_url((string) $temporalAddress, PHP_URL_PORT);
 
             $this->temporalServer->setDebugOutput($this->debug)->start($temporalPort);
         }
@@ -116,7 +117,7 @@ class TemporalTestingEnvironment
         }
 
         $roadRunnerStarted = $this->roadRunnerProcess->waitUntil(
-            fn ($type, $output) => str_contains($output, 'RoadRunner server started')
+            fn ($type, $output) => Str::contains((string) $output, 'RoadRunner server started')
         );
 
         if (! $roadRunnerStarted) {

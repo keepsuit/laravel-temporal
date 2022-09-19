@@ -14,9 +14,7 @@ class DiscoverActivities
      */
     public static function within(string $activitiesPath, string $basePath): array
     {
-        /**
-         * @var Collection<class-string,class-string|null>
-         */
+        /** @var Collection<class-string,class-string|null> $activities */
         $activities = Collection::make([]);
 
         $files = (new Finder)->files()->in($activitiesPath);
@@ -42,13 +40,14 @@ class DiscoverActivities
                         if (! $activity->isInterface() || ! $activities->has($interface->getName())) {
                             $activities->put($interface->getName(), $activity->isInterface() ? null : $activity->getName());
                         }
+
                         break 2;
                     }
                 }
             }
         }
 
-        return $activities->map(fn ($value, $key) => $value === null ? $key : $value)->values()->all();
+        return $activities->map(fn ($value, $key) => $value ?? $key)->values()->all();
     }
 
     /**
