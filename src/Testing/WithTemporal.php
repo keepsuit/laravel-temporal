@@ -2,9 +2,9 @@
 
 namespace Keepsuit\LaravelTemporal\Testing;
 
-trait WithTemporalWorker
+trait WithTemporal
 {
-    protected function setUpWithTemporalWorker()
+    protected function setUpWithTemporal()
     {
         /** @var TemporalTestingEnvironment|null $temporalEnvironment */
         $temporalEnvironment = $GLOBALS['_temporal_environment'] ?? null;
@@ -15,7 +15,7 @@ trait WithTemporalWorker
 
         $temporalEnvironment = TemporalTestingEnvironment::create();
 
-        $temporalEnvironment->start(onlyWorker: true);
+        $temporalEnvironment->start(onlyWorker: ! env('TEMPORAL_TESTING_SERVER', true));
 
         $GLOBALS['_temporal_environment'] = $temporalEnvironment;
 
