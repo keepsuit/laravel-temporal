@@ -47,7 +47,7 @@ class TemporalTestingEnvironment
 
         $env = static::create();
 
-        $env->start(!env('TEMPORAL_TESTING_SERVER', true));
+        $env->start(! env('TEMPORAL_TESTING_SERVER', true));
 
         register_shutdown_function(fn () => $env->stop());
     }
