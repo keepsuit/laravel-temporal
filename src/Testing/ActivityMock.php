@@ -50,7 +50,7 @@ class ActivityMock
 
     public function assertNotDispatched(\Closure|null $callback = null): void
     {
-        Temporal::assertActivityDispatched($this->activityName, function (mixed $result, string $taskQueue) use ($callback) {
+        Temporal::assertActivityNotDispatched($this->activityName, function (mixed $result, string $taskQueue) use ($callback) {
             if ($this->taskQueue !== null && $this->taskQueue !== $taskQueue) {
                 return false;
             }
