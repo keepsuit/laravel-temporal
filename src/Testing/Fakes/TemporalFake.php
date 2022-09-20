@@ -14,7 +14,9 @@ use PHPUnit\Framework\Assert as PHPUnit;
 use Spiral\Attributes\AttributeReader;
 use Temporal\Activity\ActivityInterface;
 use Temporal\Activity\LocalActivityInterface;
+use Temporal\Client\GRPC\ServiceClientInterface;
 use Temporal\Client\WorkflowClientInterface;
+use Temporal\DataConverter\DataConverterInterface;
 use Temporal\Internal\Declaration\Prototype\ActivityPrototype;
 use Temporal\Internal\Declaration\Reader\ActivityReader;
 use Temporal\Internal\Declaration\Reader\WorkflowReader;
@@ -34,10 +36,10 @@ class TemporalFake extends Temporal
 
     protected function swapWorkflowClient(): void
     {
-        /** @var FakeWorkflowClient $instance */
-        $instance = $this->app->make(FakeWorkflowClient::class);
-
-        $this->app->instance(WorkflowClientInterface::class, $instance);
+        $this->app->instance(WorkflowClientInterface::class, new FakeWorkflowClient(
+            serviceClient: $this->app->make(ServiceClientInterface::class),
+            converter: $this->app->make(DataConverterInterface::class)
+        ));
     }
 
     public function mockWorkflows(array $workflowMocks, ?string $taskQueue = null): void

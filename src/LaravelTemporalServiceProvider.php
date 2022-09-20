@@ -15,6 +15,7 @@ use Keepsuit\LaravelTemporal\Testing\TemporalMocker;
 use Keepsuit\LaravelTemporal\Testing\TemporalMockerCache;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
+use Temporal\Client\ClientOptions;
 use Temporal\Client\GRPC\ServiceClient;
 use Temporal\Client\GRPC\ServiceClientInterface;
 use Temporal\Client\WorkflowClient;
@@ -59,6 +60,7 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
 
         $this->app->bind(WorkflowClientInterface::class, fn (Application $app) => WorkflowClient::create(
             serviceClient: $app->make(ServiceClientInterface::class),
+            options: (new ClientOptions())->withNamespace(config('temporal.namespace')),
             converter: $app->make(DataConverterInterface::class)
         ));
 

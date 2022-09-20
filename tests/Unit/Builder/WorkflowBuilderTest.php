@@ -19,6 +19,7 @@ it('can build client with default options', function () {
 
 it('can build workflow with default options', function () {
     config()->set('temporal.queue', 'test-queue');
+    config()->set('temporal.namespace', 'test-namespace');
 
     $workflow = WorkflowBuilder::new()
         ->build(DemoWorkflow::class);
@@ -31,6 +32,12 @@ it('can build workflow with default options', function () {
 
     expect($workflowOptions)
         ->taskQueue->toBe('test-queue');
+
+    /** @var \Temporal\Client\ClientOptions $clientOptions */
+    $clientOptions = invade(invade($workflow)->client)->clientOptions;
+
+    expect($clientOptions)
+        ->namespace->toBe('test-namespace');
 });
 
 it('can build workflow with custom options', function () {

@@ -49,6 +49,7 @@ class WorkCommand extends Command
             ...['-o', 'version=2.7'],
             ...['-o', sprintf('server.command=%s ./vendor/bin/roadrunner-temporal-worker', (new PhpExecutableFinder())->find())],
             ...['-o', sprintf('temporal.address=%s', config('temporal.address'))],
+            ...['-o', sprintf('temporal.namespace=%s', config('temporal.namespace'))],
             ...$this->option('workers') === 'auto' ? [] : ['-o', sprintf('temporal.activities.num_workers=%s', $this->option('workers'))],
             ...$this->option('max-jobs') === '0' ? [] : ['-o', sprintf('temporal.activities.max_jobs=%s', $this->option('max-jobs'))],
             ...['-o', sprintf('rpc.listen=tcp://%s:%d', $this->rpcHost(), $this->rpcPort())],
