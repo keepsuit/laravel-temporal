@@ -40,6 +40,31 @@ it('can build workflow with default options', function () {
         ->namespace->toBe('test-namespace');
 });
 
+it('can build workflow with default retry options', function () {
+    config()->set('temporal.retry.workflow', [
+        'initial_interval' => 5,
+        'backoff_coefficient' => 6.0,
+        'maximum_interval' => 500,
+        'maximum_attempts' => 10,
+    ]);
+
+    $workflow = WorkflowBuilder::new()
+        ->build(DemoWorkflow::class);
+
+    expect($workflow)
+        ->toBeInstanceOf(WorkflowProxy::class);
+
+    /** @var \Temporal\Client\WorkflowOptions $workflowOptions */
+    $workflowOptions = invade(invade($workflow)->stub)->options;
+
+    expect($workflowOptions->retryOptions)
+        ->not->toBeNull()
+        ->initialInterval->totalSeconds->toBe(5)
+        ->backoffCoefficient->toBe(6.0)
+        ->maximumInterval->totalSeconds->toBe(500)
+        ->maximumAttempts->toBe(10);
+});
+
 it('can build workflow with custom options', function () {
     config()->set('temporal.queue', 'test-queue');
 

@@ -24,13 +24,17 @@ use Temporal\Internal\Client\WorkflowProxy;
  */
 final class WorkflowBuilder
 {
+    use DefaultRetryPolicy;
+
     private WorkflowOptions $workflowOptions;
 
     private ?string $runId = null;
 
     public function __construct()
     {
-        $this->workflowOptions = WorkflowOptions::new()->withTaskQueue(config('temporal.queue'));
+        $this->workflowOptions = WorkflowOptions::new()
+            ->withTaskQueue(config('temporal.queue'))
+            ->withRetryOptions($this->getDefaultRetryOptions(config('temporal.retry.workflow')));
     }
 
     public static function new(): WorkflowBuilder
@@ -102,7 +106,7 @@ final class WorkflowBuilder
         throw new InvalidArgumentException(sprintf('Property %s does not exists', $name));
     }
 
-    private function getWorkflowClient(): WorkflowClientInterface
+    protected function getWorkflowClient(): WorkflowClientInterface
     {
         return app(WorkflowClientInterface::class);
     }

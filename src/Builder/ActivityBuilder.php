@@ -22,11 +22,15 @@ use Temporal\Workflow\ActivityStubInterface;
  */
 final class ActivityBuilder
 {
+    use DefaultRetryPolicy;
+
     private ActivityOptions $activityOptions;
 
     public function __construct()
     {
-        $this->activityOptions = ActivityOptions::new()->withTaskQueue(config('temporal.queue'));
+        $this->activityOptions = ActivityOptions::new()
+            ->withTaskQueue(config('temporal.queue'))
+            ->withRetryOptions($this->getDefaultRetryOptions(config('temporal.retry.activity')));
     }
 
     public static function new(): ActivityBuilder

@@ -16,11 +16,14 @@ use Temporal\Workflow\ActivityStubInterface;
  */
 final class LocalActivityBuilder
 {
+    use DefaultRetryPolicy;
+
     private LocalActivityOptions $activityOptions;
 
     public function __construct()
     {
-        $this->activityOptions = LocalActivityOptions::new();
+        $this->activityOptions = LocalActivityOptions::new()
+            ->withRetryOptions($this->getDefaultRetryOptions(config('temporal.retry.activity')));;
     }
 
     public static function new(): LocalActivityBuilder

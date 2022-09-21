@@ -27,11 +27,15 @@ use Temporal\Workflow\ChildWorkflowStubInterface;
  */
 final class ChildWorkflowBuilder
 {
+    use DefaultRetryPolicy;
+
     private ChildWorkflowOptions $workflowOptions;
 
     public function __construct()
     {
-        $this->workflowOptions = ChildWorkflowOptions::new()->withTaskQueue(config('temporal.queue'));
+        $this->workflowOptions = ChildWorkflowOptions::new()
+            ->withTaskQueue(config('temporal.queue'))
+            ->withRetryOptions($this->getDefaultRetryOptions(config('temporal.retry.workflow')));
     }
 
     public static function new(): ChildWorkflowBuilder
