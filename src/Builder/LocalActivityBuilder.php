@@ -23,7 +23,7 @@ final class LocalActivityBuilder
     public function __construct()
     {
         $this->activityOptions = LocalActivityOptions::new()
-            ->withRetryOptions($this->getDefaultRetryOptions(config('temporal.retry.activity')));;
+            ->withRetryOptions($this->getDefaultRetryOptions(config('temporal.retry.activity')));
     }
 
     public static function new(): LocalActivityBuilder
