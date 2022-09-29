@@ -7,7 +7,8 @@ use Illuminate\Support\Str;
 
 class WorkflowInterfaceMakeCommand extends GeneratorCommand
 {
-    protected $name = 'temporal:make:workflow-interface';
+    protected $signature = 'temporal:make:workflow-interface {name}
+                        {--scoped : Create the workflow inside a scoped directory}';
 
     protected $description = 'Create a temporal workflow interface';
 
@@ -22,7 +23,16 @@ class WorkflowInterfaceMakeCommand extends GeneratorCommand
 
     protected function getDefaultNamespace($rootNamespace): string
     {
-        return $rootNamespace.'\Workflows';
+        if ($this->option('scoped')) {
+            $workflowName = Str::replaceLast('Interface', '', $this->getNameInput());
+            $namespace = Str::endsWith('Workflow', $workflowName)
+                ? Str::replaceLast('Workflow', '', $workflowName)
+                : $workflowName;
+
+            return sprintf('%s\\Workflows\\%s', $rootNamespace, $namespace);
+        }
+
+        return sprintf('%s\\Workflows', $rootNamespace);
     }
 
     /**

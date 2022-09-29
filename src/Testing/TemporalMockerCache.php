@@ -46,6 +46,7 @@ final class TemporalMockerCache
         if (! is_array($value)) {
             return null;
         }
+
         if (! Arr::has($value, 'mock')) {
             return null;
         }
@@ -75,6 +76,7 @@ final class TemporalMockerCache
         if (! is_array($value)) {
             return null;
         }
+
         if (! Arr::has($value, 'mock')) {
             return null;
         }

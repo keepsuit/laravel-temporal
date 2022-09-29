@@ -8,7 +8,9 @@ use Symfony\Component\Console\Input\InputOption;
 
 class ActivityInterfaceMakeCommand extends GeneratorCommand
 {
-    protected $name = 'temporal:make:activity-interface';
+    protected $signature = 'temporal:make:activity-interface {name}
+                            {--local : Create a local activity}
+                            {--scoped : Create the activity inside a scoped directory}';
 
     protected $description = 'Create a temporal activity interface';
 
@@ -25,7 +27,16 @@ class ActivityInterfaceMakeCommand extends GeneratorCommand
 
     protected function getDefaultNamespace($rootNamespace): string
     {
-        return $rootNamespace.'\Activities';
+        if ($this->option('scoped')) {
+            $activityName = Str::replaceLast('Interface', '', $this->getNameInput());
+            $namespace = Str::endsWith('Activity', $activityName)
+                ? Str::replaceLast('Activity', '', $activityName)
+                : $activityName;
+
+            return sprintf('%s\\Activities\\%s', $rootNamespace, $namespace);
+        }
+
+        return sprintf('%s\\Activities', $rootNamespace);
     }
 
     /**

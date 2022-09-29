@@ -106,7 +106,7 @@ final class WorkflowBuilder
         throw new InvalidArgumentException(sprintf('Property %s does not exists', $name));
     }
 
-    protected function getWorkflowClient(): WorkflowClientInterface
+    private function getWorkflowClient(): WorkflowClientInterface
     {
         return app(WorkflowClientInterface::class);
     }
