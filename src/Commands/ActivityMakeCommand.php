@@ -10,7 +10,8 @@ class ActivityMakeCommand extends GeneratorCommand
 {
     protected $signature = 'temporal:make:activity {name}
                             {--local : Create a local activity}
-                            {--scoped : Create the activity inside a scoped directory}';
+                            {--scoped : Create the activity inside a scoped directory}
+                            {--for-workflow= : Create the activity in the provided workflow namespace}';
 
     protected $description = 'Create a temporal activity';
 
@@ -22,6 +23,7 @@ class ActivityMakeCommand extends GeneratorCommand
             'name' => $this->getNameInput(),
             '--local' => $this->option('local'),
             '--scoped' => $this->option('scoped'),
+            '--for-workflow' => $this->option('for-workflow'),
         ]);
 
         return parent::handle();
@@ -34,6 +36,14 @@ class ActivityMakeCommand extends GeneratorCommand
 
     protected function getDefaultNamespace($rootNamespace): string
     {
+        if ($this->option('for-workflow') !== null) {
+            $namespace = Str::endsWith('Workflow', $this->option('for-workflow'))
+                ? Str::replaceLast('Workflow', '', $this->option('for-workflow'))
+                : $this->option('for-workflow');
+
+            return sprintf('%s\\Workflows\\%s', $rootNamespace, $namespace);
+        }
+
         if ($this->option('scoped')) {
             $activityName = $this->getNameInput();
             $namespace = Str::endsWith('Activity', $activityName)
