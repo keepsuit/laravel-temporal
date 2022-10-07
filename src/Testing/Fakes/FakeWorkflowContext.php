@@ -185,4 +185,9 @@ class FakeWorkflowContext implements WorkflowContextInterface
     {
         return $this->context->getStackTrace();
     }
+
+    public function upsertSearchAttributes(array $searchAttributes): void
+    {
+        $this->context->upsertSearchAttributes($searchAttributes);
+    }
 }
