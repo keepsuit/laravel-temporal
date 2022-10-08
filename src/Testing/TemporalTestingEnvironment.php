@@ -58,10 +58,7 @@ class TemporalTestingEnvironment
 
     public function startTemporalServer(): void
     {
-        $temporalAddress = config('temporal.address', '127.0.0.1:7233');
-        $temporalPort = parse_url((string) $temporalAddress, PHP_URL_PORT);
-
-        $this->temporalServer->setDebugOutput($this->debug)->start($temporalPort);
+        $this->temporalServer->setDebugOutput($this->debug)->start();
     }
 
     public function startTemporalWorker(): void

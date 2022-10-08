@@ -2,6 +2,7 @@
 
 namespace Keepsuit\LaravelTemporal\Facade;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Facade;
 use Keepsuit\LaravelTemporal\Builder\ActivityBuilder;
 use Keepsuit\LaravelTemporal\Builder\ChildWorkflowBuilder;
@@ -47,6 +48,11 @@ class Temporal extends Facade
 
         if (! env('LARAVEL_TEMPORAL') || ! env('TEMPORAL_TESTING_ENV')) {
             throw new \RuntimeException('This method can be called only from temporal test worker');
+        }
+
+        if (env('TEMPORAL_TESTING_CONFIG') !== null) {
+            config()->set(json_decode(env('TEMPORAL_TESTING_CONFIG'), true));
+            DB::purge();
         }
 
         static::swap((new TemporalFake(static::$app)));

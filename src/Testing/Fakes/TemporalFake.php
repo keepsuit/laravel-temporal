@@ -5,15 +5,18 @@ namespace Keepsuit\LaravelTemporal\Testing\Fakes;
 use Closure;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\ParallelTesting;
 use Illuminate\Support\Str;
 use Keepsuit\LaravelTemporal\Temporal;
 use Keepsuit\LaravelTemporal\Testing\ActivityMockBuilder;
 use Keepsuit\LaravelTemporal\Testing\TemporalMocker;
 use Keepsuit\LaravelTemporal\Testing\WorkflowMockBuilder;
 use PHPUnit\Framework\Assert as PHPUnit;
+use Spatie\LaravelData\Attributes\Validation\Rule;
 use Spiral\Attributes\AttributeReader;
 use Temporal\Activity\ActivityInterface;
 use Temporal\Activity\LocalActivityInterface;
+use Temporal\Client\ClientOptions;
 use Temporal\Client\GRPC\ServiceClientInterface;
 use Temporal\Client\WorkflowClientInterface;
 use Temporal\DataConverter\DataConverterInterface;
@@ -38,7 +41,8 @@ class TemporalFake extends Temporal
     {
         $this->app->instance(WorkflowClientInterface::class, new FakeWorkflowClient(
             serviceClient: $this->app->make(ServiceClientInterface::class),
-            converter: $this->app->make(DataConverterInterface::class)
+            options: (new ClientOptions())->withNamespace(config('temporal.namespace')),
+            converter: $this->app->make(DataConverterInterface::class),
         ));
     }
 

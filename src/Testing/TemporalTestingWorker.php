@@ -2,6 +2,7 @@
 
 namespace Keepsuit\LaravelTemporal\Testing;
 
+use Illuminate\Support\Facades\ParallelTesting;
 use Illuminate\Support\Str;
 use Keepsuit\LaravelTemporal\Support\RoadRunnerBinaryHelper;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -64,14 +65,14 @@ class TemporalTestingWorker
                 ...['-o', 'version=2.7'],
                 ...['-o', sprintf('server.command=%s ./vendor/bin/roadrunner-temporal-worker', (new PhpExecutableFinder())->find())],
                 ...['-o', sprintf('temporal.address=%s', config('temporal.address'))],
+                ...['-o', sprintf('temporal.namespace=%s', config('temporal.namespace'))],
                 ...['-o', sprintf('temporal.activities.num_workers=%s', 1)],
-                ...['-o', sprintf('rpc.listen=tcp://127.0.0.1:%d', 6001)],
+                ...['-o', sprintf('rpc.listen=tcp://127.0.0.1:%d', 6001 + (ParallelTesting::token() !== false ? ParallelTesting::token() : 0))],
                 ...['-o', 'logs.mode=none'],
                 ...['-o', 'kv.test.driver=memory'],
                 ...['-o', 'kv.test.config.interval=10'],
                 'serve',
             ],
-            timeout: 10,
             cwd: base_path(),
             env: array_merge($_SERVER, $_ENV, [
                 'APP_ENV' => app()->environment(),
@@ -79,7 +80,9 @@ class TemporalTestingWorker
                 'LARAVEL_TEMPORAL' => 1,
                 'TEMPORAL_QUEUE' => config('temporal.queue'),
                 'TEMPORAL_TESTING_ENV' => 1,
-            ])
+                'TEMPORAL_TESTING_CONFIG' => json_encode(config()->all()),
+            ]),
+            timeout: 10
         );
 
         $this->debugOutput('Starting RoadRunner... ', newLine: false);

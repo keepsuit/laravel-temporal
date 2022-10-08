@@ -3,6 +3,7 @@
 namespace Keepsuit\LaravelTemporal;
 
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\ParallelTesting;
 use Keepsuit\LaravelTemporal\Commands\ActivityInterfaceMakeCommand;
 use Keepsuit\LaravelTemporal\Commands\ActivityMakeCommand;
 use Keepsuit\LaravelTemporal\Commands\TestServerCommand;
@@ -45,6 +46,8 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
 
     public function registeringPackage(): void
     {
+        $this->setupTestingEnvironment();
+
         $this->app->bind(ServerStateFile::class, fn (Application $app) => new ServerStateFile(
             $app['config']->get('temporal.state_file', storage_path('logs/temporal-worker-state.json'))
         ));
@@ -63,11 +66,20 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
             options: (new ClientOptions())->withNamespace(config('temporal.namespace')),
             converter: $app->make(DataConverterInterface::class)
         ));
+    }
 
-        if (! $this->app->environment('production')) {
-            $this->app->singleton(TemporalMocker::class, fn (Application $app) => new TemporalMocker(
-                cache: TemporalMockerCache::create()
-            ));
+    protected function setupTestingEnvironment(): void
+    {
+        if (! $this->app->environment('testing')) {
+            return;
         }
+
+        if (ParallelTesting::token() !== false) {
+            config()->set('temporal.namespace', sprintf('%s-%s', config('temporal.namespace'), ParallelTesting::token()));
+        }
+
+        $this->app->singleton(TemporalMocker::class, fn (Application $app) => new TemporalMocker(
+            cache: TemporalMockerCache::create()
+        ));
     }
 }

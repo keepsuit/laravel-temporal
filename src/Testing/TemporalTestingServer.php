@@ -39,7 +39,7 @@ class TemporalTestingServer
         return $this;
     }
 
-    public function start(int $port = 7233): void
+    public function start(int $port = null): void
     {
         $this->downloadTemporalServerExecutable();
 
@@ -56,12 +56,15 @@ class TemporalTestingServer
         $this->temporalServerProcess?->signal(SIGTERM);
     }
 
-    protected function startTemporalServer(int $port = 7233): void
+    protected function startTemporalServer(int $port = null): void
     {
         $this->debugOutput('Starting Temporal test server... ', newLine: false);
 
+        $temporalAddress = config('temporal.address', '127.0.0.1:7233');
+        $temporalPort = $port ?? parse_url((string) $temporalAddress, PHP_URL_PORT);
+
         $this->temporalServerProcess = new Process(
-            command: [$this->systemInfo->temporalServerExecutable, (string) $port, '--enable-time-skipping'],
+            command: [$this->systemInfo->temporalServerExecutable, (string) $temporalPort, '--enable-time-skipping'],
             timeout: 10
         );
 
