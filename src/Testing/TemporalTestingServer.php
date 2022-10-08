@@ -70,9 +70,10 @@ class TemporalTestingServer
         usleep(500_000);
 
         if (! $this->temporalServerProcess->isRunning()) {
-            $this->output->writeln('<error>error</error>');
-            $this->output->writeln('Error starting Temporal server: '.$this->temporalServerProcess->getErrorOutput());
-            exit(1);
+            $this->debugOutput('<error>error</error>');
+            $this->debugOutput($this->temporalServerProcess->getErrorOutput());
+
+            throw new \RuntimeException('Failed to start Temporal test server.');
         }
 
         $this->debugOutput('<info>done.</info>');

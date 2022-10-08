@@ -86,20 +86,14 @@ class TemporalTestingWorker
 
         $this->roadRunnerProcess->start();
 
-        if (! $this->roadRunnerProcess->isRunning()) {
-            $this->output->writeln('<error>error</error>');
-            $this->output->writeln('Error starting RoadRunner: '.$this->roadRunnerProcess->getErrorOutput());
-            exit(1);
-        }
-
         $roadRunnerStarted = $this->roadRunnerProcess->waitUntil(
             fn ($type, $output) => Str::contains((string) $output, 'RoadRunner server started')
         );
 
         if (! $roadRunnerStarted) {
-            $this->output->writeln('<error>error</error>');
-            $this->output->writeln('Error starting RoadRunner: '.$this->roadRunnerProcess->getErrorOutput());
-            exit(1);
+            $this->debugOutput('<error>error</error>');
+            $this->debugOutput($this->roadRunnerProcess->getErrorOutput());
+            throw new \RuntimeException('Failed to start Temporal test worker.');
         }
 
         $this->debugOutput('<info>done.</info>');
