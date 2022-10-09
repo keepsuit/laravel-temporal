@@ -4,6 +4,7 @@ namespace Keepsuit\LaravelTemporal;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\ParallelTesting;
+use Illuminate\Support\Str;
 use Keepsuit\LaravelTemporal\Commands\ActivityInterfaceMakeCommand;
 use Keepsuit\LaravelTemporal\Commands\ActivityMakeCommand;
 use Keepsuit\LaravelTemporal\Commands\TestServerCommand;
@@ -76,6 +77,11 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
 
         if (ParallelTesting::token() !== false) {
             config()->set('temporal.namespace', sprintf('%s-%s', config('temporal.namespace'), ParallelTesting::token()));
+
+            if (env('TEMPORAL_TESTING_SERVER', true)) {
+                [$host, $port] = Str::of(config('temporal.address'))->explode(':', 2)->all();
+                config()->set('temporal.address', sprintf('%s:%s', $host, $port + ParallelTesting::token()));
+            }
         }
 
         $this->app->singleton(TemporalMocker::class, fn (Application $app) => new TemporalMocker(
