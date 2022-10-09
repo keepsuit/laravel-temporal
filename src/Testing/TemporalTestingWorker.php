@@ -2,7 +2,6 @@
 
 namespace Keepsuit\LaravelTemporal\Testing;
 
-use Illuminate\Support\Facades\ParallelTesting;
 use Illuminate\Support\Str;
 use Keepsuit\LaravelTemporal\Support\RoadRunnerBinaryHelper;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -67,7 +66,7 @@ class TemporalTestingWorker
                 ...['-o', sprintf('temporal.address=%s', config('temporal.address'))],
                 ...['-o', sprintf('temporal.namespace=%s', config('temporal.namespace'))],
                 ...['-o', sprintf('temporal.activities.num_workers=%s', 1)],
-                ...['-o', sprintf('rpc.listen=tcp://127.0.0.1:%d', 6001 + (ParallelTesting::token() !== false ? ParallelTesting::token() : 0))],
+                ...['-o', sprintf('rpc.listen=tcp://127.0.0.1:%d', config('temporal.rpc_port', 6001))],
                 ...['-o', 'logs.mode=none'],
                 ...['-o', 'kv.test.driver=memory'],
                 ...['-o', 'kv.test.config.interval=10'],

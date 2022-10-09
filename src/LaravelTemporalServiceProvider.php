@@ -76,11 +76,13 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
         }
 
         if (ParallelTesting::token() !== false) {
-            config()->set('temporal.namespace', sprintf('%s-%s', config('temporal.namespace'), ParallelTesting::token()));
+            config()->set('temporal.rpc_port', env('TEMPORAL_TESTING_RPC_PORT', 6001) + ParallelTesting::token());
 
             if (env('TEMPORAL_TESTING_SERVER', true)) {
                 [$host, $port] = Str::of(config('temporal.address'))->explode(':', 2)->all();
                 config()->set('temporal.address', sprintf('%s:%s', $host, $port + ParallelTesting::token()));
+            } else {
+                config()->set('temporal.namespace', sprintf('%s-%s', config('temporal.namespace'), ParallelTesting::token()));
             }
         }
 

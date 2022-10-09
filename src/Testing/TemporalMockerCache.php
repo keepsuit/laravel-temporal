@@ -4,7 +4,6 @@ namespace Keepsuit\LaravelTemporal\Testing;
 
 use Closure;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\ParallelTesting;
 use Spiral\Goridge\RPC\RPC;
 use Spiral\RoadRunner\KeyValue\Factory;
 use Spiral\RoadRunner\KeyValue\StorageInterface;
@@ -26,7 +25,7 @@ final class TemporalMockerCache
     public static function create(): self
     {
         return new self(
-            sprintf("tcp://127.0.0.1:%d", 6001 + (ParallelTesting::token() !== false ? ParallelTesting::token() : 0)),
+            sprintf('tcp://127.0.0.1:%d', config('temporal.rpc_port', 6001)),
             self::CACHE_NAME
         );
     }

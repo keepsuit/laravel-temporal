@@ -15,6 +15,7 @@ use Rector\DeadCode\Rector\ClassMethod\RemoveDelegatingParentCallRector;
 use Rector\DeadCode\Rector\PropertyProperty\RemoveNullPropertyInitializationRector;
 use Rector\EarlyReturn\Rector\Return_\ReturnBinaryOrToEarlyReturnRector;
 use Rector\Laravel\Set\LaravelLevelSetList;
+use Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector;
 use Rector\Php80\Rector\FunctionLike\UnionTypesRector;
 use Rector\Privatization\Rector\Class_\FinalizeClassesWithoutChildrenRector;
 use Rector\Set\ValueObject\LevelSetList;
@@ -54,5 +55,6 @@ return static function (RectorConfig $config): void {
         StaticClosureRector::class,
         StaticArrowFunctionRector::class,
         ReturnTypeFromReturnNewRector::class,
+        JsonThrowOnErrorRector::class,
     ]);
 };
