@@ -89,6 +89,7 @@ trait TemporalEloquentSerialize
 
             if ($relation instanceof BelongsTo || $relation instanceof HasOne) {
                 $instance->setRelation($relationship, self::buildRelatedInstance($relatedModel, $attributes->get($attributeKey)));
+
                 continue;
             }
 
