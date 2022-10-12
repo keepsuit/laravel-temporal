@@ -2,6 +2,7 @@
 
 namespace Keepsuit\LaravelTemporal\Integrations\Eloquent;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -36,7 +37,21 @@ trait TemporalEloquentSerialize
 
     public function toTemporalPayload(): array
     {
-        return Collection::make($this->toArray())
+        $relations = Collection::make($this->getArrayableRelations())
+            ->mapWithKeys(function (mixed $value, string $key) {
+                $key = static::$snakeAttributes ? Str::snake($key) : $key;
+
+                return [
+                    $key => match (true) {
+                        $value instanceof TemporalSerializable => $value->toTemporalPayload(),
+                        $value instanceof Arrayable => $value->toArray(),
+                        default => $value,
+                    },
+                ];
+            });
+
+        return Collection::make($this->attributesToArray())
+            ->merge($relations)
             ->mapWithKeys(fn (mixed $value, string $key) => [$this->mapAttributeKeyToTemporal($key) => $value])
             ->all();
     }
