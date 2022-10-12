@@ -193,6 +193,20 @@ $childWorkflow = Temporal::newChildWorkflow()
 $result = yield $childWorkflow->yourActivityMethod();
 ```
 
+### Input and output payloads
+
+Payloads provided to workflows/activities as params and returned from them must be serialized, sent to the Temporal server and deserialized by the worker.
+Activities can be executed by workers written in different languages, so the payload must be serialized in a common format.
+Out of the box temporal sdk supports native php types and [protobuf](https://developers.google.com/protocol-buffers) messages.
+This package adds some laravel specific options for serialization/deserialization of objects:
+
+- `TemporalSerializable` interface can be implemented to add support for custom serialization/deserialization
+- [spatie/laravel-data](https://github.com/spatie/laravel-data) data objects are supported out of the box
+
+> To improve laravel-data support, this package provides `TemporalSerializableCast` and `TemporalSerializableTransformer`
+> to add support for serialization/deserialization of `TemporalSerializable` objects used as `Data` properties.
+> You can add them to `data.casts` and `data.transformers` config to add support globally.
+
 ### Run the temporal worker
 
 To run the temporal worker, you can use the `temporal:work {queue?}` command.
@@ -205,8 +219,8 @@ This package provides two options to run a temporal server for testing purposes:
 - Run `temporal:server` command, which will start a temporal testing server and use the `WithTemporalWorker` trait which will start a test worker
 - Use the `WithTemporalServer` trait, which will start a temporal testing server and the test worker when running test and stop it on finish
 
-**Note**: When using `WithTemporalServer` trait, you can set `TEMPORAL_TESTING_SERVER` env variable to `false` to disable the testing server and run
-only the worker.
+> When using `WithTemporalServer` trait, you can set `TEMPORAL_TESTING_SERVER` env variable to `false`
+> to disable the testing server and run only the worker.
 
 ### Mocking workflows
 
