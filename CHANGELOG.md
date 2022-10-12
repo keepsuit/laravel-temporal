@@ -1,5 +1,9 @@
 # Changelog
 
+# v0.4
+- Added support for `Eloquent` models serialization/deserialization
+- Updated configuration file with eloquent serialization options
+
 ## v0.3
 - Added config option for changing the temporal namespace
 - Added config options to allow customization of default retry options for workflows and activities

@@ -133,6 +133,36 @@ return [
         'app',
         'config',
     ],
+
+    /**
+     * Integrations options
+     */
+    'integrations' => [
+
+        /**
+         * Eloquent models serialization/deserialization options
+         */
+        'eloquent' => [
+            /**
+             * Default attribute key case conversion when serialize a model before sending to temporal.
+             * Supported values: 'snake', 'camel', null.
+             */
+            'serialize_attribute_case' => null,
+
+            /**
+             * Default attribute key case conversion when deserializing payload received from temporal.
+             * Supported values: 'snake', 'camel', null.
+             */
+            'deserialize_attribute_case' => null,
+
+            /*
+             * If true adds a `__exists` attribute to the serialized model
+             * which indicate that the model is saved to database and it is used on deserialization when creating the model.
+             * If false (or `__exists` is not present) the model will be created as existing model if primary key is present.
+             */
+            'include_exists_field' => false,
+        ],
+    ],
 ];
 ```
 
@@ -200,8 +230,9 @@ Activities can be executed by workers written in different languages, so the pay
 Out of the box temporal sdk supports native php types and [protobuf](https://developers.google.com/protocol-buffers) messages.
 This package adds some laravel specific options for serialization/deserialization of objects:
 
-- `TemporalSerializable` interface can be implemented to add support for custom serialization/deserialization
-- [spatie/laravel-data](https://github.com/spatie/laravel-data) data objects are supported out of the box
+- `TemporalSerializable` interface can be implemented to add support for custom serialization/deserialization.
+- Eloquent models can be correctly serialized/deserialized (with relations) adding `TemporalSerializable` interface and `TemporalEloquentSerialize` trait.
+- [spatie/laravel-data](https://github.com/spatie/laravel-data) data objects are supported out of the box.
 
 > To improve laravel-data support, this package provides `TemporalSerializableCast` and `TemporalSerializableTransformer`
 > to add support for serialization/deserialization of `TemporalSerializable` objects used as `Data` properties.
