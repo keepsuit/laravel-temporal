@@ -53,6 +53,7 @@ trait TemporalEloquentSerialize
         return Collection::make($this->attributesToArray())
             ->merge($relations)
             ->mapWithKeys(fn (mixed $value, string $key) => [$this->mapAttributeKeyToTemporal($key) => $value])
+            ->put('__exists', $this->exists)
             ->all();
     }
 
@@ -64,7 +65,6 @@ trait TemporalEloquentSerialize
         $attributes = Collection::make($payload)
             ->mapWithKeys(fn (mixed $value, string $key) => [$model->mapAttributeKeyFromTemporal($key) => $value]);
 
-
         $relationships = $attributes->mapWithKeys(fn (mixed $value, string $key) => match (true) {
             $model->isRelation($key) => [$key => $key],
             $model->isRelation(Str::snake($key)) => [$key => Str::snake($key)],
@@ -73,8 +73,8 @@ trait TemporalEloquentSerialize
         });
 
         $instance = $model->newInstance(
-            $attributes->except($relationships->keys())->all(),
-            $attributes->get($model->getKeyName()) !== null
+            $attributes->except($relationships->keys()->merge(['__exists']))->all(),
+            $attributes->get('__exists', $attributes->get($model->getKeyName()) !== null),
         );
 
         foreach ($relationships as $attributeKey => $relationship) {
@@ -109,8 +109,12 @@ trait TemporalEloquentSerialize
             return null;
         }
 
-        return $relatedModel instanceof TemporalSerializable
-            ? $relatedModel::fromTemporalPayload($attributes)
-            : $relatedModel->newInstance($attributes, Arr::get($attributes, $relatedModel->getKeyName()) !== null);
+        if ($relatedModel instanceof TemporalSerializable) {
+            return $relatedModel::fromTemporalPayload($attributes);
+        }
+
+        $exists = Arr::get($attributes, '__exists', Arr::get($attributes, $relatedModel->getKeyName()) !== null);
+
+        return $relatedModel->newInstance(Arr::except($attributes, ['__exists']), $exists);
     }
 }
