@@ -1,0 +1,101 @@
+<?php
+
+namespace Keepsuit\LaravelTemporal\Integrations\Eloquent;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
+use Keepsuit\LaravelTemporal\Contracts\TemporalSerializable;
+
+/**
+ * @mixin Model
+ */
+trait TemporalEloquentSerialize
+{
+    protected function mapAttributeKeyToTemporal(string $attribute): string
+    {
+        return match (config('temporal.integrations.eloquent.serialize_attribute_case')) {
+            'snake' => Str::snake($attribute),
+            'camel' => Str::camel($attribute),
+            default => $attribute,
+        };
+    }
+
+    protected function mapAttributeKeyFromTemporal(string $attribute): string
+    {
+        return match (config('temporal.integrations.eloquent.deserialize_attribute_case')) {
+            'snake' => Str::snake($attribute),
+            'camel' => Str::camel($attribute),
+            default => $attribute,
+        };
+    }
+
+    public function toTemporalPayload(): array
+    {
+        return Collection::make($this->toArray())
+            ->mapWithKeys(fn (mixed $value, string $key) => [$this->mapAttributeKeyToTemporal($key) => $value])
+            ->all();
+    }
+
+    public static function fromTemporalPayload(array $payload): static
+    {
+        $model = (new static());
+
+        /** @var Collection $attributes */
+        $attributes = Collection::make($payload)
+            ->mapWithKeys(fn (mixed $value, string $key) => [$model->mapAttributeKeyFromTemporal($key) => $value]);
+
+
+        $relationships = $attributes->mapWithKeys(fn (mixed $value, string $key) => match (true) {
+            $model->isRelation($key) => [$key => $key],
+            $model->isRelation(Str::snake($key)) => [$key => Str::snake($key)],
+            $model->isRelation(Str::camel($key)) => [$key => Str::camel($key)],
+            default => [],
+        });
+
+        $instance = $model->newInstance(
+            $attributes->except($relationships->keys())->all(),
+            $attributes->get($model->getKeyName()) !== null
+        );
+
+        foreach ($relationships as $attributeKey => $relationship) {
+            /** @var Relation $relation */
+            $relation = $model->$relationship();
+
+            if ($relation === null) {
+                continue;
+            }
+
+            $relatedModel = $relation->getRelated();
+
+            if ($relation instanceof BelongsTo || $relation instanceof HasOne) {
+                $instance->setRelation($relationship, self::buildRelatedInstance($relatedModel, $attributes->get($attributeKey)));
+                continue;
+            }
+
+            $instance->setRelation($relationship, $relatedModel->newCollection(
+                Collection::make($attributes->get($attributeKey))
+                    ->map(fn (array $data) => static::buildRelatedInstance($relatedModel, $data))
+                    ->filter()
+                    ->all()
+            ));
+        }
+
+        return $instance;
+    }
+
+    private static function buildRelatedInstance(Model $relatedModel, ?array $attributes): ?Model
+    {
+        if ($attributes === null) {
+            return null;
+        }
+
+        return $relatedModel instanceof TemporalSerializable
+            ? $relatedModel::fromTemporalPayload($attributes)
+            : $relatedModel->newInstance($attributes, Arr::get($attributes, $relatedModel->getKeyName()) !== null);
+    }
+}

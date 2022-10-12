@@ -99,4 +99,27 @@ return [
         'app',
         'config',
     ],
+
+    /**
+     * Integrations options
+     */
+    'integrations' => [
+
+        /**
+         * Eloquent models serialization/deserialization options
+         */
+        'eloquent' => [
+            /**
+             * Default attribute key case conversion when serialize a model before sending to temporal.
+             * Supported values: 'snake', 'camel', null.
+             */
+            'serialize_attribute_case' => null,
+
+            /**
+             * Default attribute key case conversion when deserializing payload received from temporal.
+             * Supported values: 'snake', 'camel', null.
+             */
+            'deserialize_attribute_case' => null,
+        ]
+    ]
 ];
