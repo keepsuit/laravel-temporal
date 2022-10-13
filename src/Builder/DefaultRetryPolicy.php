@@ -25,7 +25,7 @@ trait DefaultRetryPolicy
         }
 
         if (is_numeric($maximumAttempts = Arr::get($config, 'maximum_attempts'))) {
-            $retryOptions = $retryOptions->withMaximumAttempts($maximumAttempts);
+            return $retryOptions->withMaximumAttempts($maximumAttempts);
         }
 
         return $retryOptions;

@@ -38,7 +38,7 @@ trait TemporalEloquentSerialize
     public function toTemporalPayload(): array
     {
         $relations = Collection::make($this->getArrayableRelations())
-            ->mapWithKeys(function (mixed $value, string $key) {
+            ->mapWithKeys(function (mixed $value, string $key): array {
                 $key = static::$snakeAttributes ? Str::snake($key) : $key;
 
                 return [

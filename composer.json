@@ -33,7 +33,7 @@
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan-deprecation-rules": "^1.0",
         "phpstan/phpstan-phpunit": "^1.0",
-        "rector/rector": "^0.14",
+        "rector/rector": "0.14.0",
         "spatie/invade": "^1.1",
         "spatie/laravel-data": "^2.0",
         "spatie/laravel-ray": "^1.26"
@@ -55,6 +55,7 @@
         "bin/roadrunner-temporal-worker"
     ],
     "scripts": {
+        "post-autoload-dump": "@php ./vendor/bin/testbench package:discover --ansi",
         "analyse": "phpstan analyse",
         "test": "pest",
         "test-coverage": "pest --coverage",
