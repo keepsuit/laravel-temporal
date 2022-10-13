@@ -1,6 +1,9 @@
 # Changelog
 
-# v0.4
+## Unreleased
+- Allow to mock workflows without a running temporal server and worker
+
+## v0.4
 - Added support for `Eloquent` models serialization/deserialization
 - Updated configuration file with eloquent serialization options
 

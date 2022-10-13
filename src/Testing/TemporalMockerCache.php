@@ -4,6 +4,8 @@ namespace Keepsuit\LaravelTemporal\Testing;
 
 use Closure;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
+use Spiral\Goridge\Exception\RelayException;
 use Spiral\Goridge\RPC\RPC;
 use Spiral\RoadRunner\KeyValue\Factory;
 use Spiral\RoadRunner\KeyValue\StorageInterface;
@@ -17,9 +19,14 @@ final class TemporalMockerCache
 
     private readonly StorageInterface $cache;
 
+    private readonly Collection $localCache;
+
+    private bool $localOnly = false;
+
     public function __construct(string $host, string $cacheName)
     {
         $this->cache = (new Factory(RPC::create($host)))->select($cacheName);
+        $this->localCache = Collection::make();
     }
 
     public static function create(): self
@@ -32,20 +39,33 @@ final class TemporalMockerCache
 
     public function clear(): void
     {
-        $this->cache->clear();
+        $this->cacheProxy(fn () => $this->cache->clear());
     }
 
     public function saveWorkflowMock(string $workflowName, mixed $value, ?string $taskQueue = null): void
     {
-        $this->cache->set(sprintf('workflow::%s', $workflowName), [
+        $key = sprintf('workflow::%s', $workflowName);
+
+        $payload = [
             'mock' => $value ?? 'null',
             'taskQueue' => $taskQueue,
-        ]);
+        ];
+
+        $this->cacheProxy(
+            fn () => $this->cache->set($key, $payload),
+            fn () => $this->localCache->put($key, $payload)
+        );
     }
 
     public function getWorkflowMock(string $workflowName, string $taskQueue): ?Closure
     {
-        $value = $this->cache->get(sprintf('workflow::%s', $workflowName));
+        $key = sprintf('workflow::%s', $workflowName);
+
+        $value = $this->cacheProxy(
+            fn () => $this->cache->get($key),
+            fn () => $this->localCache->get($key)
+        );
+
         if (! is_array($value)) {
             return null;
         }
@@ -97,22 +117,33 @@ final class TemporalMockerCache
 
     public function recordWorkflowDispatch(string $workflowName, string $taskQueue, array $args): void
     {
-        $cacheKey = sprintf('workflow_dispatch::%s', $workflowName);
+        $key = sprintf('workflow_dispatch::%s', $workflowName);
 
         /** @var array $dispatches */
-        $dispatches = $this->cache->get($cacheKey, []);
+        $dispatches = $this->cacheProxy(
+            fn () => $this->cache->get($key, []),
+            fn () => $this->localCache->get($key, [])
+        );
 
         $dispatches[] = [
             'taskQueue' => $taskQueue,
             'args' => $args,
         ];
 
-        $this->cache->set($cacheKey, $dispatches);
+        $this->cacheProxy(
+            fn () => $this->cache->set($key, $dispatches),
+            fn () => $this->localCache->put($key, $dispatches)
+        );
     }
 
     public function getWorkflowDispatches(string $workflowName): array
     {
-        return $this->cache->get(sprintf('workflow_dispatch::%s', $workflowName), []);
+        $key = sprintf('workflow_dispatch::%s', $workflowName);
+
+        return $this->cacheProxy(
+            fn () => $this->cache->get($key, []),
+            fn () => $this->localCache->get($key, [])
+        );
     }
 
     public function recordActivityDispatch(string $activityName, string $taskQueue, array $args): void
@@ -133,5 +164,20 @@ final class TemporalMockerCache
     public function getActivityDispatches(string $activityName): array
     {
         return $this->cache->get(sprintf('activity_dispatch::%s', $activityName), []);
+    }
+
+    private function cacheProxy(Closure $action, ?Closure $fallback = null): mixed
+    {
+        if ($this->localOnly) {
+            return $fallback?->__invoke();
+        }
+
+        try {
+            return retry(3, $action);
+        } catch (RelayException) {
+            $this->localOnly = true;
+
+            return $fallback?->__invoke();
+        }
     }
 }
