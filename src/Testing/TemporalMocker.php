@@ -34,7 +34,7 @@ class TemporalMocker
         $this->cache->saveActivityMock($activityName, $result, $taskQueue);
     }
 
-    public function getActivityResult(string $activityName, string $taskQueue): ?Closure
+    public function getActivityResult(string $activityName, ?string $taskQueue): ?Closure
     {
         return $this->cache->getActivityMock($activityName, $taskQueue);
     }
@@ -49,7 +49,7 @@ class TemporalMocker
         return $this->cache->getWorkflowDispatches($workflowName);
     }
 
-    public function recordActivityDispatch(string $activityName, string $taskQueue, array $args): void
+    public function recordActivityDispatch(string $activityName, ?string $taskQueue, array $args): void
     {
         $this->cache->recordActivityDispatch($activityName, $taskQueue, $args);
     }

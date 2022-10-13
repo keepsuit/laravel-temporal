@@ -7,6 +7,7 @@ use React\Promise\Promise;
 use React\Promise\PromiseInterface;
 use Temporal\Activity\ActivityOptions;
 use Temporal\Activity\ActivityOptionsInterface;
+use Temporal\Activity\LocalActivityOptions;
 use Temporal\DataConverter\EncodedValues;
 use Temporal\Workflow\ActivityStubInterface;
 
@@ -25,16 +26,18 @@ class FakeActivityStub implements ActivityStubInterface
 
     public function execute(string $name, array $args = [], $returnType = null, bool $isLocalActivity = false): PromiseInterface
     {
-        /** @var ActivityOptions $options */
+        /** @var ActivityOptions|LocalActivityOptions $options */
         $options = $this->getOptions();
 
-        $mock = $this->getTemporalMocker()->getActivityResult($name, $options->taskQueue);
+        $taskQueue = $isLocalActivity ? null : $options->taskQueue;
+
+        $mock = $this->getTemporalMocker()->getActivityResult($name, $taskQueue);
 
         if (! $mock instanceof \Closure) {
             return $this->stub->execute($name, $args, $returnType, $isLocalActivity);
         }
 
-        $this->getTemporalMocker()->recordActivityDispatch($name, $options->taskQueue, $args);
+        $this->getTemporalMocker()->recordActivityDispatch($name, $taskQueue, $args);
 
         $this->result = $mock->__invoke(...$args);
 

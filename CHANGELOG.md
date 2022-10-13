@@ -2,6 +2,7 @@
 
 ## Unreleased
 - Allow to mock workflows without a running temporal server and worker
+- Allow to mock local activities
 
 ## v0.4
 - Added support for `Eloquent` models serialization/deserialization

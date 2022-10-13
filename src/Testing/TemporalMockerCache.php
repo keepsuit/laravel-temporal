@@ -93,9 +93,10 @@ final class TemporalMockerCache
         ]);
     }
 
-    public function getActivityMock(string $activityName, string $taskQueue): ?Closure
+    public function getActivityMock(string $activityName, ?string $taskQueue): ?Closure
     {
         $value = $this->cache->get(sprintf('activity::%s', $activityName));
+
         if (! is_array($value)) {
             return null;
         }
@@ -146,7 +147,7 @@ final class TemporalMockerCache
         );
     }
 
-    public function recordActivityDispatch(string $activityName, string $taskQueue, array $args): void
+    public function recordActivityDispatch(string $activityName, ?string $taskQueue, array $args): void
     {
         $cacheKey = sprintf('activity_dispatch::%s', $activityName);
 
