@@ -121,7 +121,7 @@ return [
              */
             'deserialize_attribute_case' => null,
 
-            /*
+            /**
              * If true adds a `__exists` attribute to the serialized model
              * which indicate that the model is saved to database and it is used on deserialization when creating the model.
              * If false (or `__exists` is not present) the model will be created as existing model if primary key is present.
