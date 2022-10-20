@@ -23,6 +23,10 @@ class LaravelPayloadConverter extends JsonConverter
             return $this->create(json_encode($value->toTemporalPayload(), self::JSON_FLAGS));
         }
 
+        if ($value instanceof \BackedEnum) {
+            return $this->create(json_encode($value->value, self::JSON_FLAGS));
+        }
+
         if ($value instanceof Jsonable) {
             return $this->create($value->toJson(self::JSON_FLAGS));
         }
@@ -52,18 +56,20 @@ class LaravelPayloadConverter extends JsonConverter
 
         try {
             $reflection = new ReflectionClass($type->getName());
+            $class = $reflection->getName();
 
             if ($reflection->implementsInterface(TemporalSerializable::class)) {
                 /** @var class-string<TemporalSerializable> $class */
-                $class = $reflection->getName();
-
                 return $class::fromTemporalPayload($data);
+            }
+
+            if ($reflection->isEnum()) {
+                /** @var class-string<\BackedEnum> $class */
+                return $class::from($data);
             }
 
             if ($reflection->implementsInterface(BaseData::class)) {
                 /** @var class-string<BaseData> $class */
-                $class = $reflection->getName();
-
                 return $class::from($data);
             }
 
