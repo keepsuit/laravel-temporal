@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.4.2 - 2022-10-20
+
+- Support serialization of Enums
+
 ## v0.4.1 - 2022-10-13
 
 - Allow to mock workflows without a running temporal server and worker
