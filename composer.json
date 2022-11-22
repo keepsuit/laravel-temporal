@@ -24,6 +24,7 @@
         "temporal/sdk": "^2.0"
     },
     "require-dev": {
+        "driftingly/rector-laravel": "^0.14.1",
         "laravel/pint": "^1.0",
         "nunomaduro/collision": "^6.0",
         "nunomaduro/larastan": "^2.0.1",
@@ -33,7 +34,7 @@
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan-deprecation-rules": "^1.0",
         "phpstan/phpstan-phpunit": "^1.0",
-        "rector/rector": "0.14.0",
+        "rector/rector": "^0.14.8",
         "spatie/invade": "^1.1",
         "spatie/laravel-data": "^2.0",
         "spatie/laravel-ray": "^1.26"
