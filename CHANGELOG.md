@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.5.0 - 2022-11-29
+
+- Discover activities and workflows classes (without interface)
+- Refactor make commands to generate activities and workflow classes without interface (by default) or only the interface (useful for remote execution)
+
 ## v0.4.2 - 2022-10-20
 
 - Support serialization of Enums
