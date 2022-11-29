@@ -227,7 +227,7 @@ class TemporalFake extends Temporal
             return null;
         }
 
-        if (! interface_exists($activityName[0])) {
+        if (! interface_exists($activityName[0]) && ! class_exists($activityName[0])) {
             return null;
         }
 
