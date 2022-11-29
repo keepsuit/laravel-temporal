@@ -3,9 +3,9 @@
 namespace {{ namespace }};
 
 use Temporal\Activity\ActivityMethod;
-use Temporal\Activity\ActivityInterface;
+use Temporal\Activity\LocalActivityInterface;
 
-#[ActivityInterface]
+#[LocalActivityInterface]
 class {{ class }}
 {
     public function __construct()

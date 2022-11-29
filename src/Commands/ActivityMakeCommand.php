@@ -4,11 +4,11 @@ namespace Keepsuit\LaravelTemporal\Commands;
 
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Str;
-use Symfony\Component\Console\Input\InputOption;
 
 class ActivityMakeCommand extends GeneratorCommand
 {
-    protected $signature = 'temporal:make:activity {name}
+    protected $signature = 'make:activity {name}
+                            {--interface : Create an interface for the activity instead of a class}
                             {--local : Create a local activity}
                             {--scoped : Create the activity inside a scoped directory}
                             {--for-workflow= : Create the activity in the provided workflow namespace}';
@@ -17,38 +17,28 @@ class ActivityMakeCommand extends GeneratorCommand
 
     protected $type = 'Activity';
 
-    public function handle(): ?bool
-    {
-        $this->callSilently(ActivityInterfaceMakeCommand::class, [
-            'name' => $this->getNameInput(),
-            '--local' => $this->option('local'),
-            '--scoped' => $this->option('scoped'),
-            '--for-workflow' => $this->option('for-workflow'),
-        ]);
-
-        return parent::handle();
-    }
-
     protected function getStub(): string
     {
-        return $this->resolveStubPath('/stubs/activity.stub');
+        return match (true) {
+            $this->option('interface') && $this->option('local') => $this->resolveStubPath('/stubs/local_activity_interface.stub'),
+            $this->option('interface') => $this->resolveStubPath('/stubs/activity_interface.stub'),
+            $this->option('local') => $this->resolveStubPath('/stubs/local_activity.stub'),
+            default => $this->resolveStubPath('/stubs/activity.stub'),
+        };
     }
 
     protected function getDefaultNamespace($rootNamespace): string
     {
         if ($this->option('for-workflow') !== null) {
-            $namespace = Str::endsWith('Workflow', $this->option('for-workflow'))
-                ? Str::replaceLast('Workflow', '', $this->option('for-workflow'))
-                : $this->option('for-workflow');
+            $namespace = Str::of($this->option('for-workflow'))
+                ->whenEndsWith('Workflow', fn ($name) => $name->replaceLast('Workflow', ''));
 
             return sprintf('%s\\Workflows\\%s', $rootNamespace, $namespace);
         }
 
         if ($this->option('scoped')) {
-            $activityName = $this->getNameInput();
-            $namespace = Str::endsWith('Activity', $activityName)
-                ? Str::replaceLast('Activity', '', $activityName)
-                : $activityName;
+            $namespace = Str::of($this->getNameInput())
+                ->whenEndsWith('Activity', fn ($name) => $name->replaceLast('Activity', ''));
 
             return sprintf('%s\\Activities\\%s', $rootNamespace, $namespace);
         }
@@ -68,17 +58,8 @@ class ActivityMakeCommand extends GeneratorCommand
 
     protected function getNameInput(): string
     {
-        $nameInput = parent::getNameInput();
-
-        return Str::endsWith($nameInput, 'Interface')
-            ? Str::replaceLast($nameInput, 'Interface', '')
-            : $nameInput;
-    }
-
-    protected function getOptions(): array
-    {
-        return [
-            ['local', null, InputOption::VALUE_NONE, 'Indicates that activity should be local'],
-        ];
+        return Str::of(parent::getNameInput())
+            ->whenEndsWith('Interface', fn ($name) => $name->replaceLast('Interface', ''))
+            ->when($this->option('interface'), fn ($name) => $name->append('Interface'));
     }
 }

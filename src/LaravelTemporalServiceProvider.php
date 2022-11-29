@@ -5,11 +5,9 @@ namespace Keepsuit\LaravelTemporal;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\ParallelTesting;
 use Illuminate\Support\Str;
-use Keepsuit\LaravelTemporal\Commands\ActivityInterfaceMakeCommand;
 use Keepsuit\LaravelTemporal\Commands\ActivityMakeCommand;
 use Keepsuit\LaravelTemporal\Commands\TestServerCommand;
 use Keepsuit\LaravelTemporal\Commands\WorkCommand;
-use Keepsuit\LaravelTemporal\Commands\WorkflowInterfaceMakeCommand;
 use Keepsuit\LaravelTemporal\Commands\WorkflowMakeCommand;
 use Keepsuit\LaravelTemporal\DataConverter\LaravelPayloadConverter;
 use Keepsuit\LaravelTemporal\Support\ServerStateFile;
@@ -38,9 +36,7 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
             ->hasCommands([
                 WorkCommand::class,
                 TestServerCommand::class,
-                WorkflowInterfaceMakeCommand::class,
                 WorkflowMakeCommand::class,
-                ActivityInterfaceMakeCommand::class,
                 ActivityMakeCommand::class,
             ]);
     }

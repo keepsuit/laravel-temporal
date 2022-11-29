@@ -2,13 +2,18 @@
 
 namespace {{ namespace }};
 
-class {{ class }} implements {{ class }}Interface
+use Temporal\Workflow\WorkflowInterface;
+use Temporal\Workflow\WorkflowMethod;
+
+#[WorkflowInterface]
+class {{ class }}
 {
     public function __construct()
     {
         //
     }
 
+    #[WorkflowMethod]
     public function handle(): \Generator
     {
         //
