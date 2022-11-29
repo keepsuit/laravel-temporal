@@ -31,7 +31,7 @@ class DiscoverActivities
             /** @var \ReflectionClass[] $interfaces */
             $interfaces = array_merge(
                 $activity->getInterfaces(),
-                $activity->isInterface() ? [$activity->getName() => $activity] : []
+                [$activity->getName() => $activity],
             );
 
             foreach ($interfaces as $interface) {
@@ -47,7 +47,7 @@ class DiscoverActivities
             }
         }
 
-        return $activities->map(fn ($value, $key) => $value ?? $key)->values()->all();
+        return $activities->map(fn ($value, $key) => $value ?? $key)->sort()->values()->all();
     }
 
     /**

@@ -7,35 +7,28 @@ use Illuminate\Support\Str;
 
 class WorkflowMakeCommand extends GeneratorCommand
 {
-    protected $signature = 'temporal:make:workflow {name}
+    protected $signature = 'make:workflow {name}
+                            {--interface : Create an interface for the workflow instead of a class}
                             {--scoped : Create the workflow inside a scoped directory}';
 
     protected $description = 'Create a temporal workflow class';
 
     protected $type = 'Workflow';
 
-    public function handle(): ?bool
-    {
-        $this->callSilently(WorkflowInterfaceMakeCommand::class, [
-            'name' => $this->getNameInput(),
-            '--scoped' => $this->option('scoped'),
-        ]);
-
-        return parent::handle();
-    }
-
     protected function getStub(): string
     {
-        return $this->resolveStubPath('/stubs/workflow.stub');
+        return match (true) {
+            $this->option('interface') => $this->resolveStubPath('/stubs/workflow_interface.stub'),
+            default => $this->resolveStubPath('/stubs/workflow.stub'),
+        };
     }
 
     protected function getDefaultNamespace($rootNamespace): string
     {
         if ($this->option('scoped')) {
-            $workflowName = $this->getNameInput();
-            $namespace = Str::endsWith('Workflow', $workflowName)
-                ? Str::replaceLast('Workflow', '', $workflowName)
-                : $workflowName;
+            $namespace = Str::of($this->getNameInput())
+                ->when($this->option('interface'), fn ($name) => $name->replaceLast('Interface', ''))
+                ->whenEndsWith('Workflow', fn ($name) => $name->replaceLast('Workflow', ''));
 
             return sprintf('%s\\Workflows\\%s', $rootNamespace, $namespace);
         }
@@ -55,10 +48,8 @@ class WorkflowMakeCommand extends GeneratorCommand
 
     protected function getNameInput(): string
     {
-        $nameInput = parent::getNameInput();
-
-        return Str::endsWith($nameInput, 'Interface')
-            ? Str::replaceLast($nameInput, 'Interface', '')
-            : $nameInput;
+        return Str::of(parent::getNameInput())
+            ->whenEndsWith('Interface', fn ($name) => $name->replaceLast('Interface', ''))
+            ->when($this->option('interface'), fn ($name) => $name->append('Interface'));
     }
 }

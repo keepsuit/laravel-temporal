@@ -31,7 +31,7 @@ class DiscoverWorkflows
             /** @var \ReflectionClass[] $interfaces */
             $interfaces = array_merge(
                 $workflow->getInterfaces(),
-                $workflow->isInterface() ? [$workflow->getName() => $workflow] : []
+                [$workflow->getName() => $workflow]
             );
 
             foreach ($interfaces as $interface) {
@@ -45,7 +45,7 @@ class DiscoverWorkflows
             }
         }
 
-        return $workflows->map(fn ($value, $key) => $value ?? $key)->values()->all();
+        return $workflows->map(fn ($value, $key) => $value ?? $key)->sort()->values()->all();
     }
 
     /**
