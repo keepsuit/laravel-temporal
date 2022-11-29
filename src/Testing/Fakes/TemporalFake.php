@@ -187,7 +187,7 @@ class TemporalFake extends Temporal
 
     protected function normalizeWorkflowName(string $workflowName): string
     {
-        if (! interface_exists($workflowName)) {
+        if (! interface_exists($workflowName) && ! class_exists($workflowName)) {
             return $workflowName;
         }
 
