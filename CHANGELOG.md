@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.1 - 2022-12-06
+
+- Improved eloquent integration with dirty tracking (globally not attribute specific)
+
 ## v0.5.0 - 2022-11-29
 
 - Discover activities and workflows classes (without interface)
