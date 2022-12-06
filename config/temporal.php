@@ -122,11 +122,11 @@ return [
             'deserialize_attribute_case' => null,
 
             /**
-             * If true adds a `__exists` attribute to the serialized model
-             * which indicate that the model is saved to database and it is used on deserialization when creating the model.
-             * If false (or `__exists` is not present) the model will be created as existing model if primary key is present.
+             * If true adds additional metadata fields (`__exists`, `__dirty`) to the serialized model to improve deserialization.
+             * `__exists`: indicate that the model is saved to database.
+             * `__dirty`: indicate that the model has unsaved changes. (original values are not included in the serialized payload but the deserialized model will be marked as dirty)
              */
-            'include_exists_field' => false,
+            'include_metadata_field' => false,
         ],
     ],
 ];

@@ -53,7 +53,10 @@ trait TemporalEloquentSerialize
         return Collection::make($this->attributesToArray())
             ->merge($relations)
             ->mapWithKeys(fn (mixed $value, string $key) => [$this->mapAttributeKeyToTemporal($key) => $value])
-            ->put('__exists', $this->exists)
+            ->when(config('temporal.integrations.eloquent.include_metadata_field', false), fn (Collection $collection) => $collection
+                ->put('__exists', $this->exists)
+                ->put('__dirty', $this->isDirty())
+            )
             ->all();
     }
 
@@ -72,10 +75,19 @@ trait TemporalEloquentSerialize
             default => [],
         });
 
-        $instance = $model->newInstance(
-            $attributes->except($relationships->keys()->merge(['__exists']))->all(),
-            $attributes->get('__exists', $attributes->get($model->getKeyName()) !== null),
-        );
+        /** @var bool $exists */
+        $exists = $attributes->get('__exists', $attributes->get($model->getKeyName()) !== null);
+
+        /** @var bool $dirty */
+        $dirty = $attributes->get('__dirty', true);
+
+        $instance = $model->newInstance([], $exists);
+
+        $instance->forceFill($attributes->except($relationships->keys()->merge(['__exists', '__dirty']))->all());
+
+        if (! $dirty) {
+            $instance->syncOriginal();
+        }
 
         foreach ($relationships as $attributeKey => $relationship) {
             /** @var Relation $relation */
@@ -114,8 +126,20 @@ trait TemporalEloquentSerialize
             return $relatedModel::fromTemporalPayload($attributes);
         }
 
+        /** @var bool $exists */
         $exists = Arr::get($attributes, '__exists', Arr::get($attributes, $relatedModel->getKeyName()) !== null);
 
-        return $relatedModel->newInstance(Arr::except($attributes, ['__exists']), $exists);
+        /** @var bool $dirty */
+        $dirty = Arr::get($attributes, '__dirty', true);
+
+        $relatedModelInstance = $relatedModel->newInstance([], $exists);
+
+        $relatedModelInstance->forceFill(Arr::except($attributes, ['__exists', '__dirty']));
+
+        if ($dirty) {
+            $relatedModelInstance->syncOriginal();
+        }
+
+        return $relatedModelInstance;
     }
 }
