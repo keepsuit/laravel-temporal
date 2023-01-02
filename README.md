@@ -1,8 +1,8 @@
 # Laravel temporal.io
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/keepsuit/laravel-temporal.svg?style=flat-square)](https://packagist.org/packages/keepsuit/laravel-temporal)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/keepsuit/laravel-temporal/run-tests?label=tests)](https://github.com/keepsuit/laravel-temporal/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/keepsuit/laravel-temporal/Fix%20PHP%20code%20style%20issues?label=code%20style)](https://github.com/keepsuit/laravel-temporal/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/keepsuit/laravel-temporal/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/keepsuit/laravel-temporal/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/keepsuit/laravel-temporal/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/keepsuit/laravel-temporal/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/keepsuit/laravel-temporal.svg?style=flat-square)](https://packagist.org/packages/keepsuit/laravel-temporal)
 
 This package allow an easy integration of a Laravel app with a [temporal.io](https://temporal.io/),
