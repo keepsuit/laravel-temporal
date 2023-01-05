@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.2 - 2023-01-05
+
+- Allow to pass only workflow/activity name for mock
+
 ## v0.5.1 - 2022-12-06
 
 - Improved eloquent integration with dirty tracking (globally not attribute specific)
