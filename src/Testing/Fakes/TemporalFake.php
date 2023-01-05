@@ -47,6 +47,11 @@ class TemporalFake extends Temporal
     public function mockWorkflows(array $workflowMocks, ?string $taskQueue = null): void
     {
         foreach ($workflowMocks as $workflowName => $workflowResult) {
+            if (is_int($workflowName) && is_string($workflowResult)) {
+                $workflowName = $workflowResult;
+                $workflowResult = null;
+            }
+
             $this->temporalMocker->mockWorkflowResult($this->normalizeWorkflowName($workflowName), $workflowResult, $taskQueue);
         }
     }
@@ -61,6 +66,11 @@ class TemporalFake extends Temporal
         $activityMocks = $this->normalizeActivityMocks($activityMocks);
 
         foreach ($activityMocks as $activityName => $activityResult) {
+            if (is_int($activityName) && is_string($activityResult)) {
+                $activityName = $activityResult;
+                $activityResult = null;
+            }
+
             $this->temporalMocker->mockActivityResult($activityName, $activityResult, $taskQueue);
         }
     }
