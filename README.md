@@ -26,7 +26,7 @@ composer require keepsuit/laravel-temporal
 You can publish the config file with:
 
 ```bash
-php artisan vendor:publish --tag="laravel-temporal-config"
+php artisan vendor:publish --tag="temporal-config"
 ```
 
 This is the contents of the published config file:
