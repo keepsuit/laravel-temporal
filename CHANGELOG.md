@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.5.3 - 2023-01-25
+
+### What's Changed
+
+- Fix installation step in ReadMe 📝 by @michael-rubel in https://github.com/keepsuit/laravel-temporal/pull/4
+- Support laravel 10 by @cappuc in https://github.com/keepsuit/laravel-temporal/pull/5
+
+### New Contributors
+
+- @michael-rubel made their first contribution in https://github.com/keepsuit/laravel-temporal/pull/4
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/0.5.2...0.5.3
+
 ## v0.5.2 - 2023-01-05
 
 - Allow to pass only workflow/activity name for mock
