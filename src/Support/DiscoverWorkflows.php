@@ -2,9 +2,8 @@
 
 namespace Keepsuit\LaravelTemporal\Support;
 
+use Composer\ClassMapGenerator\ClassMapGenerator;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
-use Symfony\Component\Finder\Finder;
 use Temporal\Workflow\WorkflowInterface;
 
 class DiscoverWorkflows
@@ -17,16 +16,11 @@ class DiscoverWorkflows
         /** @var Collection<class-string,class-string|null> $workflows */
         $workflows = Collection::make([]);
 
-        $files = (new Finder)->files()->in($workflowPath);
+        $generator = new ClassMapGenerator();
+        $generator->scanPaths($workflowPath);
 
-        foreach ($files as $file) {
-            try {
-                $workflow = new \ReflectionClass(
-                    static::classFromFile($file, $basePath)
-                );
-            } catch (\ReflectionException) {
-                continue;
-            }
+        foreach ($generator->getClassMap()->getMap() as $class => $path) {
+            $workflow = new \ReflectionClass($class);
 
             /** @var \ReflectionClass[] $interfaces */
             $interfaces = array_merge(
@@ -46,19 +40,5 @@ class DiscoverWorkflows
         }
 
         return $workflows->map(fn ($value, $key) => $value ?? $key)->sort()->values()->all();
-    }
-
-    /**
-     * Extract the class name from the given file path.
-     */
-    protected static function classFromFile(\SplFileInfo $file, string $basePath): string
-    {
-        $class = trim(Str::replaceFirst($basePath, '', $file->getRealPath()), DIRECTORY_SEPARATOR);
-
-        return str_replace(
-            [DIRECTORY_SEPARATOR, ucfirst(basename(app()->path())).'\\'],
-            ['\\', app()->getNamespace()],
-            ucfirst(Str::replaceLast('.php', '', $class))
-        );
     }
 }

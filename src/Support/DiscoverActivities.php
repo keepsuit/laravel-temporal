@@ -2,9 +2,8 @@
 
 namespace Keepsuit\LaravelTemporal\Support;
 
+use Composer\ClassMapGenerator\ClassMapGenerator;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
-use Symfony\Component\Finder\Finder;
 use Temporal\Activity\ActivityInterface;
 
 class DiscoverActivities
@@ -15,18 +14,13 @@ class DiscoverActivities
     public static function within(string $activitiesPath, string $basePath): array
     {
         /** @var Collection<class-string,class-string|null> $activities */
-        $activities = Collection::make([]);
+        $activities = Collection::make();
 
-        $files = (new Finder)->files()->in($activitiesPath);
+        $generator = new ClassMapGenerator();
+        $generator->scanPaths($activitiesPath);
 
-        foreach ($files as $file) {
-            try {
-                $activity = new \ReflectionClass(
-                    static::classFromFile($file, $basePath)
-                );
-            } catch (\ReflectionException) {
-                continue;
-            }
+        foreach ($generator->getClassMap()->getMap() as $class => $path) {
+            $activity = new \ReflectionClass($class);
 
             /** @var \ReflectionClass[] $interfaces */
             $interfaces = array_merge(
@@ -48,19 +42,5 @@ class DiscoverActivities
         }
 
         return $activities->map(fn ($value, $key) => $value ?? $key)->sort()->values()->all();
-    }
-
-    /**
-     * Extract the class name from the given file path.
-     */
-    protected static function classFromFile(\SplFileInfo $file, string $basePath): string
-    {
-        $class = trim(Str::replaceFirst($basePath, '', $file->getRealPath()), DIRECTORY_SEPARATOR);
-
-        return str_replace(
-            [DIRECTORY_SEPARATOR, ucfirst(basename(app()->path())).'\\'],
-            ['\\', app()->getNamespace()],
-            ucfirst(Str::replaceLast('.php', '', $class))
-        );
     }
 }
