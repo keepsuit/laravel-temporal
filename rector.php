@@ -19,11 +19,15 @@ use Rector\Php80\Rector\FunctionLike\UnionTypesRector;
 use Rector\Privatization\Rector\Class_\FinalizeClassesWithoutChildrenRector;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
+use Rector\TypeDeclaration\Rector\ArrowFunction\AddArrowFunctionReturnTypeRector;
+use Rector\TypeDeclaration\Rector\ClassMethod\ReturnTypeFromReturnDirectArrayRector;
 use Rector\TypeDeclaration\Rector\ClassMethod\ReturnTypeFromReturnNewRector;
+use Rector\TypeDeclaration\Rector\ClassMethod\ReturnTypeFromStrictTypedCallRector;
+use Rector\TypeDeclaration\Rector\FunctionLike\ParamTypeDeclarationRector;
 use RectorLaravel\Set\LaravelLevelSetList;
 
 return static function (RectorConfig $config): void {
-    $config->phpVersion(PhpVersion::PHP_80);
+    $config->phpVersion(PhpVersion::PHP_81);
 
     $config->paths([
         __DIR__.'/src',
@@ -36,8 +40,8 @@ return static function (RectorConfig $config): void {
         SetList::DEAD_CODE,
         SetList::EARLY_RETURN,
         SetList::PRIVATIZATION,
-        SetList::TYPE_DECLARATION_STRICT,
-        LevelSetList::UP_TO_PHP_81,
+        SetList::TYPE_DECLARATION,
+        LevelSetList::UP_TO_PHP_82,
         LaravelLevelSetList::UP_TO_LARAVEL_90,
     ]);
 
@@ -56,5 +60,9 @@ return static function (RectorConfig $config): void {
         StaticArrowFunctionRector::class,
         ReturnTypeFromReturnNewRector::class,
         JsonThrowOnErrorRector::class,
+        AddArrowFunctionReturnTypeRector::class,
+        ReturnTypeFromStrictTypedCallRector::class,
+        ReturnTypeFromReturnDirectArrayRector::class,
+        ParamTypeDeclarationRector::class,
     ]);
 };

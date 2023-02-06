@@ -19,7 +19,7 @@ class DiscoverActivities
         $generator = new ClassMapGenerator();
         $generator->scanPaths($activitiesPath);
 
-        foreach ($generator->getClassMap()->getMap() as $class => $path) {
+        foreach (array_keys($generator->getClassMap()->getMap()) as $class) {
             $activity = new \ReflectionClass($class);
 
             /** @var \ReflectionClass[] $interfaces */

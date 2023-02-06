@@ -19,7 +19,7 @@ class DiscoverWorkflows
         $generator = new ClassMapGenerator();
         $generator->scanPaths($workflowPath);
 
-        foreach ($generator->getClassMap()->getMap() as $class => $path) {
+        foreach (array_keys($generator->getClassMap()->getMap()) as $class) {
             $workflow = new \ReflectionClass($class);
 
             /** @var \ReflectionClass[] $interfaces */
