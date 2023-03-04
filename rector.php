@@ -23,7 +23,6 @@ use Rector\TypeDeclaration\Rector\ArrowFunction\AddArrowFunctionReturnTypeRector
 use Rector\TypeDeclaration\Rector\ClassMethod\ReturnTypeFromReturnDirectArrayRector;
 use Rector\TypeDeclaration\Rector\ClassMethod\ReturnTypeFromReturnNewRector;
 use Rector\TypeDeclaration\Rector\ClassMethod\ReturnTypeFromStrictTypedCallRector;
-use Rector\TypeDeclaration\Rector\FunctionLike\ParamTypeDeclarationRector;
 use RectorLaravel\Set\LaravelLevelSetList;
 
 return static function (RectorConfig $config): void {
@@ -63,6 +62,5 @@ return static function (RectorConfig $config): void {
         AddArrowFunctionReturnTypeRector::class,
         ReturnTypeFromStrictTypedCallRector::class,
         ReturnTypeFromReturnDirectArrayRector::class,
-        ParamTypeDeclarationRector::class,
     ]);
 };
