@@ -60,9 +60,9 @@ final class WorkflowBuilder
      * @template T of object
      *
      * @param  class-string<T>  $class
-     * @return WorkflowProxy<T>|T
+     * @return WorkflowProxy<T>
      */
-    public function build(string $class)
+    public function build(string $class): WorkflowProxy
     {
         if ($this->runId !== null) {
             return $this->getWorkflowClient()

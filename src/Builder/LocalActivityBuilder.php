@@ -35,9 +35,9 @@ final class LocalActivityBuilder
      * @template T of object
      *
      * @param  class-string<T>  $class
-     * @return ActivityProxy|T
+     * @return ActivityProxy<T>
      */
-    public function build(string $class)
+    public function build(string $class): ActivityProxy
     {
         return Temporal::getTemporalContext()->newActivityStub($class, $this->activityOptions);
     }

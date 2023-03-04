@@ -22,7 +22,7 @@
         "spatie/laravel-package-tools": "^1.9.2",
         "spiral/roadrunner": "^2.8",
         "symfony/process": "^6.0",
-        "temporal/sdk": "^2.0"
+        "temporal/sdk": "dev-feat/phpstan as 2.4.0"
     },
     "require-dev": {
         "driftingly/rector-laravel": "^0.16.1",
@@ -80,5 +80,11 @@
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../../packages/temporal-sdk-php"
+        }
+    ]
 }
