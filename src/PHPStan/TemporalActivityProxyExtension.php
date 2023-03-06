@@ -40,6 +40,7 @@ class TemporalActivityProxyExtension implements MethodsClassReflectionExtension
         }
 
         $methodReflection = $objectType->getMethod($methodName, new OutOfClassScope());
+
         return $methodReflection->isPublic();
     }
 

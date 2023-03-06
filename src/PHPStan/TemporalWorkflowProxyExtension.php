@@ -50,6 +50,7 @@ class TemporalWorkflowProxyExtension implements MethodsClassReflectionExtension
         $objectClassReflection = new \ReflectionClass($objectType->getClassName());
         $objectMethodReflection = $objectClassReflection->getMethod($methodName);
         $objectMethodAttributes = $objectMethodReflection->getAttributes(ReturnType::class);
+
         return $objectMethodAttributes !== [];
     }
 
