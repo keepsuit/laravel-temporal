@@ -77,6 +77,11 @@
             "providers": [
                 "Keepsuit\\LaravelTemporal\\LaravelTemporalServiceProvider"
             ]
+        },
+        "phpstan": {
+            "includes": [
+                "extension.neon"
+            ]
         }
     },
     "minimum-stability": "dev",

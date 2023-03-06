@@ -1,0 +1,13 @@
+services:
+    -
+        class: Keepsuit\LaravelTemporal\PHPStan\TemporalActivityProxyExtension
+        tags:
+            - phpstan.broker.methodsClassReflectionExtension
+    -
+        class: Keepsuit\LaravelTemporal\PHPStan\TemporalWorkflowProxyExtension
+        tags:
+            - phpstan.broker.methodsClassReflectionExtension
+
+parameters:
+    stubFiles:
+        - stubs/phpstan/ActivityProxy.php.stub

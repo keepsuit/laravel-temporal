@@ -1,6 +1,8 @@
 name: PHPStan
 
 on:
+  pull_request:
+    branches: [ main ]
   push:
     paths:
       - '**.php'
