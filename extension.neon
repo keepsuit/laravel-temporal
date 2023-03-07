@@ -10,4 +10,4 @@ services:
 
 parameters:
     stubFiles:
-        - stubs/phpstan/ActivityProxy.php.stub
+        - stubs/phpstan/ActivityProxy.stub
