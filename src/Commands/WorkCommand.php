@@ -248,12 +248,6 @@ class WorkCommand extends Command
                 $logger = trim($debug['logger']);
                 $message = trim($debug['msg']);
 
-                if ($logger === 'server') {
-                    $this->raw($message);
-
-                    return;
-                }
-
                 if ($logger !== 'temporal') {
                     return;
                 }
