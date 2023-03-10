@@ -10,11 +10,19 @@ use PHPStan\Reflection\MethodReflection;
 use PHPStan\Reflection\MethodsClassReflectionExtension;
 use PHPStan\Reflection\ParametersAcceptorSelector;
 use PHPStan\TrinaryLogic;
+use PHPStan\Type\BooleanType;
+use PHPStan\Type\FloatType;
+use PHPStan\Type\IntegerType;
+use PHPStan\Type\MixedType;
+use PHPStan\Type\NullType;
 use PHPStan\Type\ObjectType;
+use PHPStan\Type\StringType;
 use PHPStan\Type\Type;
 use PHPStan\Type\UnionType;
+use PHPStan\Type\VoidType;
 use Temporal\Internal\Client\WorkflowProxy;
 use Temporal\Workflow\ReturnType;
+use Temporal\Workflow\WorkflowMethod;
 
 class TemporalWorkflowProxyExtension implements MethodsClassReflectionExtension
 {
@@ -49,7 +57,7 @@ class TemporalWorkflowProxyExtension implements MethodsClassReflectionExtension
         // @phpstan-ignore-next-line
         $objectClassReflection = new \ReflectionClass($objectType->getClassName());
         $objectMethodReflection = $objectClassReflection->getMethod($methodName);
-        $objectMethodAttributes = $objectMethodReflection->getAttributes(ReturnType::class);
+        $objectMethodAttributes = $objectMethodReflection->getAttributes(WorkflowMethod::class);
 
         return $objectMethodAttributes !== [];
     }
@@ -67,14 +75,24 @@ class TemporalWorkflowProxyExtension implements MethodsClassReflectionExtension
         $objectClassReflection = new \ReflectionClass($objectType->getClassName());
         $objectMethodReflection = $objectClassReflection->getMethod($methodName);
         $objectMethodAttributes = $objectMethodReflection->getAttributes(ReturnType::class);
-        $objectMethodReturnType = $objectMethodAttributes[0]->getArguments()[0];
+        $objectMethodReturnType = $objectMethodAttributes === [] ? \Temporal\DataConverter\Type::TYPE_VOID : $objectMethodAttributes[0]->getArguments()[0];
         assert(is_string($objectMethodReturnType));
-        $objectMethodReturnTypeNullable = $objectMethodAttributes[0]->getArguments()[1] ?? false;
+        $objectMethodReturnTypeNullable = $objectMethodAttributes === [] ? false : ($objectMethodAttributes[0]->getArguments()[1] ?? false);
         assert(is_bool($objectMethodReturnTypeNullable));
 
+        $returnType = match (true) {
+            $objectMethodReturnType === \Temporal\DataConverter\Type::TYPE_VOID => new VoidType(),
+            $objectMethodReturnType === \Temporal\DataConverter\Type::TYPE_BOOL => new BooleanType(),
+            $objectMethodReturnType === \Temporal\DataConverter\Type::TYPE_STRING => new StringType(),
+            $objectMethodReturnType === \Temporal\DataConverter\Type::TYPE_INT => new IntegerType(),
+            $objectMethodReturnType === \Temporal\DataConverter\Type::TYPE_FLOAT => new FloatType(),
+            class_exists($objectMethodReturnType) => new ObjectType($objectMethodReturnType),
+            default => new MixedType(),
+        };
+
         $returnType = $objectMethodReturnTypeNullable
-            ? new UnionType([new ObjectType($objectMethodReturnType), new ObjectType('null')])
-            : new ObjectType($objectMethodReturnType);
+            ? new UnionType([$returnType, new NullType()])
+            : $returnType;
 
         return new class($classReflection, $methodName, $methodReflection, $returnType) implements MethodReflection
         {
