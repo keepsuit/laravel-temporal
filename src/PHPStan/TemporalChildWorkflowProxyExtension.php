@@ -21,7 +21,6 @@ use PHPStan\Type\StringType;
 use PHPStan\Type\Type;
 use PHPStan\Type\UnionType;
 use PHPStan\Type\VoidType;
-use Temporal\Internal\Client\WorkflowProxy;
 use Temporal\Internal\Transport\CompletableResultInterface;
 use Temporal\Internal\Workflow\ChildWorkflowProxy;
 use Temporal\Workflow\ReturnType;
