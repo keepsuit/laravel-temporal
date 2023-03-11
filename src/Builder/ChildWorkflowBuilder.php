@@ -47,9 +47,9 @@ final class ChildWorkflowBuilder
      * @template T of object
      *
      * @param  class-string<T>  $class
-     * @return ChildWorkflowProxy|T
+     * @return ChildWorkflowProxy<T>
      */
-    public function build(string $class)
+    public function build(string $class): ChildWorkflowProxy
     {
         return Temporal::getTemporalContext()->newChildWorkflowStub($class, $this->workflowOptions);
     }

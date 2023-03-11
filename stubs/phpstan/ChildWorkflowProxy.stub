@@ -1,0 +1,10 @@
+<?php
+
+namespace Temporal\Internal\Workflow;
+
+/**
+ * @template T of object
+ */
+final class ChildWorkflowProxy
+{
+}

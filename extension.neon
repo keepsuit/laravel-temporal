@@ -7,7 +7,12 @@ services:
         class: Keepsuit\LaravelTemporal\PHPStan\TemporalWorkflowProxyExtension
         tags:
             - phpstan.broker.methodsClassReflectionExtension
+    -
+        class: Keepsuit\LaravelTemporal\PHPStan\TemporalChildWorkflowProxyExtension
+        tags:
+            - phpstan.broker.methodsClassReflectionExtension
 
 parameters:
     stubFiles:
         - stubs/phpstan/ActivityProxy.stub
+        - stubs/phpstan/ChildWorkflowProxy.stub
