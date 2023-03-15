@@ -318,6 +318,18 @@ Temporal::assertActivityDispatched([YourActivityInterface::class, 'activityMetho
 });
 ```
 
+## PHPStan
+
+This package provides a PHPStan extension to improve the experience when working with Temporal proxy classes.
+
+If you have [`phpstan/extension-installer`](https://github.com/phpstan/extension-installer) installed, you are ready to go.
+Otherwise, you have to add the extension to your `phpstan.neon` file:
+
+```neon
+includes:
+    - ./vendor/keepsuit/laravel-temporal/extension.neon
+```
+
 ## Testing
 
 ```bash
