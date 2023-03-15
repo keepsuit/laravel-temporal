@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.6.0 - 2023-03-15
+
+### What's Changed
+
+- Improved phpstan types (https://github.com/keepsuit/laravel-temporal/pull/6)
+- Added phpstan extension to resolve temporal proxy classes methods and return types
+- Improved test worker handling
+- Update trait name in ReadMe 📚  (https://github.com/keepsuit/laravel-temporal/pull/8)
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/0.5.3...v0.6.0
+
 ## v0.5.3 - 2023-01-25
 
 ### What's Changed
