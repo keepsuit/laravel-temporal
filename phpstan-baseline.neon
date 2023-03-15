@@ -4,3 +4,8 @@ parameters:
 			message: "#^Method Keepsuit\\\\LaravelTemporal\\\\Contracts\\\\TemporalSerializable\\:\\:fromTemporalPayload\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Contracts/TemporalSerializable.php
+
+		-
+			message: "#^Parameter \\#3 \\$sleepMilliseconds of function retry expects int, Closure given\\.$#"
+			count: 1
+			path: src/Testing/TemporalMockerCache.php

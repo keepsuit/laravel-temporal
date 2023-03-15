@@ -5,7 +5,6 @@ namespace Keepsuit\LaravelTemporal\Testing;
 use Closure;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Spiral\Goridge\Exception\RelayException;
 use Spiral\Goridge\RPC\RPC;
 use Spiral\RoadRunner\KeyValue\Factory;
 use Spiral\RoadRunner\KeyValue\StorageInterface;
@@ -87,10 +86,10 @@ final class TemporalMockerCache
 
     public function saveActivityMock(string $activityName, mixed $value, ?string $taskQueue = null): void
     {
-        $this->cache->set(sprintf('activity::%s', $activityName), [
+        $this->cacheProxy(fn () => $this->cache->set(sprintf('activity::%s', $activityName), [
             'mock' => $value ?? 'null',
             'taskQueue' => $taskQueue,
-        ]);
+        ]));
     }
 
     public function getActivityMock(string $activityName, ?string $taskQueue): ?Closure
@@ -174,8 +173,8 @@ final class TemporalMockerCache
         }
 
         try {
-            return retry(3, $action);
-        } catch (RelayException) {
+            return retry(5, $action, fn (int $attempt) => $attempt * 100);
+        } catch (\Exception) {
             $this->localOnly = true;
 
             return $fallback?->__invoke();

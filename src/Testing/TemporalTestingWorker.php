@@ -45,10 +45,15 @@ class TemporalTestingWorker
 
     public function stop(): void
     {
-        if ($this->roadRunnerProcess != null) {
-            $this->roadRunnerProcess->signal(SIGTERM);
-            usleep(100_000);
+        if ($this->roadRunnerProcess === null) {
+            return;
         }
+
+        $this->roadRunnerProcess->signal(SIGTERM);
+
+        do {
+            usleep(100_000);
+        } while ($this->roadRunnerProcess->isRunning());
     }
 
     public function isRunning(): bool

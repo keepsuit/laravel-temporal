@@ -53,7 +53,15 @@ class TemporalTestingServer
 
     public function stop(): void
     {
-        $this->temporalServerProcess?->signal(SIGTERM);
+        if ($this->temporalServerProcess === null) {
+            return;
+        }
+
+        $this->temporalServerProcess->signal(SIGTERM);
+
+        do {
+            usleep(100_000);
+        } while ($this->temporalServerProcess->isRunning());
     }
 
     protected function startTemporalServer(int $port = null): void
