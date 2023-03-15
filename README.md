@@ -248,9 +248,9 @@ In order to test workflows end-to-end, you need a temporal server running.
 This package provides two options to run a temporal server for testing purposes:
 
 - Run `temporal:server` command, which will start a temporal testing server and use the `WithTemporalWorker` trait which will start a test worker
-- Use the `WithTemporalServer` trait, which will start a temporal testing server and the test worker when running test and stop it on finish
+- Use the `WithTemporal` trait, which will start a temporal testing server and the test worker when running test and stop it on finish
 
-> When using `WithTemporalServer` trait, you can set `TEMPORAL_TESTING_SERVER` env variable to `false`
+> When using `WithTemporal` trait, you can set `TEMPORAL_TESTING_SERVER` env variable to `false`
 > to disable the testing server and run only the worker.
 
 ### Mocking workflows
