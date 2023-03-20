@@ -6,8 +6,8 @@ namespace Keepsuit\LaravelTemporal\Contracts;
 
 interface TemporalInterface
 {
-    public function newActivity();
-    public function newLocalActivity();
-    public function newWorkflow();
-    public function newChildWorkflow();
+    public function newActivity(): object;
+    public function newLocalActivity(): object;
+    public function newWorkflow(): object;
+    public function newChildWorkflow(): object;
 }
