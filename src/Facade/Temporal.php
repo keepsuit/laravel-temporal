@@ -74,6 +74,6 @@ class Temporal extends Facade
 
     protected static function getFacadeAccessor(): string
     {
-        return \Keepsuit\LaravelTemporal\Temporal::class;
+        return \Keepsuit\LaravelTemporal\Contracts\Temporal::class;
     }
 }
