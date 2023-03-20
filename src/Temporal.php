@@ -6,8 +6,9 @@ use Keepsuit\LaravelTemporal\Builder\ActivityBuilder;
 use Keepsuit\LaravelTemporal\Builder\ChildWorkflowBuilder;
 use Keepsuit\LaravelTemporal\Builder\LocalActivityBuilder;
 use Keepsuit\LaravelTemporal\Builder\WorkflowBuilder;
+use Keepsuit\LaravelTemporal\Contracts\TemporalInterface;
 
-class Temporal
+class Temporal implements TemporalInterface
 {
     public function newActivity(): ActivityBuilder
     {
