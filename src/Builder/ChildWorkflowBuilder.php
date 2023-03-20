@@ -25,11 +25,11 @@ use Temporal\Workflow\ChildWorkflowStubInterface;
  * @method ChildWorkflowBuilder withSearchAttributes(?array $searchAttributes)
  * @method ChildWorkflowBuilder withParentClosePolicy(int $policy)
  */
-final class ChildWorkflowBuilder
+class ChildWorkflowBuilder
 {
     use DefaultRetryPolicy;
 
-    private ChildWorkflowOptions $workflowOptions;
+    protected ChildWorkflowOptions $workflowOptions;
 
     public function __construct()
     {

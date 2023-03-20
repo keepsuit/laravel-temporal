@@ -20,11 +20,11 @@ use Temporal\Workflow\ActivityStubInterface;
  * @method self withActivityId(string $activityId)
  * @method self withRetryOptions(?RetryOptions $options)
  */
-final class ActivityBuilder
+class ActivityBuilder
 {
     use DefaultRetryPolicy;
 
-    private ActivityOptions $activityOptions;
+    protected ActivityOptions $activityOptions;
 
     public function __construct()
     {

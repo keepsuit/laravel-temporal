@@ -22,13 +22,13 @@ use Temporal\Internal\Client\WorkflowProxy;
  * @method self withMemo(?array $memo)
  * @method self withSearchAttributes(?array $searchAttributes)
  */
-final class WorkflowBuilder
+class WorkflowBuilder
 {
     use DefaultRetryPolicy;
 
-    private WorkflowOptions $workflowOptions;
+    protected WorkflowOptions $workflowOptions;
 
-    private ?string $runId = null;
+    protected ?string $runId = null;
 
     public function __construct()
     {
@@ -106,7 +106,7 @@ final class WorkflowBuilder
         throw new InvalidArgumentException(sprintf('Property %s does not exists', $name));
     }
 
-    private function getWorkflowClient(): WorkflowClientInterface
+    protected function getWorkflowClient(): WorkflowClientInterface
     {
         return app(WorkflowClientInterface::class);
     }

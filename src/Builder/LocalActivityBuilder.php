@@ -14,11 +14,11 @@ use Temporal\Workflow\ActivityStubInterface;
  * @method self withStartToCloseTimeout(\DateInterval $timeout)
  * @method self withRetryOptions(?RetryOptions $options)
  */
-final class LocalActivityBuilder
+class LocalActivityBuilder
 {
     use DefaultRetryPolicy;
 
-    private LocalActivityOptions $activityOptions;
+    protected LocalActivityOptions $activityOptions;
 
     public function __construct()
     {
