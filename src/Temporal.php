@@ -7,7 +7,7 @@ use Keepsuit\LaravelTemporal\Builder\ChildWorkflowBuilder;
 use Keepsuit\LaravelTemporal\Builder\LocalActivityBuilder;
 use Keepsuit\LaravelTemporal\Builder\WorkflowBuilder;
 
-class Temporal
+class Temporal implements Contracts\Temporal
 {
     public function newActivity(): ActivityBuilder
     {

@@ -45,6 +45,8 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
     {
         $this->setupTestingEnvironment();
 
+        $this->app->bind(Contracts\Temporal::class, Temporal::class);
+
         $this->app->bind(ServerStateFile::class, fn (Application $app) => new ServerStateFile(
             $app['config']->get('temporal.state_file', storage_path('logs/temporal-worker-state.json'))
         ));
