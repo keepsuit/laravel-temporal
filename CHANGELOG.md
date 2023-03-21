@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.6.1 - 2023-03-21
+
+### What's Changed
+
+- Add interface for `Temporal` class 🔧 (https://github.com/keepsuit/laravel-temporal/pull/10)
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/v0.6.0...v0.6.1
+
 ## v0.6.0 - 2023-03-15
 
 ### What's Changed
