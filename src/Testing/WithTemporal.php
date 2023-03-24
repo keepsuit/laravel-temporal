@@ -4,7 +4,7 @@ namespace Keepsuit\LaravelTemporal\Testing;
 
 trait WithTemporal
 {
-    protected function setUpWithTemporal()
+    protected function setUpWithTemporal(): void
     {
         /** @var TemporalTestingEnvironment|null $temporalEnvironment */
         $temporalEnvironment = $GLOBALS['_temporal_environment'] ?? null;
