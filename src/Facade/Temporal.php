@@ -10,6 +10,7 @@ use Keepsuit\LaravelTemporal\Builder\LocalActivityBuilder;
 use Keepsuit\LaravelTemporal\Builder\WorkflowBuilder;
 use Keepsuit\LaravelTemporal\Testing\ActivityMockBuilder;
 use Keepsuit\LaravelTemporal\Testing\Fakes\TemporalFake;
+use Keepsuit\LaravelTemporal\Testing\TemporalTestingEnvironment;
 use Keepsuit\LaravelTemporal\Testing\WorkflowMockBuilder;
 use Temporal\Workflow;
 
@@ -35,9 +36,18 @@ class Temporal extends Facade
     {
         static::swap($instance = (new TemporalFake(static::$app)));
 
-        $instance->init();
+        if (! static::temporalTestingEnvironmentIsConfigured()) {
+            $instance->useLocalCache();
+        }
 
         return $instance;
+    }
+
+    protected static function temporalTestingEnvironmentIsConfigured(): bool
+    {
+        $temporalTestingEnvironment = $GLOBALS['_temporal_environment'] ?? null;
+
+        return $temporalTestingEnvironment instanceof TemporalTestingEnvironment;
     }
 
     public static function initFakeWorker(): void

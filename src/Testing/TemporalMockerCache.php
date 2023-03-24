@@ -36,6 +36,11 @@ final class TemporalMockerCache
         );
     }
 
+    public function localOnly(): void
+    {
+        $this->localOnly = true;
+    }
+
     public function clear(): void
     {
         $this->cacheProxy(fn () => $this->cache->clear());

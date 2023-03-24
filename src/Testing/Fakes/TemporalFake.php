@@ -46,6 +46,8 @@ class TemporalFake extends Temporal
 
     public function mockWorkflows(array $workflowMocks, ?string $taskQueue = null): void
     {
+        $this->initCache();
+
         foreach ($workflowMocks as $workflowName => $workflowResult) {
             if (is_int($workflowName) && is_string($workflowResult)) {
                 $workflowName = $workflowResult;
@@ -58,11 +60,15 @@ class TemporalFake extends Temporal
 
     public function mockWorkflow(string $workflowName): WorkflowMockBuilder
     {
+        $this->initCache();
+
         return new WorkflowMockBuilder($this->normalizeWorkflowName($workflowName));
     }
 
     public function mockActivities(array $activityMocks, ?string $taskQueue = null): void
     {
+        $this->initCache();
+
         $activityMocks = $this->normalizeActivityMocks($activityMocks);
 
         foreach ($activityMocks as $activityName => $activityResult) {
@@ -77,6 +83,8 @@ class TemporalFake extends Temporal
 
     public function mockActivity(string|array $activityName): ActivityMockBuilder
     {
+        $this->initCache();
+
         return new ActivityMockBuilder($this->normalizeActivityName($activityName));
     }
 
@@ -190,9 +198,11 @@ class TemporalFake extends Temporal
         $this->activityCacheCleared = true;
     }
 
-    public function init(): void
+    public function useLocalCache(): TemporalFake
     {
-        $this->initCache();
+        $this->temporalMocker->localOnly();
+
+        return $this;
     }
 
     protected function normalizeWorkflowName(string $workflowName): string

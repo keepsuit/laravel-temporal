@@ -10,6 +10,11 @@ class TemporalMocker
     {
     }
 
+    public function localOnly(): void
+    {
+        $this->cache->localOnly();
+    }
+
     public function clear(): void
     {
         $this->cache->clear();
