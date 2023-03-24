@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.6.2 - 2023-03-24
+
+### What's Changed
+
+- Improve testing speed using only local cache when testing environment is not configured
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/v0.6.1...0.6.2
+
 ## v0.6.1 - 2023-03-21
 
 ### What's Changed
