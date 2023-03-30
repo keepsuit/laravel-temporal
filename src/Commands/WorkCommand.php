@@ -167,7 +167,7 @@ class WorkCommand extends Command
                     $watcher->getErrorOutput()
                 );
 
-                return 1;
+                return Command::FAILURE;
             }
 
             usleep(500 * 1000);
@@ -175,7 +175,13 @@ class WorkCommand extends Command
 
         $this->writeServerOutput($server);
 
-        return $server->getExitCode();
+        $exitCode = $server->getExitCode();
+
+        if ($exitCode === Command::FAILURE) {
+            $this->components->error('The worker has crashed. Please, verify that the host can connect to the Temporal service.');
+        }
+
+        return $exitCode;
     }
 
     /**
