@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.6.3 - 2023-04-05
+
+### What's Changed
+
+- Add more verbose message for the user if worker crashes https://github.com/keepsuit/laravel-temporal/pull/12
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/0.6.2...0.6.3
+
 ## v0.6.2 - 2023-03-24
 
 ### What's Changed
