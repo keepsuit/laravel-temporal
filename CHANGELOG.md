@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.6.4 - 2023-04-12
+
+### What's Changed
+
+- Ensure roadrunner binary is executable
+- Improved error messages for testing processes fail
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/0.6.3...0.6.4
+
 ## v0.6.3 - 2023-04-05
 
 ### What's Changed
