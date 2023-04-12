@@ -84,10 +84,11 @@ class TemporalTestingServer
             $this->debugOutput('<error>error</error>');
             $this->debugOutput($this->temporalServerProcess->getErrorOutput());
 
-            throw new \RuntimeException('Failed to start Temporal test server.');
+            throw new \RuntimeException(sprintf('Failed to start Temporal test server: %s', $this->temporalServerProcess->getErrorOutput()));
         }
 
         $this->debugOutput('<info>done.</info>');
+        $this->debugOutput($this->temporalServerProcess->getOutput());
     }
 
     protected function downloadTemporalServerExecutable(): void

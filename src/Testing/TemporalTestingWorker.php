@@ -100,10 +100,11 @@ class TemporalTestingWorker
         if (! $roadRunnerStarted) {
             $this->debugOutput('<error>error</error>');
             $this->debugOutput($this->roadRunnerProcess->getErrorOutput());
-            throw new \RuntimeException('Failed to start Temporal test worker.');
+            throw new \RuntimeException(sprintf('Failed to start Temporal test worker: %s', $this->roadRunnerProcess->getErrorOutput()));
         }
 
         $this->debugOutput('<info>done.</info>');
+        $this->debugOutput($this->roadRunnerProcess->getOutput());
     }
 
     protected function downloadRoadRunnerBinary(): void
