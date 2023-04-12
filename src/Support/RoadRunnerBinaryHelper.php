@@ -46,6 +46,8 @@ class RoadRunnerBinaryHelper
         ]), base_path(), null, null, null);
 
         $process->mustRun();
+
+        chmod(base_path('rr'), 0755);
     }
 
     public function ensureConfigFileExists(): void
