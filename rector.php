@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Rector\CodeQuality\Rector\Array_\CallableThisArrayToAnonymousFunctionRector;
+use Rector\CodeQuality\Rector\Identical\FlipTypeControlToUseExclusiveTypeRector;
 use Rector\CodingStyle\Rector\ArrowFunction\StaticArrowFunctionRector;
 use Rector\CodingStyle\Rector\ClassMethod\ReturnArrayClassMethodToYieldRector;
 use Rector\CodingStyle\Rector\ClassMethod\UnSpreadOperatorRector;
@@ -62,5 +63,6 @@ return static function (RectorConfig $config): void {
         AddArrowFunctionReturnTypeRector::class,
         ReturnTypeFromStrictTypedCallRector::class,
         ReturnTypeFromReturnDirectArrayRector::class,
+        FlipTypeControlToUseExclusiveTypeRector::class,
     ]);
 };

@@ -78,7 +78,7 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
 
             if (env('TEMPORAL_TESTING_SERVER', true)) {
                 [$host, $port] = Str::of(config('temporal.address'))->explode(':', 2)->all();
-                config()->set('temporal.address', sprintf('%s:%s', $host, $port + ParallelTesting::token()));
+                config()->set('temporal.address', sprintf('%s:%s', $host, (int) $port + (int) ParallelTesting::token()));
             } else {
                 config()->set('temporal.namespace', sprintf('%s-%s', config('temporal.namespace'), ParallelTesting::token()));
             }
