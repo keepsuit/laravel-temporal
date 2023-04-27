@@ -16,6 +16,7 @@ use Rector\DeadCode\Rector\ClassMethod\RemoveDelegatingParentCallRector;
 use Rector\DeadCode\Rector\PropertyProperty\RemoveNullPropertyInitializationRector;
 use Rector\EarlyReturn\Rector\Return_\ReturnBinaryOrToEarlyReturnRector;
 use Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector;
+use Rector\Php74\Rector\FuncCall\ArraySpreadInsteadOfArrayMergeRector;
 use Rector\Php80\Rector\FunctionLike\UnionTypesRector;
 use Rector\Privatization\Rector\Class_\FinalizeClassesWithoutChildrenRector;
 use Rector\Set\ValueObject\LevelSetList;
@@ -64,5 +65,6 @@ return static function (RectorConfig $config): void {
         ReturnTypeFromStrictTypedCallRector::class,
         ReturnTypeFromReturnDirectArrayRector::class,
         FlipTypeControlToUseExclusiveTypeRector::class,
+        ArraySpreadInsteadOfArrayMergeRector::class,
     ]);
 };
