@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.6.5 - 2023-04-27
+
+### What's changed
+
+- Support roadrunner v3
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/0.6.4...0.6.5
+
 ## v0.6.4 - 2023-04-12
 
 ### What's Changed
