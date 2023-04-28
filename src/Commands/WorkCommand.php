@@ -291,7 +291,7 @@ class WorkCommand extends Command
             return '2.7';
         }
 
-        $this->warn("Your RoadRunner binary version (<fg=red>$version</>) may be incompatible with laravel grpc.");
+        $this->warn("Your RoadRunner binary version (<fg=red>$version</>) may be incompatible with laravel temporal.");
 
         return '2.7';
     }
