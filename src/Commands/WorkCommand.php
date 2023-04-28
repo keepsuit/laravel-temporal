@@ -194,7 +194,8 @@ class WorkCommand extends Command
     protected function startServerWatcher()
     {
         if (! $this->option('watch')) {
-            return new class() {
+            return new class()
+            {
                 public function __call(string $method, mixed $parameters): mixed
                 {
                     return null;
