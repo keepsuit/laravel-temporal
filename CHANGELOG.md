@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.6.6 - 2023-04-28
+
+### What's changed
+
+- Set correct roadrunner config version when using v3
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/0.6.5...0.6.6
+
 ## v0.6.5 - 2023-04-27
 
 ### What's changed
