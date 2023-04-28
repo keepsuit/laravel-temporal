@@ -39,6 +39,8 @@ class WorkCommand extends Command
     ): ?int {
         $roadRunnerBinary = $roadRunnerBinaryFinder->binaryPath();
 
+        $configVersion = $this->detectRoadrunnerConfigVersion($roadRunnerBinary);
+
         $this->writeServerStateFile($serverStateFile);
 
         $this->queue = ($this->argument('queue') ?: $this->laravel['config']['temporal.queue']) ?: WorkerFactory::DEFAULT_TASK_QUEUE;
@@ -46,7 +48,7 @@ class WorkCommand extends Command
         $server = new Process([
             $roadRunnerBinary,
             ...['-c', $this->configPath()],
-            ...['-o', 'version=2.7'],
+            ...['-o', sprintf('version=%s', $configVersion)],
             ...['-o', sprintf('server.command=%s ./vendor/bin/roadrunner-temporal-worker', (new PhpExecutableFinder())->find())],
             ...['-o', sprintf('temporal.address=%s', config('temporal.address'))],
             ...['-o', sprintf('temporal.namespace=%s', config('temporal.namespace'))],
@@ -192,8 +194,7 @@ class WorkCommand extends Command
     protected function startServerWatcher()
     {
         if (! $this->option('watch')) {
-            return new class()
-            {
+            return new class() {
                 public function __call(string $method, mixed $parameters): mixed
                 {
                     return null;
@@ -267,11 +268,30 @@ class WorkCommand extends Command
             ->explode("\n")
             ->filter()
             ->each(function ($output): void {
-                // Only unusable output is provided
-
-                // if (! Str::contains($output, ['DEBUG', 'INFO', 'WARN'])) {
-                //     $this->components->error($output);
-                // }
+                if (! Str::contains($output, ['DEBUG', 'INFO', 'WARN'])) {
+                    $this->error($output);
+                }
             });
+    }
+
+    protected function detectRoadrunnerConfigVersion(string $roadRunnerBinary): string
+    {
+        $version = tap(new Process([$roadRunnerBinary, '--version'], base_path()))
+            ->run()
+            ->getOutput();
+
+        $version = explode(' ', $version)[2];
+
+        if (version_compare($version, '2023.1', '>')) {
+            return '3';
+        }
+
+        if (version_compare($version, '2.0', '>')) {
+            return '2.7';
+        }
+
+        $this->warn("Your RoadRunner binary version (<fg=red>$version</>) may be incompatible with laravel grpc.");
+
+        return '2.7';
     }
 }
