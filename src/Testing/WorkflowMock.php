@@ -13,7 +13,7 @@ class WorkflowMock
     ) {
     }
 
-    public function assertDispatched(\Closure|int|null $callback = null): void
+    public function assertDispatched(\Closure|int $callback = null): void
     {
         if (is_int($callback)) {
             $this->assertDispatchedTimes($callback);
@@ -36,7 +36,7 @@ class WorkflowMock
         });
     }
 
-    public function assertDispatchedTimes(int $times = 1, \Closure|int|null $callback = null): void
+    public function assertDispatchedTimes(int $times = 1, \Closure|int $callback = null): void
     {
         Temporal::assertWorkflowDispatchedTimes($this->workflowName, $times, function (...$args) use ($callback) {
             $taskQueue = Arr::last($args);
@@ -53,7 +53,7 @@ class WorkflowMock
         });
     }
 
-    public function assertNotDispatched(\Closure|null $callback = null): void
+    public function assertNotDispatched(\Closure $callback = null): void
     {
         Temporal::assertWorkflowNotDispatched($this->workflowName, function (...$args) use ($callback) {
             $taskQueue = Arr::last($args);

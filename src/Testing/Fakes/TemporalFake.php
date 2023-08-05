@@ -44,7 +44,7 @@ class TemporalFake extends Temporal
         ));
     }
 
-    public function mockWorkflows(array $workflowMocks, ?string $taskQueue = null): void
+    public function mockWorkflows(array $workflowMocks, string $taskQueue = null): void
     {
         $this->initCache();
 
@@ -65,7 +65,7 @@ class TemporalFake extends Temporal
         return new WorkflowMockBuilder($this->normalizeWorkflowName($workflowName));
     }
 
-    public function mockActivities(array $activityMocks, ?string $taskQueue = null): void
+    public function mockActivities(array $activityMocks, string $taskQueue = null): void
     {
         $this->initCache();
 
@@ -88,7 +88,7 @@ class TemporalFake extends Temporal
         return new ActivityMockBuilder($this->normalizeActivityName($activityName));
     }
 
-    public function assertWorkflowDispatched(string $workflowName, Closure|int|null $callback = null): void
+    public function assertWorkflowDispatched(string $workflowName, Closure|int $callback = null): void
     {
         if (is_int($callback)) {
             $this->assertWorkflowDispatchedTimes($workflowName, $callback);
@@ -102,7 +102,7 @@ class TemporalFake extends Temporal
         );
     }
 
-    public function assertWorkflowDispatchedTimes(string $workflowName, int $times = 1, Closure|null $callback = null): void
+    public function assertWorkflowDispatchedTimes(string $workflowName, int $times = 1, Closure $callback = null): void
     {
         $count = $this->workflowDispatched($workflowName, $callback)->count();
 
@@ -112,7 +112,7 @@ class TemporalFake extends Temporal
         );
     }
 
-    public function assertWorkflowNotDispatched(string $workflowName, Closure|null $callback = null): void
+    public function assertWorkflowNotDispatched(string $workflowName, Closure $callback = null): void
     {
         PHPUnit::assertCount(
             0, $this->workflowDispatched($workflowName, $callback),
@@ -129,7 +129,7 @@ class TemporalFake extends Temporal
         );
     }
 
-    public function assertActivityDispatched(string|array $activityName, Closure|int|null $callback = null): void
+    public function assertActivityDispatched(string|array $activityName, Closure|int $callback = null): void
     {
         $activityName = $this->normalizeActivityName($activityName);
 
@@ -145,7 +145,7 @@ class TemporalFake extends Temporal
         );
     }
 
-    public function assertActivityDispatchedTimes(string|array $activityName, int $times = 1, Closure|null $callback = null): void
+    public function assertActivityDispatchedTimes(string|array $activityName, int $times = 1, Closure $callback = null): void
     {
         $activityName = $this->normalizeActivityName($activityName);
 
@@ -157,7 +157,7 @@ class TemporalFake extends Temporal
         );
     }
 
-    public function assertActivityNotDispatched(string|array $activityName, Closure|null $callback = null): void
+    public function assertActivityNotDispatched(string|array $activityName, Closure $callback = null): void
     {
         $activityName = $this->normalizeActivityName($activityName);
 

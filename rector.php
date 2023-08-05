@@ -17,7 +17,6 @@ use Rector\DeadCode\Rector\PropertyProperty\RemoveNullPropertyInitializationRect
 use Rector\EarlyReturn\Rector\Return_\ReturnBinaryOrToEarlyReturnRector;
 use Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector;
 use Rector\Php74\Rector\FuncCall\ArraySpreadInsteadOfArrayMergeRector;
-use Rector\Php80\Rector\FunctionLike\UnionTypesRector;
 use Rector\Privatization\Rector\Class_\FinalizeClassesWithoutChildrenRector;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
@@ -42,7 +41,7 @@ return static function (RectorConfig $config): void {
         SetList::EARLY_RETURN,
         SetList::PRIVATIZATION,
         SetList::TYPE_DECLARATION,
-        LevelSetList::UP_TO_PHP_82,
+        LevelSetList::UP_TO_PHP_81,
         LaravelLevelSetList::UP_TO_LARAVEL_90,
     ]);
 
@@ -53,7 +52,6 @@ return static function (RectorConfig $config): void {
         RemoveDelegatingParentCallRector::class,
         CallableThisArrayToAnonymousFunctionRector::class,
         BinarySwitchToIfElseRector::class,
-        UnionTypesRector::class,
         ReturnBinaryOrToEarlyReturnRector::class,
         ReturnArrayClassMethodToYieldRector::class,
         PostIncDecToPreIncDecRector::class,

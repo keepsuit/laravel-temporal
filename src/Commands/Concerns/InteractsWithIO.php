@@ -49,7 +49,7 @@ trait InteractsWithIO
      *              WorkflowStartTime: string
      *         }  $workflowInfo
      */
-    public function workflowInfo(array $workflowInfo, int|string|null $verbosity = null): void
+    public function workflowInfo(array $workflowInfo, int|string $verbosity = null): void
     {
         $terminalWidth = $this->getTerminalWidth();
 

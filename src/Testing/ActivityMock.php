@@ -13,7 +13,7 @@ class ActivityMock
     ) {
     }
 
-    public function assertDispatched(\Closure|int|null $callback = null): void
+    public function assertDispatched(\Closure|int $callback = null): void
     {
         if (is_int($callback)) {
             $this->assertDispatchedTimes($callback);
@@ -36,7 +36,7 @@ class ActivityMock
         });
     }
 
-    public function assertDispatchedTimes(int $times = 1, \Closure|int|null $callback = null): void
+    public function assertDispatchedTimes(int $times = 1, \Closure|int $callback = null): void
     {
         Temporal::assertActivityDispatchedTimes($this->activityName, $times, function (...$args) use ($callback) {
             $taskQueue = Arr::last($args);
@@ -53,7 +53,7 @@ class ActivityMock
         });
     }
 
-    public function assertNotDispatched(\Closure|null $callback = null): void
+    public function assertNotDispatched(\Closure $callback = null): void
     {
         Temporal::assertActivityNotDispatched($this->activityName, function (...$args) use ($callback) {
             $taskQueue = Arr::last($args);
