@@ -5,14 +5,12 @@ declare(strict_types=1);
 use Rector\CodeQuality\Rector\Array_\CallableThisArrayToAnonymousFunctionRector;
 use Rector\CodeQuality\Rector\Identical\FlipTypeControlToUseExclusiveTypeRector;
 use Rector\CodingStyle\Rector\ArrowFunction\StaticArrowFunctionRector;
-use Rector\CodingStyle\Rector\ClassMethod\ReturnArrayClassMethodToYieldRector;
 use Rector\CodingStyle\Rector\ClassMethod\UnSpreadOperatorRector;
 use Rector\CodingStyle\Rector\Closure\StaticClosureRector;
 use Rector\CodingStyle\Rector\PostInc\PostIncDecToPreIncDecRector;
 use Rector\CodingStyle\Rector\Switch_\BinarySwitchToIfElseRector;
 use Rector\Config\RectorConfig;
 use Rector\Core\ValueObject\PhpVersion;
-use Rector\DeadCode\Rector\ClassMethod\RemoveDelegatingParentCallRector;
 use Rector\DeadCode\Rector\PropertyProperty\RemoveNullPropertyInitializationRector;
 use Rector\EarlyReturn\Rector\Return_\ReturnBinaryOrToEarlyReturnRector;
 use Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector;
@@ -49,11 +47,9 @@ return static function (RectorConfig $config): void {
         FinalizeClassesWithoutChildrenRector::class,
         RemoveNullPropertyInitializationRector::class,
         UnSpreadOperatorRector::class,
-        RemoveDelegatingParentCallRector::class,
         CallableThisArrayToAnonymousFunctionRector::class,
         BinarySwitchToIfElseRector::class,
         ReturnBinaryOrToEarlyReturnRector::class,
-        ReturnArrayClassMethodToYieldRector::class,
         PostIncDecToPreIncDecRector::class,
         StaticClosureRector::class,
         StaticArrowFunctionRector::class,

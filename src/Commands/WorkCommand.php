@@ -281,7 +281,7 @@ class WorkCommand extends Command
             ->run()
             ->getOutput();
 
-        $version = explode(' ', $version)[2];
+        $version = explode(' ', (string) $version)[2];
 
         if (version_compare($version, '2023.1', '>')) {
             return '3';

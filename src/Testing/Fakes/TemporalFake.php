@@ -224,7 +224,7 @@ class TemporalFake extends Temporal
             ->mapWithKeys(function (mixed $mocks, string $activity): array {
                 if (interface_exists($activity) && is_array($mocks)) {
                     return Collection::make($mocks)
-                        ->mapWithKeys(function (mixed $value, string $method) use ($activity) {
+                        ->mapWithKeys(function (mixed $value, string $method) use ($activity): array {
                             $activityName = $this->normalizeActivityName([$activity, $method]);
 
                             return $activityName ? [$activityName => $value] : [];
