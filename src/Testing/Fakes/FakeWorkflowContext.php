@@ -26,7 +26,7 @@ class FakeWorkflowContext implements WorkflowContextInterface
     {
     }
 
-    public function now(): \DateTimeInterface
+    public function now(): DateTimeInterface
     {
         return $this->context->now();
     }
@@ -203,7 +203,7 @@ class FakeWorkflowContext implements WorkflowContextInterface
         return $this->sideEffect(static fn (): UuidInterface => \Ramsey\Uuid\Uuid::uuid4());
     }
 
-    public function uuid7(?DateTimeInterface $dateTime = null): PromiseInterface
+    public function uuid7(DateTimeInterface $dateTime = null): PromiseInterface
     {
         return $this->sideEffect(static fn (): UuidInterface => \Ramsey\Uuid\Uuid::uuid7($dateTime));
     }
