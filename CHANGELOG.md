@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.6.7 - 2023-09-19
+
+### What's Changed
+
+- Fix testing with `temporal/sdk:2.6.0`
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/0.6.6...0.6.7
+
 ## v0.6.6 - 2023-04-28
 
 ### What's changed
