@@ -5,8 +5,6 @@ declare(strict_types=1);
 use Rector\CodeQuality\Rector\Array_\CallableThisArrayToAnonymousFunctionRector;
 use Rector\CodeQuality\Rector\Identical\FlipTypeControlToUseExclusiveTypeRector;
 use Rector\CodingStyle\Rector\ArrowFunction\StaticArrowFunctionRector;
-use Rector\CodingStyle\Rector\ClassMethod\UnSpreadOperatorRector;
-use Rector\CodingStyle\Rector\Closure\StaticClosureRector;
 use Rector\CodingStyle\Rector\PostInc\PostIncDecToPreIncDecRector;
 use Rector\CodingStyle\Rector\Switch_\BinarySwitchToIfElseRector;
 use Rector\Config\RectorConfig;
@@ -44,21 +42,20 @@ return static function (RectorConfig $config): void {
     ]);
 
     $config->skip([
-        FinalizeClassesWithoutChildrenRector::class,
-        RemoveNullPropertyInitializationRector::class,
-        UnSpreadOperatorRector::class,
-        CallableThisArrayToAnonymousFunctionRector::class,
-        BinarySwitchToIfElseRector::class,
-        ReturnBinaryOrToEarlyReturnRector::class,
-        PostIncDecToPreIncDecRector::class,
-        StaticClosureRector::class,
-        StaticArrowFunctionRector::class,
-        ReturnTypeFromReturnNewRector::class,
-        JsonThrowOnErrorRector::class,
         AddArrowFunctionReturnTypeRector::class,
-        ReturnTypeFromStrictTypedCallRector::class,
-        ReturnTypeFromReturnDirectArrayRector::class,
-        FlipTypeControlToUseExclusiveTypeRector::class,
         ArraySpreadInsteadOfArrayMergeRector::class,
+        BinarySwitchToIfElseRector::class,
+        CallableThisArrayToAnonymousFunctionRector::class,
+        FinalizeClassesWithoutChildrenRector::class,
+        FlipTypeControlToUseExclusiveTypeRector::class,
+        JsonThrowOnErrorRector::class,
+        PostIncDecToPreIncDecRector::class,
+        RemoveNullPropertyInitializationRector::class,
+        ReturnBinaryOrToEarlyReturnRector::class,
+        ReturnTypeFromReturnDirectArrayRector::class,
+        ReturnTypeFromReturnNewRector::class,
+        ReturnTypeFromStrictTypedCallRector::class,
+        StaticArrowFunctionRector::class,
+        StaticClosureRector::class,
     ]);
 };
