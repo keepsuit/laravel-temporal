@@ -27,6 +27,7 @@
     "require-dev": {
         "driftingly/rector-laravel": "^0.25.0",
         "laravel/pint": "^1.0",
+        "nesbot/carbon": "^2.63.0",
         "nunomaduro/collision": "^6.0",
         "nunomaduro/larastan": "^2.0.1",
         "orchestra/testbench": "^7.0 || ^8.0",

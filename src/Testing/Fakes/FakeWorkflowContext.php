@@ -2,8 +2,11 @@
 
 namespace Keepsuit\LaravelTemporal\Testing\Fakes;
 
+use DateTimeInterface;
+use Ramsey\Uuid\UuidInterface;
 use React\Promise\PromiseInterface;
 use Temporal\Activity\ActivityOptionsInterface;
+use Temporal\DataConverter\Type;
 use Temporal\DataConverter\ValuesInterface;
 use Temporal\Internal\Workflow\ActivityProxy;
 use Temporal\Internal\Workflow\ChildWorkflowProxy;
@@ -70,7 +73,6 @@ class FakeWorkflowContext implements WorkflowContextInterface
         return $this->context->getVersion($changeId, $minSupported, $maxSupported);
     }
 
-    //@phpstan-ignore-next-line
     public function sideEffect(callable $context): PromiseInterface
     {
         return $this->context->sideEffect($context);
@@ -143,7 +145,7 @@ class FakeWorkflowContext implements WorkflowContextInterface
         string $type,
         array $args = [],
         ActivityOptionsInterface $options = null,
-        \ReflectionType $returnType = null
+        Type|string|\ReflectionClass|\ReflectionType $returnType = null
     ): PromiseInterface {
         return $this->context->executeActivity($type, $args, $options, $returnType);
     }
@@ -189,5 +191,20 @@ class FakeWorkflowContext implements WorkflowContextInterface
     public function upsertSearchAttributes(array $searchAttributes): void
     {
         $this->context->upsertSearchAttributes($searchAttributes);
+    }
+
+    public function uuid(): PromiseInterface
+    {
+        return $this->sideEffect(static fn (): UuidInterface => \Ramsey\Uuid\Uuid::uuid4());
+    }
+
+    public function uuid4(): PromiseInterface
+    {
+        return $this->sideEffect(static fn (): UuidInterface => \Ramsey\Uuid\Uuid::uuid4());
+    }
+
+    public function uuid7(?DateTimeInterface $dateTime = null): PromiseInterface
+    {
+        return $this->sideEffect(static fn (): UuidInterface => \Ramsey\Uuid\Uuid::uuid7($dateTime));
     }
 }
