@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.6.8 - 2023-09-19
+
+### What's changed
+
+- Fixed required wrong temporal sdk version
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/0.6.7...0.6.8
+
 ## v0.6.7 - 2023-09-19
 
 ### What's Changed
