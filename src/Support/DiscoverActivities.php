@@ -11,7 +11,7 @@ class DiscoverActivities
     /**
      * Get all of the workflows by searching the given workflow directory.
      */
-    public static function within(string $activitiesPath, string $basePath): array
+    public static function within(string $activitiesPath): array
     {
         /** @var Collection<class-string,class-string|null> $activities */
         $activities = Collection::make();

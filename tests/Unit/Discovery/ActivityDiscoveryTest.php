@@ -14,7 +14,6 @@ it('can discovery activities', function () {
 
     $activities = DiscoverActivities::within(
         __DIR__.'/../../Fixtures/WorkflowDiscovery/Activities',
-        getcwd()
     );
 
     expect($activities)->toBe([

@@ -18,13 +18,14 @@ class TemporalDiscovery
      */
     protected function discoverWorkflows(): Collection
     {
-        return Collection::make([
+        $paths = [
             $this->app->path('Workflows'),
-        ])
+            $this->app->path('Temporal/Workflows'),
+        ];
+
+        return Collection::make($paths)
             ->reject(fn ($directory) => ! is_dir($directory))
-            ->reduce(fn (Collection $discovered, string $directory) => $discovered->mergeRecursive(
-                DiscoverWorkflows::within($directory, base_path())
-            ), Collection::make());
+            ->reduce(fn (Collection $discovered, string $directory) => $discovered->mergeRecursive(DiscoverWorkflows::within($directory)), Collection::make());
     }
 
     /**
@@ -32,14 +33,16 @@ class TemporalDiscovery
      */
     protected function discoverActivities(): Collection
     {
-        return Collection::make([
+        $paths = [
             $this->app->path('Workflows'),
             $this->app->path('Activities'),
-        ])
+            $this->app->path('Temporal/Activities'),
+            $this->app->path('Temporal/Workflows'),
+        ];
+
+        return Collection::make($paths)
             ->reject(fn ($directory) => ! is_dir($directory))
-            ->reduce(fn (Collection $discovered, string $directory) => $discovered->mergeRecursive(
-                DiscoverActivities::within($directory, base_path())
-            ), Collection::make());
+            ->reduce(fn (Collection $discovered, string $directory) => $discovered->mergeRecursive(DiscoverActivities::within($directory)), Collection::make());
     }
 
     /**
