@@ -4,6 +4,7 @@ namespace Keepsuit\LaravelTemporal\Commands;
 
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Str;
+use Keepsuit\LaravelTemporal\Support\DiscoverWorkflows;
 
 class WorkflowMakeCommand extends GeneratorCommand
 {
@@ -25,6 +26,12 @@ class WorkflowMakeCommand extends GeneratorCommand
 
     protected function getDefaultNamespace($rootNamespace): string
     {
+        $rootNamespace = match (true) {
+            is_dir($this->laravel->path('Temporal/Workflows')) => $rootNamespace.'\\Temporal',
+            ! is_dir($this->laravel->path('Workflows')) => $rootNamespace.'\\Temporal',
+            default => $rootNamespace
+        };
+
         if ($this->option('scoped')) {
             $namespace = Str::of($this->getNameInput())
                 ->when($this->option('interface'), fn ($name) => $name->replaceLast('Interface', ''))
