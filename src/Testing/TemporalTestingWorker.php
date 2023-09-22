@@ -66,7 +66,7 @@ class TemporalTestingWorker
         $this->roadRunnerProcess = new Process(
             command: [
                 $this->roadRunnerBinary->binaryPath(),
-                ...['-o', 'version=2.7'],
+                ...['-o', sprintf('version=%s', $this->roadRunnerBinary->configVersion())],
                 ...['-o', sprintf('server.command=%s ./vendor/bin/roadrunner-temporal-worker', (new PhpExecutableFinder())->find())],
                 ...['-o', sprintf('temporal.address=%s', config('temporal.address'))],
                 ...['-o', sprintf('temporal.namespace=%s', config('temporal.namespace'))],

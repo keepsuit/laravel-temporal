@@ -39,7 +39,7 @@ class WorkCommand extends Command
     ): ?int {
         $roadRunnerBinary = $roadRunnerBinaryFinder->binaryPath();
 
-        $configVersion = $this->detectRoadrunnerConfigVersion($roadRunnerBinary);
+        $configVersion = $this->detectRoadrunnerConfigVersion($roadRunnerBinaryFinder);
 
         $this->writeServerStateFile($serverStateFile);
 
@@ -275,24 +275,14 @@ class WorkCommand extends Command
             });
     }
 
-    protected function detectRoadrunnerConfigVersion(string $roadRunnerBinary): string
+    protected function detectRoadrunnerConfigVersion(RoadRunnerBinaryHelper $roadRunnerBinaryHelper): string
     {
-        $version = tap(new Process([$roadRunnerBinary, '--version'], base_path()))
-            ->run()
-            ->getOutput();
+        try {
+            return $roadRunnerBinaryHelper->configVersion();
+        } catch (\Throwable) {
+            $this->warn('Your RoadRunner binary version may be incompatible with laravel temporal.');
 
-        $version = explode(' ', (string) $version)[2];
-
-        if (version_compare($version, '2023.1', '>')) {
-            return '3';
-        }
-
-        if (version_compare($version, '2.0', '>')) {
             return '2.7';
         }
-
-        $this->warn(sprintf('Your RoadRunner binary version (<fg=red>%s</>) may be incompatible with laravel temporal.', $version));
-
-        return '2.7';
     }
 }
