@@ -174,10 +174,10 @@ the [official documentation](https://docs.temporal.io/application-development/?l
 
 ### Create workflows and activities
 
-To create a new workflow, you can use the `temporal:make:workflow {name}` command, which will create a new workflow interface & relative class in
+To create a new workflow, you can use the `make:workflow {name}` command, which will create a new workflow interface & relative class in
 the `app/Workflows` directory.
 
-To create a new activity, you can use the `temporal:make:activity {name}` command, which will create a new activity interface & relative class in
+To create a new activity, you can use the `make:activity {name}` command, which will create a new activity interface & relative class in
 the `app/Activities` directory.
 
 Workflows in `app/Workflows` and activities in `app/Activities` and `app/Workflows` are automatically registered.
