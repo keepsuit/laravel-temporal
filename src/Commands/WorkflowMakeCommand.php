@@ -4,7 +4,6 @@ namespace Keepsuit\LaravelTemporal\Commands;
 
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Str;
-use Keepsuit\LaravelTemporal\Support\DiscoverWorkflows;
 
 class WorkflowMakeCommand extends GeneratorCommand
 {
