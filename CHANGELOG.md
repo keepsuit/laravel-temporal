@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.6.9 - 2023-09-25
+
+### What's Changed
+
+- Fix commands in ReadMe 📚 by @michael-rubel in https://github.com/keepsuit/laravel-temporal/pull/15
+- Remove issue template config by @michael-rubel in https://github.com/keepsuit/laravel-temporal/pull/17
+- Temporal root namespace by @cappuc in https://github.com/keepsuit/laravel-temporal/pull/18
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/0.6.8...0.6.9
+
 ## v0.6.8 - 2023-09-19
 
 ### What's changed
