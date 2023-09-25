@@ -29,6 +29,12 @@ class ActivityMakeCommand extends GeneratorCommand
 
     protected function getDefaultNamespace($rootNamespace): string
     {
+        $rootNamespace = match (true) {
+            is_dir($this->laravel->path('Temporal/Activities')) => $rootNamespace.'\\Temporal',
+            ! is_dir($this->laravel->path('Activities')) => $rootNamespace.'\\Temporal',
+            default => $rootNamespace
+        };
+
         if ($this->option('for-workflow') !== null) {
             $namespace = Str::of($this->option('for-workflow'))
                 ->whenEndsWith('Workflow', fn ($name) => $name->replaceLast('Workflow', ''));

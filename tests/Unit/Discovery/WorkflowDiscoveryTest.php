@@ -14,7 +14,6 @@ it('can discovery workflows', function () {
 
     $workflows = DiscoverWorkflows::within(
         __DIR__.'/../../Fixtures/WorkflowDiscovery/Workflows',
-        getcwd()
     );
 
     expect($workflows)->toBe([
