@@ -44,14 +44,14 @@ class LaravelPayloadConverter extends JsonConverter
 
     public function fromPayload(Payload $payload, Type $type)
     {
+        if (! $type->isClass()) {
+            return parent::fromPayload($payload, $type);
+        }
+
         try {
             $data = json_decode($payload->getData(), true, 512, self::JSON_FLAGS);
         } catch (Throwable $throwable) {
             throw new DataConverterException($throwable->getMessage(), $throwable->getCode(), $throwable);
-        }
-
-        if (! $type->isClass()) {
-            return parent::fromPayload($payload, $type);
         }
 
         try {
@@ -74,7 +74,7 @@ class LaravelPayloadConverter extends JsonConverter
             }
 
             return $reflection->newInstance($data);
-        } catch (ReflectionException) {
+        } catch (Throwable) {
         }
 
         return parent::fromPayload($payload, $type);
