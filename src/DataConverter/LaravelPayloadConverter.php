@@ -7,7 +7,6 @@ use Illuminate\Contracts\Support\Jsonable;
 use JsonSerializable;
 use Keepsuit\LaravelTemporal\Contracts\TemporalSerializable;
 use ReflectionClass;
-use ReflectionException;
 use Spatie\LaravelData\Contracts\BaseData;
 use Temporal\Api\Common\V1\Payload;
 use Temporal\DataConverter\JsonConverter;
