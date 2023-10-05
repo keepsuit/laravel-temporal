@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.6.10 - 2023-10-05
+
+### What's changed
+
+- Catch all instantiation errors in `LaravalPayloadConverter` and fallback to `JsonConverter`
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/0.6.9...0.6.10
+
 ## v0.6.9 - 2023-09-25
 
 ### What's Changed
