@@ -2,12 +2,10 @@
 
 namespace Keepsuit\LaravelTemporal\DataConverter;
 
-use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Contracts\Support\Jsonable;
-use JsonSerializable;
+use Illuminate\Database\Eloquent\Model;
 use Keepsuit\LaravelTemporal\Contracts\TemporalSerializable;
 use ReflectionClass;
-use Spatie\LaravelData\Contracts\BaseData;
+use Spatie\LaravelData\Contracts\DataObject;
 use Temporal\Api\Common\V1\Payload;
 use Temporal\DataConverter\JsonConverter;
 use Temporal\DataConverter\Type;
@@ -26,16 +24,12 @@ class LaravelPayloadConverter extends JsonConverter
             return $this->create(json_encode($value->value, self::JSON_FLAGS));
         }
 
-        if ($value instanceof Jsonable) {
+        if ($value instanceof DataObject) {
             return $this->create($value->toJson(self::JSON_FLAGS));
         }
 
-        if ($value instanceof JsonSerializable) {
-            return $this->create(json_encode($value->jsonSerialize(), self::JSON_FLAGS));
-        }
-
-        if ($value instanceof Arrayable) {
-            return $this->create(json_encode($value->toArray(), self::JSON_FLAGS));
+        if ($value instanceof Model) {
+            return $this->create($value->toJson(self::JSON_FLAGS));
         }
 
         return parent::toPayload($value);
@@ -67,12 +61,14 @@ class LaravelPayloadConverter extends JsonConverter
                 return $class::from($data);
             }
 
-            if ($reflection->implementsInterface(BaseData::class)) {
-                /** @var class-string<BaseData> $class */
+            if ($reflection->implementsInterface(DataObject::class)) {
+                /** @var class-string<DataObject> $class */
                 return $class::from($data);
             }
 
-            return $reflection->newInstance($data);
+            if ($reflection->isSubclassOf(Model::class)) {
+                return $reflection->newInstance($data);
+            }
         } catch (Throwable) {
         }
 
