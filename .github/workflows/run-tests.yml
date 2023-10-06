@@ -2,9 +2,11 @@ name: run-tests
 
 on:
   push:
-    branches: [*]
+    branches:
+      - '*'
   pull_request:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   test:
@@ -12,9 +14,9 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: [8.1, 8.2, 8.3]
-        laravel: [^10.0]
-        stability: [prefer-stable, prefer-lowest]
+        php: [ 8.1, 8.2, 8.3 ]
+        laravel: [ ^10.0 ]
+        stability: [ prefer-stable, prefer-lowest ]
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }}
 
