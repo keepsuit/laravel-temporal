@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.6.11 - 2023-11-17
+
+### What's Changed
+
+- Support project using type "module"
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/0.6.10...0.6.11
+
 ## v0.6.10 - 2023-10-05
 
 ### What's changed
