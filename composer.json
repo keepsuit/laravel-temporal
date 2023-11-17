@@ -25,7 +25,7 @@
         "temporal/sdk": "^2.0"
     },
     "require-dev": {
-        "driftingly/rector-laravel": "^0.25.0",
+        "driftingly/rector-laravel": "^0.26.0",
         "laravel/pint": "^1.0",
         "nesbot/carbon": "^2.63.0",
         "nunomaduro/collision": "^6.0",
