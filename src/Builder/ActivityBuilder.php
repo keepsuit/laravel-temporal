@@ -29,6 +29,7 @@ class ActivityBuilder
     public function __construct()
     {
         $this->activityOptions = ActivityOptions::new()
+            ->withNamespace(config('temporal.namespace'))
             ->withTaskQueue(config('temporal.queue'))
             ->withRetryOptions($this->getDefaultRetryOptions(config('temporal.retry.activity')));
     }
