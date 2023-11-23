@@ -200,7 +200,7 @@ $workflow = Temporal::newWorkflow()
 $result = $workflow->yourMethod();
 
 // This will start a new workflow execution and return immediately
-app(\Temporal\Client\WorkflowClient::class)->start($workflow);
+app(\Temporal\Client\WorkflowClientInterface::class)->start($workflow);
 ```
 
 ### Build and start an activity
