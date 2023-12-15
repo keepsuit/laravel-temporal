@@ -20,7 +20,7 @@ class TemporalMocker
         $this->cache->clear();
     }
 
-    public function mockWorkflowResult(string $workflowName, mixed $workflowResult, string $taskQueue = null): void
+    public function mockWorkflowResult(string $workflowName, mixed $workflowResult, ?string $taskQueue = null): void
     {
         $result = $workflowResult instanceof Closure ? $workflowResult() : $workflowResult;
 
@@ -32,7 +32,7 @@ class TemporalMocker
         return $this->cache->getWorkflowMock($workflowName, $taskQueue);
     }
 
-    public function mockActivityResult(string $activityName, mixed $activityResult, string $taskQueue = null): void
+    public function mockActivityResult(string $activityName, mixed $activityResult, ?string $taskQueue = null): void
     {
         $result = $activityResult instanceof Closure ? $activityResult() : $activityResult;
 

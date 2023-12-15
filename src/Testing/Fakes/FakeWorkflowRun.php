@@ -22,7 +22,7 @@ class FakeWorkflowRun implements WorkflowRunInterface
     /**
      * {@inheritDoc}
      */
-    public function getResult($type = null, int $timeout = null)
+    public function getResult($type = null, ?int $timeout = null)
     {
         return $this->returnValue;
     }

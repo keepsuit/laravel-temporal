@@ -78,12 +78,12 @@ class FakeWorkflowContext implements WorkflowContextInterface
         return $this->context->sideEffect($context);
     }
 
-    public function complete(array $result = null, \Throwable $failure = null): PromiseInterface
+    public function complete(?array $result = null, ?\Throwable $failure = null): PromiseInterface
     {
         return $this->context->complete($result, $failure);
     }
 
-    public function panic(\Throwable $failure = null): PromiseInterface
+    public function panic(?\Throwable $failure = null): PromiseInterface
     {
         return $this->context->panic($failure);
     }
@@ -93,22 +93,22 @@ class FakeWorkflowContext implements WorkflowContextInterface
         return $this->context->timer($interval);
     }
 
-    public function continueAsNew(string $type, array $args = [], ContinueAsNewOptions $options = null): PromiseInterface
+    public function continueAsNew(string $type, array $args = [], ?ContinueAsNewOptions $options = null): PromiseInterface
     {
         return $this->context->continueAsNew($type, $args, $options);
     }
 
-    public function newContinueAsNewStub(string $class, ContinueAsNewOptions $options = null): object
+    public function newContinueAsNewStub(string $class, ?ContinueAsNewOptions $options = null): object
     {
         return $this->context->newContinueAsNewStub($class, $options);
     }
 
-    public function executeChildWorkflow(string $type, array $args = [], ChildWorkflowOptions $options = null, $returnType = null): PromiseInterface
+    public function executeChildWorkflow(string $type, array $args = [], ?ChildWorkflowOptions $options = null, $returnType = null): PromiseInterface
     {
         return $this->context->executeChildWorkflow($type, $args, $options, $returnType);
     }
 
-    public function newChildWorkflowStub(string $class, ChildWorkflowOptions $options = null): object
+    public function newChildWorkflowStub(string $class, ?ChildWorkflowOptions $options = null): object
     {
         /** @var ChildWorkflowProxy $workflowProxy */
         $workflowProxy = $this->context->newChildWorkflowStub($class, $options);
@@ -126,7 +126,7 @@ class FakeWorkflowContext implements WorkflowContextInterface
         );
     }
 
-    public function newUntypedChildWorkflowStub(string $type, ChildWorkflowOptions $options = null): ChildWorkflowStubInterface
+    public function newUntypedChildWorkflowStub(string $type, ?ChildWorkflowOptions $options = null): ChildWorkflowStubInterface
     {
         return new FakeChildWorkflowStub($this->context->newUntypedChildWorkflowStub($type, $options));
     }
@@ -144,13 +144,13 @@ class FakeWorkflowContext implements WorkflowContextInterface
     public function executeActivity(
         string $type,
         array $args = [],
-        ActivityOptionsInterface $options = null,
-        Type|string|\ReflectionClass|\ReflectionType $returnType = null
+        ?ActivityOptionsInterface $options = null,
+        Type|string|\ReflectionClass|\ReflectionType|null $returnType = null
     ): PromiseInterface {
         return $this->context->executeActivity($type, $args, $options, $returnType);
     }
 
-    public function newActivityStub(string $class, ActivityOptionsInterface $options = null): object
+    public function newActivityStub(string $class, ?ActivityOptionsInterface $options = null): object
     {
         /** @var ActivityProxy $activityProxy */
         $activityProxy = $this->context->newActivityStub($class, $options);
@@ -168,7 +168,7 @@ class FakeWorkflowContext implements WorkflowContextInterface
         );
     }
 
-    public function newUntypedActivityStub(ActivityOptionsInterface $options = null): ActivityStubInterface
+    public function newUntypedActivityStub(?ActivityOptionsInterface $options = null): ActivityStubInterface
     {
         return new FakeActivityStub($this->context->newUntypedActivityStub($options));
     }
@@ -203,7 +203,7 @@ class FakeWorkflowContext implements WorkflowContextInterface
         return $this->sideEffect(static fn (): UuidInterface => \Ramsey\Uuid\Uuid::uuid4());
     }
 
-    public function uuid7(DateTimeInterface $dateTime = null): PromiseInterface
+    public function uuid7(?DateTimeInterface $dateTime = null): PromiseInterface
     {
         return $this->sideEffect(static fn (): UuidInterface => \Ramsey\Uuid\Uuid::uuid7($dateTime));
     }

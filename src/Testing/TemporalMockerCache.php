@@ -46,7 +46,7 @@ final class TemporalMockerCache
         $this->cacheProxy(fn () => $this->cache->clear());
     }
 
-    public function saveWorkflowMock(string $workflowName, mixed $value, string $taskQueue = null): void
+    public function saveWorkflowMock(string $workflowName, mixed $value, ?string $taskQueue = null): void
     {
         $key = sprintf('workflow::%s', $workflowName);
 
@@ -89,7 +89,7 @@ final class TemporalMockerCache
         };
     }
 
-    public function saveActivityMock(string $activityName, mixed $value, string $taskQueue = null): void
+    public function saveActivityMock(string $activityName, mixed $value, ?string $taskQueue = null): void
     {
         $this->cacheProxy(fn () => $this->cache->set(sprintf('activity::%s', $activityName), [
             'mock' => $value ?? 'null',
@@ -171,7 +171,7 @@ final class TemporalMockerCache
         return $this->cache->get(sprintf('activity_dispatch::%s', $activityName), []);
     }
 
-    private function cacheProxy(Closure $action, Closure $fallback = null): mixed
+    private function cacheProxy(Closure $action, ?Closure $fallback = null): mixed
     {
         if ($this->localOnly) {
             return $fallback?->__invoke();

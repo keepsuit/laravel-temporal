@@ -39,7 +39,7 @@ class TemporalTestingServer
         return $this;
     }
 
-    public function start(int $port = null): void
+    public function start(?int $port = null): void
     {
         $this->downloadTemporalServerExecutable();
 
@@ -64,7 +64,7 @@ class TemporalTestingServer
         } while ($this->temporalServerProcess->isRunning());
     }
 
-    protected function startTemporalServer(int $port = null): void
+    protected function startTemporalServer(?int $port = null): void
     {
         $this->debugOutput('Starting Temporal test server... ', newLine: false);
 
