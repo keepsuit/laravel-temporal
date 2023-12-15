@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.6.12 - 2023-12-15
+
+### What's Changed
+
+* Support for namespaces config when starting child workflows and activities. by @slnw in https://github.com/keepsuit/laravel-temporal/pull/28
+
+### New Contributors
+
+* @slnw made their first contribution in https://github.com/keepsuit/laravel-temporal/pull/28
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/0.6.11...0.6.12
+
 ## v0.6.11 - 2023-11-17
 
 ### What's Changed
