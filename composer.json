@@ -29,7 +29,7 @@
         "laravel/pint": "^1.0",
         "nesbot/carbon": "^2.63.0",
         "nunomaduro/collision": "^6.0",
-        "nunomaduro/larastan": "^2.0.1",
+        "larastan/larastan": "^2.0.1",
         "orchestra/testbench": "^7.0 || ^8.0",
         "pestphp/pest": "^1.21",
         "pestphp/pest-plugin-laravel": "^1.1",
@@ -43,6 +43,9 @@
     },
     "suggest": {
         "spatie/laravel-data": "Can be used for workflows payloads (^2.0 || ^3.0)"
+    },
+    "conflict": {
+        "orchestra/testbench-core": "> 8.15.0"
     },
     "autoload": {
         "psr-4": {
