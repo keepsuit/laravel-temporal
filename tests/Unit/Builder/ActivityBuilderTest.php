@@ -1,21 +1,25 @@
 <?php
 
-use Keepsuit\LaravelTemporal\Builder\ActivityBuilder;
-use Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Activities\DemoActivityInterface;
-use Temporal\Internal\Workflow\ActivityProxy;
+use Carbon\CarbonInterval;
+use Keepsuit\LaravelTemporal\Builder\WorkflowBuilder;
+use Keepsuit\LaravelTemporal\Facade\Temporal;
+use Keepsuit\LaravelTemporal\Testing\WithTemporal;
+use Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Workflows\DebugOptionsWorkflow;
+
+uses(WithTemporal::class);
+
+beforeEach(function () {
+    Temporal::fake();
+});
 
 it('can build activity with default options', function () {
-    config()->set('temporal.queue', 'test-queue');
+    $workflow = WorkflowBuilder::new()
+        ->withWorkflowExecutionTimeout(CarbonInterval::seconds(1))
+        ->build(DebugOptionsWorkflow::class);
 
-    $activity = ActivityBuilder::new()
-        ->build(DemoActivityInterface::class);
-
-    expect($activity)
-        ->toBeInstanceOf(ActivityProxy::class);
-
-    /** @var \Temporal\Activity\ActivityOptions $activityOptions */
-    $activityOptions = invade(invade($activity)->stub)->options;
+    $activityOptions = $workflow->activityOptions();
 
     expect($activityOptions)
+        ->toBeArray()
         ->taskQueue->toBe('test-queue');
-})->skip('Worker context is required');
+});

@@ -68,10 +68,7 @@ class Temporal extends Facade
         static::swap((new TemporalFake(static::$app)));
     }
 
-    /**
-     * @return Workflow\WorkflowContextInterface|Workflow\ScopedContextInterface|object
-     */
-    public static function getTemporalContext(): mixed
+    public static function getTemporalContext(): Workflow\ScopedContextInterface
     {
         $instance = static::getFacadeRoot();
 

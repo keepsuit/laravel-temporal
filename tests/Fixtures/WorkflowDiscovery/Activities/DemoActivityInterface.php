@@ -2,10 +2,10 @@
 
 namespace Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Activities;
 
+use Temporal\Activity\ActivityInterface;
 use Temporal\Activity\ActivityMethod;
-use Temporal\Activity\LocalActivityInterface;
 
-#[LocalActivityInterface(prefix: 'demo')]
+#[ActivityInterface(prefix: 'demo')]
 interface DemoActivityInterface
 {
     #[ActivityMethod(name: 'greet')]

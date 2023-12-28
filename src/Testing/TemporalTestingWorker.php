@@ -67,7 +67,7 @@ class TemporalTestingWorker
             command: [
                 $this->roadRunnerBinary->binaryPath(),
                 ...['-o', sprintf('version=%s', $this->roadRunnerBinary->configVersion())],
-                ...['-o', sprintf('server.command=%s ./vendor/bin/roadrunner-temporal-worker', (new PhpExecutableFinder())->find())],
+                ...['-o', sprintf('server.command=%s %s', (new PhpExecutableFinder())->find(), $this->findWorkerPath())],
                 ...['-o', sprintf('temporal.address=%s', config('temporal.address'))],
                 ...['-o', sprintf('temporal.namespace=%s', config('temporal.namespace'))],
                 ...['-o', sprintf('temporal.activities.num_workers=%s', 1)],
@@ -107,6 +107,17 @@ class TemporalTestingWorker
 
         $this->debugOutput('<info>done.</info>');
         $this->debugOutput($this->roadRunnerProcess->getOutput());
+    }
+
+    protected function findWorkerPath(): string
+    {
+        $defaultWorkerPath = base_path('vendor/bin/roadrunner-temporal-worker');
+
+        if (file_exists($defaultWorkerPath)) {
+            return $defaultWorkerPath;
+        }
+
+        return realpath(__DIR__.'/../../bin/roadrunner-temporal-worker');
     }
 
     protected function downloadRoadRunnerBinary(): void

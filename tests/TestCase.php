@@ -2,8 +2,12 @@
 
 namespace Keepsuit\LaravelTemporal\Tests;
 
+use Illuminate\Config\Repository;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Keepsuit\LaravelTemporal\LaravelTemporalServiceProvider;
+use Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Activities\DemoActivity;
+use Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Workflows\DebugOptionsWorkflow;
+use Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Workflows\DemoWorkflow;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
@@ -24,8 +28,19 @@ class TestCase extends Orchestra
         ];
     }
 
-    public function getEnvironmentSetUp($app)
+    public function defineEnvironment($app)
     {
-        config()->set('database.default', 'testing');
+        tap($app['config'], function (Repository $config) {
+            $config->set('database.default', 'testing');
+            $config->set('temporal.workflows', [
+                DebugOptionsWorkflow::class,
+                DemoWorkflow::class,
+            ]);
+            $config->set('temporal.activities', [
+                DemoActivity::class,
+            ]);
+            $config->set('temporal.namespace', 'test-namespace');
+            $config->set('temporal.queue', 'test-queue');
+        });
     }
 }
