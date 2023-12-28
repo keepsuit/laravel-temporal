@@ -3,6 +3,7 @@
 namespace Keepsuit\LaravelTemporal\Testing\Fakes;
 
 use DateTimeInterface;
+use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use React\Promise\PromiseInterface;
 use Temporal\Activity\ActivityOptionsInterface;
@@ -164,7 +165,8 @@ class FakeWorkflowContext implements WorkflowContextInterface
             $properties->get('class'),
             $properties->get('activities'),
             $properties->get('options'),
-            $this
+            $this,
+            $properties->get('callsInterceptor')
         );
     }
 
@@ -195,16 +197,16 @@ class FakeWorkflowContext implements WorkflowContextInterface
 
     public function uuid(): PromiseInterface
     {
-        return $this->sideEffect(static fn (): UuidInterface => \Ramsey\Uuid\Uuid::uuid4());
+        return $this->sideEffect(static fn (): UuidInterface => Uuid::uuid4());
     }
 
     public function uuid4(): PromiseInterface
     {
-        return $this->sideEffect(static fn (): UuidInterface => \Ramsey\Uuid\Uuid::uuid4());
+        return $this->sideEffect(static fn (): UuidInterface => Uuid::uuid4());
     }
 
     public function uuid7(?DateTimeInterface $dateTime = null): PromiseInterface
     {
-        return $this->sideEffect(static fn (): UuidInterface => \Ramsey\Uuid\Uuid::uuid7($dateTime));
+        return $this->sideEffect(static fn (): UuidInterface => Uuid::uuid7($dateTime));
     }
 }
