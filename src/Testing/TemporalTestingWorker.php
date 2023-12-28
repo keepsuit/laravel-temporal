@@ -78,14 +78,16 @@ class TemporalTestingWorker
                 'serve',
             ],
             cwd: base_path(),
-            env: array_merge($_SERVER, $_ENV, [
+            env: [
+                ...$_SERVER,
+                ...$_ENV,
                 'APP_ENV' => app()->environment(),
                 'APP_BASE_PATH' => base_path(),
                 'LARAVEL_TEMPORAL' => 1,
                 'TEMPORAL_QUEUE' => config('temporal.queue'),
                 'TEMPORAL_TESTING_ENV' => 1,
                 'TEMPORAL_TESTING_CONFIG' => json_encode(config()->all()),
-            ]),
+            ],
             timeout: 10
         );
 

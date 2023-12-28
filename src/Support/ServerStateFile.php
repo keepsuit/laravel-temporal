@@ -37,7 +37,7 @@ class ServerStateFile
         }
 
         file_put_contents($this->path, json_encode(
-            array_merge($this->read(), ['masterProcessId' => $masterProcessId]),
+            [...$this->read(), 'masterProcessId' => $masterProcessId],
             JSON_PRETTY_PRINT
         ));
     }
@@ -54,7 +54,7 @@ class ServerStateFile
         }
 
         file_put_contents($this->path, json_encode(
-            array_merge($this->read(), ['state' => $newState]),
+            [...$this->read(), 'state' => $newState],
             JSON_PRETTY_PRINT
         ));
     }

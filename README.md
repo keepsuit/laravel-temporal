@@ -23,6 +23,15 @@ You can install the package via composer:
 composer require keepsuit/laravel-temporal
 ```
 
+Then download the latest `roadrunner` executable for your platform:
+
+```bash
+./vendor/bin/rr get-binary
+```
+
+> [!NOTE]
+> You should run this command after every update to ensure that you have the latest version of `roadrunner` executable.
+
 You can publish the config file with:
 
 ```bash
@@ -200,7 +209,7 @@ $workflow = Temporal::newWorkflow()
 $result = $workflow->yourMethod();
 
 // This will start a new workflow execution and return immediately
-app(\Temporal\Client\WorkflowClient::class)->start($workflow);
+app(\Temporal\Client\WorkflowClientInterface::class)->start($workflow);
 ```
 
 ### Build and start an activity

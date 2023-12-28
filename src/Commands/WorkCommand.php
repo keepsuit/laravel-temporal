@@ -212,7 +212,7 @@ class WorkCommand extends Command
 
         return tap(new Process([
             (new ExecutableFinder())->find('node'),
-            'file-watcher.js',
+            'file-watcher.cjs',
             json_encode(collect($paths)->map(fn (string $path) => base_path($path)), JSON_THROW_ON_ERROR),
         ], realpath(__DIR__.'/../../bin'), null, null, null))->start();
     }

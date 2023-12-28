@@ -34,6 +34,7 @@ class ChildWorkflowBuilder
     public function __construct()
     {
         $this->workflowOptions = ChildWorkflowOptions::new()
+            ->withNamespace(config('temporal.namespace'))
             ->withTaskQueue(config('temporal.queue'))
             ->withRetryOptions($this->getDefaultRetryOptions(config('temporal.retry.workflow')));
     }
