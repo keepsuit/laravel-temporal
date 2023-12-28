@@ -45,6 +45,7 @@
         "spatie/laravel-data": "Can be used for workflows payloads (^2.0 || ^3.0)"
     },
     "conflict": {
+        "temporal/sdk": ">=2.7.0",
         "orchestra/testbench-core": "> 8.15.0"
     },
     "autoload": {
