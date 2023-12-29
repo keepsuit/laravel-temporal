@@ -2,18 +2,20 @@
 
 use Carbon\CarbonInterval;
 use Keepsuit\LaravelTemporal\Facade\Temporal;
-use Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Activities\DemoActivityInterface;
-use Temporal\Activity\ActivityOptions;
+use Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Workflows\DemoWorkflowInterface;
+use Temporal\Client\ClientOptions;
 use Temporal\Common\RetryOptions;
 use Temporal\WorkerFactory;
+use Temporal\Workflow\ChildWorkflowOptions;
 
 beforeEach(function () {
     Temporal::fake();
 });
 
-it('can build activity with default config options', function (bool $typed) {
-    $contextMock = mockTemporalContext(validateActivityOptions: function (ActivityOptions $activityOptions): bool {
-        expect($activityOptions)
+it('can build child workflow with default config options', function (bool $typed) {
+    $contextMock = mockTemporalContext(validateWorkflowOptions: function (ChildWorkflowOptions $workflowOptions): bool {
+        expect($workflowOptions)
+            ->namespace->toBe(ClientOptions::DEFAULT_NAMESPACE)
             ->taskQueue->toBe(WorkerFactory::DEFAULT_TASK_QUEUE)
             ->retryOptions->not->toBeNull()
             ->retryOptions->initialInterval->totalSeconds->toBe(RetryOptions::DEFAULT_INITIAL_INTERVAL)
@@ -28,29 +30,31 @@ it('can build activity with default config options', function (bool $typed) {
         ->shouldReceive('getTemporalContext')
         ->andReturn($contextMock);
 
-    $builder = Temporal::newActivity();
+    $builder = Temporal::newChildWorkflow();
 
     if ($typed) {
-        $builder->build(DemoActivityInterface::class);
+        $builder->build(DemoWorkflowInterface::class);
     } else {
-        $builder->buildUntyped();
+        $builder->buildUntyped('demo.greet');
     }
 })->with([
     'typed' => true,
     'untyped' => false,
 ]);
 
-it('can build activity with custom config options', function (bool $typed) {
+it('can build child workflow with custom config options', function (bool $typed) {
+    config()->set('temporal.namespace', 'test-namespace');
     config()->set('temporal.queue', 'test-queue');
-    config()->set('temporal.retry.activity', [
+    config()->set('temporal.retry.workflow', [
         'initial_interval' => 5,
         'backoff_coefficient' => 6.0,
         'maximum_interval' => 500,
         'maximum_attempts' => 10,
     ]);
 
-    $contextMock = mockTemporalContext(validateActivityOptions: function (ActivityOptions $activityOptions): bool {
-        expect($activityOptions)
+    $contextMock = mockTemporalContext(validateWorkflowOptions: function (ChildWorkflowOptions $workflowOptions): bool {
+        expect($workflowOptions)
+            ->namespace->toBe('test-namespace')
             ->taskQueue->toBe('test-queue')
             ->retryOptions->not->toBeNull()
             ->retryOptions->initialInterval->totalSeconds->toBe(5)
@@ -65,23 +69,24 @@ it('can build activity with custom config options', function (bool $typed) {
         ->shouldReceive('getTemporalContext')
         ->andReturn($contextMock);
 
-    $builder = Temporal::newActivity();
+    $builder = Temporal::newChildWorkflow();
 
     if ($typed) {
-        $builder->build(DemoActivityInterface::class);
+        $builder->build(DemoWorkflowInterface::class);
     } else {
-        $builder->buildUntyped();
+        $builder->buildUntyped('demo.greet');
     }
 })->with([
     'typed' => true,
     'untyped' => false,
 ]);
 
-it('can build activity with custom options', function (bool $typed) {
-    $contextMock = mockTemporalContext(validateActivityOptions: function (ActivityOptions $activityOptions): bool {
-        expect($activityOptions)
+it('can build child workflow with custom options', function (bool $typed) {
+    $contextMock = mockTemporalContext(validateWorkflowOptions: function (ChildWorkflowOptions $workflowOptions): bool {
+        expect($workflowOptions)
+            ->namespace->toBe('custom-namespace')
             ->taskQueue->toBe('custom-queue')
-            ->startToCloseTimeout->totalSeconds->toBe(10)
+            ->workflowExecutionTimeout->totalSeconds->toBe(10)
             ->retryOptions->not->toBeNull()
             ->retryOptions->maximumAttempts->toBe(5);
 
@@ -92,15 +97,16 @@ it('can build activity with custom options', function (bool $typed) {
         ->shouldReceive('getTemporalContext')
         ->andReturn($contextMock);
 
-    $builder = Temporal::newActivity()
-        ->withStartToCloseTimeout(CarbonInterval::seconds(10))
+    $builder = Temporal::newChildWorkflow()
+        ->withWorkflowExecutionTimeout(CarbonInterval::seconds(10))
         ->withRetryOptions(RetryOptions::new()->withMaximumAttempts(5))
+        ->withNamespace('custom-namespace')
         ->withTaskQueue('custom-queue');
 
     if ($typed) {
-        $builder->build(DemoActivityInterface::class);
+        $builder->build(DemoWorkflowInterface::class);
     } else {
-        $builder->buildUntyped();
+        $builder->buildUntyped('demo.greet');
     }
 })->with([
     'typed' => true,

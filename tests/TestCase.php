@@ -39,8 +39,6 @@ class TestCase extends Orchestra
             $config->set('temporal.activities', [
                 DemoActivity::class,
             ]);
-            $config->set('temporal.namespace', 'test-namespace');
-            $config->set('temporal.queue', 'test-queue');
         });
     }
 }

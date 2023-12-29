@@ -178,9 +178,10 @@ class TemporalFake extends Temporal
         );
     }
 
-    public function getTemporalContext(): FakeScopeContext
+    public function getTemporalContext(): Workflow\ScopedContextInterface
     {
         $currentContext = Workflow::getCurrentContext();
+        assert($currentContext instanceof Workflow\ScopedContextInterface);
 
         return new FakeScopeContext($currentContext);
     }
