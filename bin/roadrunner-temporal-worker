@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Keepsuit\LaravelTemporal\Support\ApplicationFactory;
 use Keepsuit\LaravelTemporal\TemporalDiscovery;
+use Spiral\Goridge\Exception\RelayException;
 use Temporal\DataConverter\DataConverterInterface;
 use Temporal\WorkerFactory;
 
@@ -25,7 +26,7 @@ $factory = WorkerFactory::create(
 
 // Worker that listens on a Task Queue and hosts both workflow and activity implementations.
 $worker = $factory->newWorker(
-    taskQueue: env('TEMPORAL_QUEUE')
+    taskQueue: env('TEMPORAL_QUEUE'),
 );
 
 foreach ($discovery->getWorkflows() as $workflow) {
@@ -36,4 +37,8 @@ foreach ($discovery->getActivities() as $activity) {
     $worker->registerActivity($activity, fn (ReflectionClass $class) => $app->make($class->getName()));
 }
 
-$factory->run();
+try {
+    $factory->run();
+} catch (RelayException $e) {
+    exit(1);
+}
