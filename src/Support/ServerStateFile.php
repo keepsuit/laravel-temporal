@@ -3,6 +3,7 @@
 namespace Keepsuit\LaravelTemporal\Support;
 
 use RuntimeException;
+use Safe\Exceptions\FilesystemException;
 
 class ServerStateFile
 {
@@ -18,7 +19,7 @@ class ServerStateFile
     public function read(): array
     {
         $state = is_readable($this->path)
-            ? json_decode(file_get_contents($this->path), true, 512, JSON_THROW_ON_ERROR)
+            ? \Safe\json_decode(\Safe\file_get_contents($this->path), true, 512, JSON_THROW_ON_ERROR)
             : [];
 
         return [
@@ -36,7 +37,7 @@ class ServerStateFile
             throw new RuntimeException('Unable to write to process ID file.');
         }
 
-        file_put_contents($this->path, json_encode(
+        \Safe\file_put_contents($this->path, \Safe\json_encode(
             [...$this->read(), 'masterProcessId' => $masterProcessId],
             JSON_PRETTY_PRINT
         ));
@@ -53,7 +54,7 @@ class ServerStateFile
             throw new RuntimeException('Unable to write to process ID file.');
         }
 
-        file_put_contents($this->path, json_encode(
+        \Safe\file_put_contents($this->path, \Safe\json_encode(
             [...$this->read(), 'state' => $newState],
             JSON_PRETTY_PRINT
         ));
@@ -64,11 +65,13 @@ class ServerStateFile
      */
     public function delete(): bool
     {
-        if (is_writable($this->path)) {
-            return unlink($this->path);
-        }
+        try {
+            \Safe\unlink($this->path);
 
-        return false;
+            return true;
+        } catch (FilesystemException) {
+            return false;
+        }
     }
 
     /**

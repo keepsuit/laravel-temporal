@@ -119,6 +119,7 @@ class FakeWorkflowContext implements WorkflowContextInterface
             ->each(fn (\ReflectionProperty $property) => $property->setAccessible(true))
             ->mapWithKeys(fn (\ReflectionProperty $property) => [$property->getName() => $property->getValue($workflowProxy)]);
 
+        // @phpstan-ignore-next-line
         return new ChildWorkflowProxy(
             $properties->get('class'),
             $properties->get('workflow'),
@@ -161,6 +162,7 @@ class FakeWorkflowContext implements WorkflowContextInterface
             ->each(fn (\ReflectionProperty $property) => $property->setAccessible(true))
             ->mapWithKeys(fn (\ReflectionProperty $property) => [$property->getName() => $property->getValue($activityProxy)]);
 
+        // @phpstan-ignore-next-line
         return new ActivityProxy(
             $properties->get('class'),
             $properties->get('activities'),

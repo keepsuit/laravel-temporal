@@ -17,11 +17,11 @@ class LaravelPayloadConverter extends JsonConverter
     public function toPayload($value): ?Payload
     {
         if ($value instanceof TemporalSerializable) {
-            return $this->create(json_encode($value->toTemporalPayload(), self::JSON_FLAGS));
+            return $this->create(\Safe\json_encode($value->toTemporalPayload(), self::JSON_FLAGS));
         }
 
         if ($value instanceof \BackedEnum) {
-            return $this->create(json_encode($value->value, self::JSON_FLAGS));
+            return $this->create(\Safe\json_encode($value->value, self::JSON_FLAGS));
         }
 
         if ($value instanceof DataObject) {
@@ -41,14 +41,20 @@ class LaravelPayloadConverter extends JsonConverter
             return parent::fromPayload($payload, $type);
         }
 
+        $typeName = $type->getName();
+
+        if (! class_exists($typeName)) {
+            return parent::fromPayload($payload, $type);
+        }
+
         try {
-            $data = json_decode($payload->getData(), true, 512, self::JSON_FLAGS);
+            $data = \Safe\json_decode($payload->getData(), true, 512, self::JSON_FLAGS);
         } catch (Throwable $throwable) {
             throw new DataConverterException($throwable->getMessage(), $throwable->getCode(), $throwable);
         }
 
         try {
-            $reflection = new ReflectionClass($type->getName());
+            $reflection = new ReflectionClass($typeName);
             $class = $reflection->getName();
 
             if ($reflection->implementsInterface(TemporalSerializable::class)) {

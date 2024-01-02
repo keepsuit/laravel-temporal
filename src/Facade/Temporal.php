@@ -61,7 +61,7 @@ class Temporal extends Facade
         }
 
         if (env('TEMPORAL_TESTING_CONFIG') !== null) {
-            config()->set(json_decode((string) env('TEMPORAL_TESTING_CONFIG'), true) ?? []);
+            config()->set(\Safe\json_decode((string) env('TEMPORAL_TESTING_CONFIG'), true) ?? []);
             DB::purge();
         }
 
@@ -72,7 +72,7 @@ class Temporal extends Facade
     {
         $instance = static::getFacadeRoot();
 
-        if (method_exists($instance, 'getTemporalContext')) {
+        if (is_object($instance) && method_exists($instance, 'getTemporalContext')) {
             return $instance->getTemporalContext();
         }
 

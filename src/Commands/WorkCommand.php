@@ -44,7 +44,7 @@ class WorkCommand extends Command
 
         $this->writeServerStateFile($serverStateFile);
 
-        $this->queue = ($this->argument('queue') ?: $this->laravel['config']['temporal.queue']) ?: WorkerFactory::DEFAULT_TASK_QUEUE;
+        $this->queue = ($this->argument('queue') ?: config('temporal.queue')) ?: WorkerFactory::DEFAULT_TASK_QUEUE;
 
         $server = new Process([
             $roadRunnerBinary,
@@ -112,7 +112,9 @@ class WorkCommand extends Command
      */
     protected function rpcPort(): int
     {
-        return $this->option('rpc-port') ?: 6001;
+        $rpcPort = $this->option('rpc-port');
+
+        return is_numeric($rpcPort) ? (int) $rpcPort : 6001;
     }
 
     /**
@@ -131,16 +133,12 @@ class WorkCommand extends Command
         $path = $this->option('rr-config');
 
         if (! $path) {
-            touch(base_path('.rr.yaml'));
+            \Safe\touch(base_path('.rr.yaml'));
 
             return base_path('.rr.yaml');
         }
 
-        if (! realpath($path)) {
-            throw new InvalidArgumentException('Unable to locate specified configuration file.');
-        }
-
-        return realpath($path);
+        return \Safe\realpath($path);
     }
 
     /**
@@ -159,18 +157,19 @@ class WorkCommand extends Command
         while ($server->isRunning()) {
             $this->writeServerOutput($server);
 
-            if ($watcher->isRunning() &&
-                $watcher->getIncrementalOutput()) {
-                $this->components->info('Application change detected. Restarting workers…');
+            if ($watcher !== null) {
+                if ($watcher->isRunning() && $watcher->getIncrementalOutput()) {
+                    $this->components->info('Application change detected. Restarting workers…');
 
-                $inspector->reloadServer();
-            } elseif ($watcher->isTerminated()) {
-                $this->error(
-                    'Watcher process has terminated. Please ensure Node and chokidar are installed.'.PHP_EOL.
-                    $watcher->getErrorOutput()
-                );
+                    $inspector->reloadServer();
+                } elseif ($watcher->isTerminated()) {
+                    $this->error(
+                        'Watcher process has terminated. Please ensure Node and chokidar are installed.'.PHP_EOL.
+                        $watcher->getErrorOutput()
+                    );
 
-                return Command::FAILURE;
+                    return Command::FAILURE;
+                }
             }
 
             usleep(500 * 1000);
@@ -189,19 +188,11 @@ class WorkCommand extends Command
 
     /**
      * Start the watcher process for the server.
-     *
-     * @return Process|object
      */
-    protected function startServerWatcher(): mixed
+    protected function startServerWatcher(): ?Process
     {
         if (! $this->option('watch')) {
-            return new class()
-            {
-                public function __call(string $method, mixed $parameters): mixed
-                {
-                    return null;
-                }
-            };
+            return null;
         }
 
         /** @var string[] $paths */
@@ -214,8 +205,8 @@ class WorkCommand extends Command
         return tap(new Process([
             (new ExecutableFinder())->find('node'),
             'file-watcher.cjs',
-            json_encode(collect($paths)->map(fn (string $path) => base_path($path)), JSON_THROW_ON_ERROR),
-        ], realpath(__DIR__.'/../../bin'), null, null, null))->start();
+            \Safe\json_encode(collect($paths)->map(fn (string $path) => base_path($path)), JSON_THROW_ON_ERROR),
+        ], \Safe\realpath(__DIR__.'/../../bin'), null, null, null))->start();
     }
 
     /**
@@ -240,7 +231,7 @@ class WorkCommand extends Command
             ->filter()
             ->each(function ($output): void {
                 try {
-                    $debug = json_decode($output, true, 512, JSON_THROW_ON_ERROR);
+                    $debug = \Safe\json_decode($output, true, 512, JSON_THROW_ON_ERROR);
                 } catch (Exception) {
                     return;
                 }
@@ -251,7 +242,20 @@ class WorkCommand extends Command
                     return;
                 }
 
-                /** @var array{level:string,msg:string,ts:float,logger:string,"workflow info"?:array} $debug */
+                /**
+                 * @var array{
+                 *     level: string,
+                 *     msg: string,
+                 *     ts: float,
+                 *     logger: string,
+                 *     "workflow info"?: array{
+                 *          WorkflowType: array{Name:string},
+                 *          TaskQueueName: string,
+                 *          Attempt: int,
+                 *          WorkflowStartTime: string
+                 *     }
+                 * } $debug
+                 */
 
                 // $level = trim($debug['level']);
                 $logger = trim($debug['logger']);
@@ -261,7 +265,7 @@ class WorkCommand extends Command
                     return;
                 }
 
-                if ($message === 'workflow execute') {
+                if ($message === 'workflow execute' && isset($debug['workflow info'])) {
                     $this->workflowInfo($debug['workflow info']);
                 }
             });

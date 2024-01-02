@@ -22,6 +22,10 @@ final class TemporalMockerCache
 
     private bool $localOnly = false;
 
+    /**
+     * @param  non-empty-string  $host
+     * @param  non-empty-string  $cacheName
+     */
     public function __construct(string $host, string $cacheName)
     {
         $this->cache = (new Factory(RPC::create($host)))->select($cacheName);

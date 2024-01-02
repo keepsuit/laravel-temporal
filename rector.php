@@ -10,6 +10,7 @@ use Rector\CodingStyle\Rector\PostInc\PostIncDecToPreIncDecRector;
 use Rector\Config\RectorConfig;
 use Rector\Core\ValueObject\PhpVersion;
 use Rector\DeadCode\Rector\PropertyProperty\RemoveNullPropertyInitializationRector;
+use Rector\EarlyReturn\Rector\If_\ChangeAndIfToEarlyReturnRector;
 use Rector\EarlyReturn\Rector\Return_\ReturnBinaryOrToEarlyReturnRector;
 use Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector;
 use Rector\Privatization\Rector\Class_\FinalizeClassesWithoutChildrenRector;
@@ -43,6 +44,7 @@ return static function (RectorConfig $config): void {
     $config->skip([
         AddArrowFunctionReturnTypeRector::class,
         CallableThisArrayToAnonymousFunctionRector::class,
+        ChangeAndIfToEarlyReturnRector::class,
         FinalizeClassesWithoutChildrenRector::class,
         FlipTypeControlToUseExclusiveTypeRector::class,
         JsonThrowOnErrorRector::class,

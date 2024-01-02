@@ -17,7 +17,7 @@ trait DefaultRetryPolicy
         }
 
         if (is_numeric($backoffCoefficient = Arr::get($config, 'backoff_coefficient'))) {
-            $retryOptions = $retryOptions->withBackoffCoefficient($backoffCoefficient);
+            $retryOptions = $retryOptions->withBackoffCoefficient((float) $backoffCoefficient);
         }
 
         if (is_numeric($maximumInterval = Arr::get($config, 'maximum_interval'))) {
@@ -25,7 +25,7 @@ trait DefaultRetryPolicy
         }
 
         if (is_numeric($maximumAttempts = Arr::get($config, 'maximum_attempts'))) {
-            return $retryOptions->withMaximumAttempts($maximumAttempts);
+            return $retryOptions->withMaximumAttempts(max(0, (int) $maximumAttempts));
         }
 
         return $retryOptions;

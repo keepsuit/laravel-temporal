@@ -86,7 +86,7 @@ class TemporalTestingWorker
                 'LARAVEL_TEMPORAL' => 1,
                 'TEMPORAL_QUEUE' => config('temporal.queue'),
                 'TEMPORAL_TESTING_ENV' => 1,
-                'TEMPORAL_TESTING_CONFIG' => json_encode(config()->all()),
+                'TEMPORAL_TESTING_CONFIG' => \Safe\json_encode(config()->all()),
             ],
             timeout: 10
         );
@@ -117,7 +117,7 @@ class TemporalTestingWorker
             return $defaultWorkerPath;
         }
 
-        return realpath(__DIR__.'/../../bin/roadrunner-temporal-worker');
+        return \Safe\realpath(__DIR__.'/../../bin/roadrunner-temporal-worker');
     }
 
     protected function downloadRoadRunnerBinary(): void

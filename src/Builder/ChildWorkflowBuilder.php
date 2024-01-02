@@ -38,6 +38,7 @@ class ChildWorkflowBuilder
      */
     public function build(string $class): ChildWorkflowProxy
     {
+        // @phpstan-ignore-next-line
         return Temporal::getTemporalContext()->newChildWorkflowStub($class, $this->workflowOptions);
     }
 
