@@ -17,6 +17,7 @@ use Temporal\WorkerFactory;
 class WorkCommand extends Command
 {
     use Concerns\InteractsWithIO;
+    use Concerns\RoadrunnerDependencies;
 
     protected $signature = 'temporal:work
                         {queue? : The name of the task queue to work}
@@ -35,11 +36,11 @@ class WorkCommand extends Command
     public function handle(
         ServerStateFile $serverStateFile,
         ServerProcessInspector $inspector,
-        RoadRunnerBinaryHelper $roadRunnerBinaryFinder
+        RoadRunnerBinaryHelper $roadRunnerBinaryHelper
     ): ?int {
-        $roadRunnerBinary = $roadRunnerBinaryFinder->binaryPath();
+        $roadRunnerBinary = $this->ensureRoadRunnerBinaryIsInstalled($roadRunnerBinaryHelper);
 
-        $configVersion = $this->detectRoadrunnerConfigVersion($roadRunnerBinaryFinder);
+        $configVersion = $this->detectRoadrunnerConfigVersion($roadRunnerBinaryHelper);
 
         $this->writeServerStateFile($serverStateFile);
 
@@ -191,7 +192,7 @@ class WorkCommand extends Command
      *
      * @return Process|object
      */
-    protected function startServerWatcher()
+    protected function startServerWatcher(): mixed
     {
         if (! $this->option('watch')) {
             return new class()
