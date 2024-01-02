@@ -14,6 +14,7 @@ use Temporal\Workflow\ChildWorkflowOptions;
 use Temporal\Workflow\ScopedContextInterface;
 
 uses(TestCase::class)->in(__DIR__.'/Unit');
+uses(TestCase::class)->in(__DIR__.'/Integrations/Temporal');
 uses(LaravelDataTestCase::class)->in(__DIR__.'/Integrations/LaravelData');
 
 /**

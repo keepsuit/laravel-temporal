@@ -11,9 +11,9 @@ use Temporal\Workflow\WorkflowInterface;
 use Temporal\Workflow\WorkflowMethod;
 
 #[WorkflowInterface]
-class DebugOptionsWorkflow
+class ActivityOptionsWorkflow
 {
-    #[WorkflowMethod(name: 'debug.activityOptions')]
+    #[WorkflowMethod(name: 'activityOptions')]
     #[Workflow\ReturnType('array')]
     public function activityOptions(): \Generator
     {

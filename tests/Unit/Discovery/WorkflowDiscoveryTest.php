@@ -1,10 +1,11 @@
 <?php
 
 use Keepsuit\LaravelTemporal\Support\DiscoverWorkflows;
-use Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Workflows\DebugOptionsWorkflow;
+use Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Workflows\ActivityOptionsWorkflow;
 use Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Workflows\DemoWorkflow;
 use Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Workflows\DemoWorkflowInterfaceOnly;
 use Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Workflows\DemoWorkflowWithoutInterface;
+use Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Workflows\TesterWorkflow;
 
 it('can discovery workflows', function () {
     $workflows = DiscoverWorkflows::within(
@@ -12,9 +13,10 @@ it('can discovery workflows', function () {
     );
 
     expect($workflows)->toBe([
-        DebugOptionsWorkflow::class,
+        ActivityOptionsWorkflow::class,
         DemoWorkflow::class,
         DemoWorkflowInterfaceOnly::class,
         DemoWorkflowWithoutInterface::class,
+        TesterWorkflow::class,
     ]);
 });

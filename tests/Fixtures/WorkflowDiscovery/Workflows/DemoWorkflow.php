@@ -4,7 +4,7 @@ namespace Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Workflows;
 
 use Carbon\CarbonInterval;
 use Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Activities\DemoActivityInterface;
-use Temporal\Activity\LocalActivityOptions;
+use Temporal\Activity\ActivityOptions;
 use Temporal\Workflow;
 
 class DemoWorkflow implements DemoWorkflowInterface
@@ -18,7 +18,7 @@ class DemoWorkflow implements DemoWorkflowInterface
     {
         $this->activity = Workflow::newActivityStub(
             DemoActivityInterface::class,
-            LocalActivityOptions::new()
+            ActivityOptions::new()
                 ->withStartToCloseTimeout(CarbonInterval::seconds(1))
         );
     }

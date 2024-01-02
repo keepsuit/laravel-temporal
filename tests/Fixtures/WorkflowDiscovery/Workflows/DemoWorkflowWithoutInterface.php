@@ -3,7 +3,7 @@
 namespace Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Workflows;
 
 use Carbon\CarbonInterval;
-use Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Activities\DemoActivityWithoutInterface;
+use Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Activities\DemoActivity;
 use Temporal\Activity\ActivityOptions;
 use Temporal\Workflow;
 use Temporal\Workflow\WorkflowInterface;
@@ -16,7 +16,7 @@ class DemoWorkflowWithoutInterface
     public function greet(string $name): \Generator
     {
         $activity = Workflow::newActivityStub(
-            DemoActivityWithoutInterface::class,
+            DemoActivity::class,
             ActivityOptions::new()->withStartToCloseTimeout(CarbonInterval::seconds(1))
         );
 

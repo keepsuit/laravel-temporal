@@ -2,15 +2,15 @@
 
 namespace Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Activities;
 
-use Temporal\Activity\ActivityInterface;
 use Temporal\Activity\ActivityMethod;
+use Temporal\Activity\LocalActivityInterface;
 
-#[ActivityInterface(prefix: 'demo_without_interface')]
-class DemoActivityWithoutInterface
+#[LocalActivityInterface(prefix: 'demo_local')]
+class DemoLocalActivity
 {
     #[ActivityMethod(name: 'greet')]
     public function greet(string $name): string
     {
-        return sprintf('Hello %s', $name);
+        return sprintf('(local) Hello %s', $name);
     }
 }
