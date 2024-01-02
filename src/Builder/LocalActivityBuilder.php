@@ -5,14 +5,11 @@ namespace Keepsuit\LaravelTemporal\Builder;
 use InvalidArgumentException;
 use Keepsuit\LaravelTemporal\Facade\Temporal;
 use Temporal\Activity\LocalActivityOptions;
-use Temporal\Common\RetryOptions;
 use Temporal\Internal\Workflow\ActivityProxy;
 use Temporal\Workflow\ActivityStubInterface;
 
 /**
- * @method self withScheduleToCloseTimeout(\DateInterval $timeout)
- * @method self withStartToCloseTimeout(\DateInterval $timeout)
- * @method self withRetryOptions(?RetryOptions $options)
+ * @mixin LocalActivityOptions
  */
 class LocalActivityBuilder
 {

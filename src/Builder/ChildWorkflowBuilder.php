@@ -2,28 +2,14 @@
 
 namespace Keepsuit\LaravelTemporal\Builder;
 
-use DateInterval;
 use InvalidArgumentException;
 use Keepsuit\LaravelTemporal\Facade\Temporal;
-use Temporal\Common\RetryOptions;
 use Temporal\Internal\Workflow\ChildWorkflowProxy;
 use Temporal\Workflow\ChildWorkflowOptions;
 use Temporal\Workflow\ChildWorkflowStubInterface;
 
 /**
- * @method ChildWorkflowBuilder withNamespace(string $namespace)
- * @method ChildWorkflowBuilder withWorkflowId(string $workflowId)
- * @method ChildWorkflowBuilder withTaskQueue(string $taskQueue)
- * @method ChildWorkflowBuilder withWorkflowExecutionTimeout(DateInterval $timeout)
- * @method ChildWorkflowBuilder withWorkflowRunTimeout(DateInterval $timeout)
- * @method ChildWorkflowBuilder withWorkflowTaskTimeout(DateInterval $timeout)
- * @method ChildWorkflowBuilder withChildWorkflowCancellationType(int $type)
- * @method ChildWorkflowBuilder withWorkflowIdReusePolicy(int $policy)
- * @method ChildWorkflowBuilder withRetryOptions(?RetryOptions $options)
- * @method ChildWorkflowBuilder withCronSchedule(?string $expression)
- * @method ChildWorkflowBuilder withMemo(?array $memo)
- * @method ChildWorkflowBuilder withSearchAttributes(?array $searchAttributes)
- * @method ChildWorkflowBuilder withParentClosePolicy(int $policy)
+ * @mixin ChildWorkflowOptions
  */
 class ChildWorkflowBuilder
 {

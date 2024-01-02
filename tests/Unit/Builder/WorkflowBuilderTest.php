@@ -25,6 +25,14 @@ it('can build client with default options', function () {
 it('can build workflow with default config options', function (bool $typed) {
     $builder = WorkflowBuilder::new();
 
+    expect($builder)
+        ->taskQueue->toBe(WorkerFactory::DEFAULT_TASK_QUEUE)
+        ->retryOptions->not->toBeNull()
+        ->retryOptions->initialInterval->totalSeconds->toBe(RetryOptions::DEFAULT_INITIAL_INTERVAL)
+        ->retryOptions->backoffCoefficient->toBe(RetryOptions::DEFAULT_BACKOFF_COEFFICIENT)
+        ->retryOptions->maximumInterval->totalSeconds->toBe(RetryOptions::DEFAULT_MAXIMUM_INTERVAL)
+        ->retryOptions->maximumAttempts->toBe(RetryOptions::DEFAULT_MAXIMUM_ATTEMPTS);
+
     $workflow = match ($typed) {
         true => $builder->build(DemoWorkflow::class),
         false => $builder->buildUntyped('demo.greet'),
@@ -74,6 +82,14 @@ it('can build workflow with custom config options', function (bool $typed) {
 
     $builder = WorkflowBuilder::new();
 
+    expect($builder)
+        ->taskQueue->toBe('test-queue')
+        ->retryOptions->not->toBeNull()
+        ->retryOptions->initialInterval->totalSeconds->toBe(5)
+        ->retryOptions->backoffCoefficient->toBe(6.0)
+        ->retryOptions->maximumInterval->totalSeconds->toBe(500)
+        ->retryOptions->maximumAttempts->toBe(10);
+
     $workflow = match ($typed) {
         true => $builder->build(DemoWorkflow::class),
         false => $builder->buildUntyped('demo.greet'),
@@ -109,6 +125,11 @@ it('can build workflow with custom options', function (bool $typed) {
         ->withRetryOptions(RetryOptions::new()->withMaximumAttempts(5))
         ->withWorkflowExecutionTimeout(CarbonInterval::seconds(10));
 
+    expect($builder)
+        ->taskQueue->toBe('custom-queue')
+        ->retryOptions->maximumAttempts->toBe(5)
+        ->workflowExecutionTimeout->totalSeconds->toBe(10);
+
     $workflow = match ($typed) {
         true => $builder->build(DemoWorkflow::class),
         false => $builder->buildUntyped('demo.greet'),
@@ -132,6 +153,9 @@ it('can build workflow with custom options', function (bool $typed) {
 it('can build running workflow', function (bool $typed) {
     $builder = WorkflowBuilder::new()
         ->withRunId('test-run-id');
+
+    expect($builder)
+        ->runId->toBe('test-run-id');
 
     $workflow = match ($typed) {
         true => $builder->build(DemoWorkflow::class),
