@@ -178,15 +178,12 @@ class TemporalFake extends Temporal
         );
     }
 
-    public function getTemporalContext(): mixed
+    public function getTemporalContext(): Workflow\ScopedContextInterface
     {
         $currentContext = Workflow::getCurrentContext();
+        assert($currentContext instanceof Workflow\ScopedContextInterface);
 
-        return match (true) {
-            $currentContext instanceof Workflow\ScopedContextInterface => new FakeScopeContext($currentContext),
-            $currentContext instanceof Workflow\WorkflowContextInterface => new FakeWorkflowContext($currentContext),
-            default => $currentContext
-        };
+        return new FakeScopeContext($currentContext);
     }
 
     protected function initCache(): void

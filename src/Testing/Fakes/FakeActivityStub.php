@@ -29,7 +29,7 @@ class FakeActivityStub implements ActivityStubInterface
         /** @var ActivityOptions|LocalActivityOptions $options */
         $options = $this->getOptions();
 
-        $taskQueue = $isLocalActivity ? null : $options->taskQueue;
+        $taskQueue = $options instanceof ActivityOptions ? $options->taskQueue : null;
 
         $mock = $this->getTemporalMocker()->getActivityResult($name, $taskQueue);
 

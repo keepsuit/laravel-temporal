@@ -6,6 +6,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\ParallelTesting;
 use Illuminate\Support\Str;
 use Keepsuit\LaravelTemporal\Commands\ActivityMakeCommand;
+use Keepsuit\LaravelTemporal\Commands\InstallCommand;
 use Keepsuit\LaravelTemporal\Commands\TestServerCommand;
 use Keepsuit\LaravelTemporal\Commands\WorkCommand;
 use Keepsuit\LaravelTemporal\Commands\WorkflowMakeCommand;
@@ -35,6 +36,7 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasCommands([
                 WorkCommand::class,
+                InstallCommand::class,
                 TestServerCommand::class,
                 WorkflowMakeCommand::class,
                 ActivityMakeCommand::class,

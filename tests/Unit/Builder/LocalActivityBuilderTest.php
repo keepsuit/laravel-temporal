@@ -3,18 +3,16 @@
 use Carbon\CarbonInterval;
 use Keepsuit\LaravelTemporal\Facade\Temporal;
 use Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Activities\DemoActivityInterface;
-use Temporal\Activity\ActivityOptions;
+use Temporal\Activity\LocalActivityOptions;
 use Temporal\Common\RetryOptions;
-use Temporal\WorkerFactory;
 
 beforeEach(function () {
     Temporal::fake();
 });
 
-it('can build activity with default config options', function (bool $typed) {
-    $contextMock = mockTemporalContext(validateActivityOptions: function (ActivityOptions $activityOptions): bool {
+it('can build local activity with default config options', function (bool $typed) {
+    $contextMock = mockTemporalContext(validateActivityOptions: function (LocalActivityOptions $activityOptions): bool {
         expect($activityOptions)
-            ->taskQueue->toBe(WorkerFactory::DEFAULT_TASK_QUEUE)
             ->retryOptions->not->toBeNull()
             ->retryOptions->initialInterval->totalSeconds->toBe(RetryOptions::DEFAULT_INITIAL_INTERVAL)
             ->retryOptions->backoffCoefficient->toBe(RetryOptions::DEFAULT_BACKOFF_COEFFICIENT)
@@ -28,10 +26,9 @@ it('can build activity with default config options', function (bool $typed) {
         ->shouldReceive('getTemporalContext')
         ->andReturn($contextMock);
 
-    $builder = Temporal::newActivity();
+    $builder = Temporal::newLocalActivity();
 
     expect($builder)
-        ->taskQueue->toBe(WorkerFactory::DEFAULT_TASK_QUEUE)
         ->retryOptions->not->toBeNull()
         ->retryOptions->initialInterval->totalSeconds->toBe(RetryOptions::DEFAULT_INITIAL_INTERVAL)
         ->retryOptions->backoffCoefficient->toBe(RetryOptions::DEFAULT_BACKOFF_COEFFICIENT)
@@ -48,8 +45,7 @@ it('can build activity with default config options', function (bool $typed) {
     'untyped' => false,
 ]);
 
-it('can build activity with custom config options', function (bool $typed) {
-    config()->set('temporal.queue', 'test-queue');
+it('can build local activity with custom config options', function (bool $typed) {
     config()->set('temporal.retry.activity', [
         'initial_interval' => 5,
         'backoff_coefficient' => 6.0,
@@ -57,9 +53,8 @@ it('can build activity with custom config options', function (bool $typed) {
         'maximum_attempts' => 10,
     ]);
 
-    $contextMock = mockTemporalContext(validateActivityOptions: function (ActivityOptions $activityOptions): bool {
+    $contextMock = mockTemporalContext(validateActivityOptions: function (LocalActivityOptions $activityOptions): bool {
         expect($activityOptions)
-            ->taskQueue->toBe('test-queue')
             ->retryOptions->not->toBeNull()
             ->retryOptions->initialInterval->totalSeconds->toBe(5)
             ->retryOptions->backoffCoefficient->toBe(6.0)
@@ -73,10 +68,9 @@ it('can build activity with custom config options', function (bool $typed) {
         ->shouldReceive('getTemporalContext')
         ->andReturn($contextMock);
 
-    $builder = Temporal::newActivity();
+    $builder = Temporal::newLocalActivity();
 
     expect($builder)
-        ->taskQueue->toBe('test-queue')
         ->retryOptions->not->toBeNull()
         ->retryOptions->initialInterval->totalSeconds->toBe(5)
         ->retryOptions->backoffCoefficient->toBe(6.0)
@@ -93,10 +87,9 @@ it('can build activity with custom config options', function (bool $typed) {
     'untyped' => false,
 ]);
 
-it('can build activity with custom options', function (bool $typed) {
-    $contextMock = mockTemporalContext(validateActivityOptions: function (ActivityOptions $activityOptions): bool {
+it('can build local activity with custom options', function (bool $typed) {
+    $contextMock = mockTemporalContext(validateActivityOptions: function (LocalActivityOptions $activityOptions): bool {
         expect($activityOptions)
-            ->taskQueue->toBe('custom-queue')
             ->startToCloseTimeout->totalSeconds->toBe(10)
             ->retryOptions->not->toBeNull()
             ->retryOptions->maximumAttempts->toBe(5);
@@ -108,13 +101,11 @@ it('can build activity with custom options', function (bool $typed) {
         ->shouldReceive('getTemporalContext')
         ->andReturn($contextMock);
 
-    $builder = Temporal::newActivity()
+    $builder = Temporal::newLocalActivity()
         ->withStartToCloseTimeout(CarbonInterval::seconds(10))
-        ->withRetryOptions(RetryOptions::new()->withMaximumAttempts(5))
-        ->withTaskQueue('custom-queue');
+        ->withRetryOptions(RetryOptions::new()->withMaximumAttempts(5));
 
     expect($builder)
-        ->taskQueue->toBe('custom-queue')
         ->startToCloseTimeout->totalSeconds->toBe(10)
         ->retryOptions->not->toBeNull()
         ->retryOptions->maximumAttempts->toBe(5);

@@ -21,4 +21,7 @@
             <directory suffix=".php">./src</directory>
         </include>
     </source>
+    <php>
+        <server name="TEMPORAL_TESTING_DEBUG" value="false"/>
+    </php>
 </phpunit>

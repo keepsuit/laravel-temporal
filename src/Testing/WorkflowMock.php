@@ -36,7 +36,7 @@ class WorkflowMock
         });
     }
 
-    public function assertDispatchedTimes(int $times = 1, \Closure|int|null $callback = null): void
+    public function assertDispatchedTimes(int $times = 1, ?\Closure $callback = null): void
     {
         Temporal::assertWorkflowDispatchedTimes($this->workflowName, $times, function (...$args) use ($callback) {
             $taskQueue = Arr::last($args);

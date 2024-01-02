@@ -37,35 +37,15 @@ class RoadRunnerBinaryHelper
         return $this->binaryPath = $roadRunnerBinary;
     }
 
-    public function download(bool $force = false): void
-    {
-        if (! $force && $this->binaryPath() !== null) {
-            return;
-        }
-
-        $process = new Process(array_filter([
-            (new PhpExecutableFinder())->find(),
-            './vendor/bin/rr',
-            'get-binary',
-            '-n',
-            '--ansi',
-        ]), base_path(), null, null, null);
-
-        $process->mustRun();
-
-        chmod(base_path('rr'), 0755);
-    }
-
-    public function ensureConfigFileExists(): void
-    {
-        if (! file_exists(base_path('.rr.yaml'))) {
-            touch(base_path('.rr.yaml'));
-        }
-    }
-
     public function configVersion(): string
     {
-        $version = tap(new Process([$this->binaryPath(), '--version'], base_path()))
+        $binaryPath = $this->binaryPath();
+
+        if ($binaryPath === null) {
+            throw new \RuntimeException('RoadRunner binary not found.');
+        }
+
+        $version = tap(new Process([$binaryPath, '--version'], base_path()))
             ->run()
             ->getOutput();
 
@@ -80,5 +60,36 @@ class RoadRunnerBinaryHelper
         }
 
         throw new \RuntimeException(sprintf('Your RoadRunner binary version (%s) is not compatible with laravel temporal.', $version));
+    }
+
+    public function download(bool $force = false): string
+    {
+        if (! $force && $this->binaryPath() !== null) {
+            return $this->binaryPath();
+        }
+
+        $process = new Process(array_filter([
+            (new PhpExecutableFinder())->find(),
+            './vendor/bin/rr',
+            'get-binary',
+            '-n',
+            '--ansi',
+        ]), base_path(), null, null, null);
+
+        $process->mustRun();
+
+        $this->binaryPath = base_path('rr');
+
+        chmod($this->binaryPath, 0755);
+        touch(base_path('.rr.yaml'));
+
+        return $this->binaryPath;
+    }
+
+    public function ensureConfigFileExists(): void
+    {
+        if (! file_exists(base_path('.rr.yaml'))) {
+            touch(base_path('.rr.yaml'));
+        }
     }
 }

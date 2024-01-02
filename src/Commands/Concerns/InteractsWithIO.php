@@ -27,6 +27,8 @@ trait InteractsWithIO
         'worker is allocated',
         'worker destroyed',
         'stderr',
+        '[INFO] RoadRunner server started; version:',
+        '[INFO] sdnotify: not notified',
     ];
 
     /**

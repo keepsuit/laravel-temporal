@@ -2,25 +2,16 @@
 
 namespace Keepsuit\LaravelTemporal\Builder;
 
-use DateInterval;
 use InvalidArgumentException;
 use Temporal\Client\WorkflowClientInterface;
 use Temporal\Client\WorkflowOptions;
 use Temporal\Client\WorkflowStubInterface;
-use Temporal\Common\RetryOptions;
 use Temporal\Internal\Client\WorkflowProxy;
 
 /**
- * @method self withWorkflowId(string $workflowId)
- * @method self withTaskQueue(string $taskQueue)
- * @method self withWorkflowExecutionTimeout(DateInterval $timeout)
- * @method self withWorkflowRunTimeout(DateInterval $timeout)
- * @method self withWorkflowTaskTimeout(DateInterval $timeout)
- * @method self withWorkflowIdReusePolicy(int $policy)
- * @method self withRetryOptions(?RetryOptions $options)
- * @method self withCronSchedule(?string $expression)
- * @method self withMemo(?array $memo)
- * @method self withSearchAttributes(?array $searchAttributes)
+ * @mixin WorkflowOptions
+ *
+ * @property string|null $runId
  */
 class WorkflowBuilder
 {
@@ -99,6 +90,10 @@ class WorkflowBuilder
 
     public function __get(string $name): mixed
     {
+        if ($name === 'runId') {
+            return $this->runId;
+        }
+
         if (property_exists($this->workflowOptions, $name)) {
             return $this->workflowOptions->{$name};
         }
