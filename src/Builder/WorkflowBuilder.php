@@ -56,12 +56,10 @@ class WorkflowBuilder
     public function build(string $class): WorkflowProxy
     {
         if ($this->runId !== null) {
-            // @phpstan-ignore-next-line
             return $this->getWorkflowClient()
                 ->newRunningWorkflowStub($class, $this->workflowOptions->workflowId, $this->runId);
         }
 
-        // @phpstan-ignore-next-line
         return $this->getWorkflowClient()
             ->newWorkflowStub($class, $this->workflowOptions);
     }

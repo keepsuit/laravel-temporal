@@ -36,7 +36,6 @@ class LocalActivityBuilder
      */
     public function build(string $class): ActivityProxy
     {
-        // @phpstan-ignore-next-line
         return Temporal::getTemporalContext()->newActivityStub($class, $this->activityOptions);
     }
 
