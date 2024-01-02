@@ -13,7 +13,9 @@ use Temporal\Workflow\WorkflowExecution;
 
 class FakeChildWorkflowStub implements ChildWorkflowStubInterface
 {
-    private mixed $result = null;
+    protected bool $hasMock = false;
+
+    protected mixed $result = null;
 
     public function __construct(protected ChildWorkflowStubInterface $stub)
     {
@@ -44,7 +46,9 @@ class FakeChildWorkflowStub implements ChildWorkflowStubInterface
     {
         $mock = $this->getTemporalMocker()->getWorkflowResult($this->stub->getChildWorkflowType(), $this->stub->getOptions()->taskQueue);
 
-        if (! $mock instanceof \Closure) {
+        $this->hasMock = $mock instanceof \Closure;
+
+        if (! $this->hasMock) {
             return $this->stub->start(...$args);
         }
 
@@ -63,6 +67,10 @@ class FakeChildWorkflowStub implements ChildWorkflowStubInterface
     //@phpstan-ignore-next-line
     public function getResult($returnType = null): PromiseInterface
     {
+        if (! $this->hasMock) {
+            return $this->stub->getResult($returnType);
+        }
+
         return new Promise(function (callable $resolve): void {
             $resolve($this->result);
         });
