@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.6.13 - 2024-01-02
+
+### What's Changed
+
+* Conflict with `temporal/sdk:2.7`
+* Added `temporal:install` command
+* Ignored communication exceptions in worker (thrown when the worker is killed)
+* Fixed child workflow result when not mocked in testing environment
+* Improved tests
+* Bump aglipanci/laravel-pint-action from 2.3.0 to 2.3.1 by @dependabot in https://github.com/keepsuit/laravel-temporal/pull/30
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/0.6.12...0.6.13
+
 ## v0.6.12 - 2023-12-15
 
 ### What's Changed
