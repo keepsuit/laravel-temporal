@@ -24,9 +24,16 @@ $factory = WorkerFactory::create(
     converter: $app->make(DataConverterInterface::class)
 );
 
+/** @var class-string<\Temporal\Internal\Interceptor\Interceptor>[] $interceptors */
+$interceptors = $app['config']->get('temporal.interceptors', []);
+
 // Worker that listens on a Task Queue and hosts both workflow and activity implementations.
 $worker = $factory->newWorker(
     taskQueue: env('TEMPORAL_QUEUE'),
+    interceptorProvider: new \Temporal\Interceptor\SimplePipelineProvider(array_map(
+        fn (string $className) => $app->make($className),
+        $interceptors
+    ))
 );
 
 foreach ($registry->workflows() as $workflow) {

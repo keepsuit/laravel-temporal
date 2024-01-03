@@ -4,10 +4,10 @@ namespace Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Workflows;
 
 use Carbon\CarbonInterval;
 use Keepsuit\LaravelTemporal\Facade\Temporal;
-use Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Activities\DemoActivityInterface;
-use Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Activities\DemoActivityWithInterface;
+use Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Activities\DemoActivity;
 use Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Activities\DemoLocalActivity;
 use Temporal\Internal\Workflow\ActivityProxy;
+use Temporal\Internal\Workflow\ChildWorkflowProxy;
 use Temporal\Workflow;
 use Temporal\Workflow\WorkflowInterface;
 use Temporal\Workflow\WorkflowMethod;
@@ -16,7 +16,7 @@ use Temporal\Workflow\WorkflowMethod;
 class TesterWorkflow
 {
     /**
-     * @var ActivityProxy<DemoActivityWithInterface>
+     * @var ActivityProxy<DemoActivity>
      */
     protected ActivityProxy $activity;
 
@@ -25,11 +25,16 @@ class TesterWorkflow
      */
     protected ActivityProxy $localActivity;
 
+    /**
+     * @var ChildWorkflowProxy<DemoWorkflow>
+     */
+    protected ChildWorkflowProxy $childWorkflow;
+
     public function __construct()
     {
         $this->activity = Temporal::newActivity()
             ->withStartToCloseTimeout(CarbonInterval::seconds(1))
-            ->build(DemoActivityInterface::class);
+            ->build(DemoActivity::class);
 
         $this->localActivity = Temporal::newLocalActivity()
             ->withStartToCloseTimeout(CarbonInterval::seconds(1))

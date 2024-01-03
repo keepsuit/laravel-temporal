@@ -8,6 +8,7 @@ use Keepsuit\LaravelTemporal\LaravelTemporalServiceProvider;
 use Keepsuit\LaravelTemporal\Support\DiscoverActivities;
 use Keepsuit\LaravelTemporal\Support\DiscoverWorkflows;
 use Keepsuit\LaravelTemporal\TemporalRegistry;
+use Keepsuit\LaravelTemporal\Tests\Fixtures\Interceptors\DemoWorkflowInboundCallsInterceptor;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
@@ -32,6 +33,9 @@ class TestCase extends Orchestra
     {
         tap($app['config'], function (Repository $config) {
             $config->set('database.default', 'testing');
+            $config->set('temporal.interceptors', [
+                DemoWorkflowInboundCallsInterceptor::class,
+            ]);
         });
 
         tap($app->make(TemporalRegistry::class), function (TemporalRegistry $registry) {

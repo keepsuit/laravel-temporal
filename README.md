@@ -128,6 +128,12 @@ return [
             'maximum_attempts' => null,
         ],
     ],
+    
+    /**
+     * Interceptors (middlewares) registered in the worker
+     */
+    'interceptors' => [
+    ],
 
     /**
      * Manual register workflows
@@ -275,6 +281,14 @@ This package adds some laravel specific options for serialization/deserializatio
 > To improve laravel-data support, this package provides `TemporalSerializableCast` and `TemporalSerializableTransformer`
 > to add support for serialization/deserialization of `TemporalSerializable` objects used as `Data` properties.
 > You can add them to `data.casts` and `data.transformers` config to add support globally.
+
+### Interceptors
+
+Temporal interceptors are similar to laravel middleware and can be used to modify inbound and outbound SDK calls.
+Interceptors can be registered in the `interceptors` config key.
+See [temporal sdk v2.7](https://github.com/temporalio/sdk-php/releases/tag/v2.7.0) release notes for more information.
+
+```php
 
 ### Run the temporal worker
 
