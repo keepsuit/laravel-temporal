@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.6.14 - 2024-01-03
+
+### What's Changed
+
+* Fixed builders phpdoc
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/0.6.13...0.6.14
+
 ## v0.6.13 - 2024-01-02
 
 ### What's Changed
