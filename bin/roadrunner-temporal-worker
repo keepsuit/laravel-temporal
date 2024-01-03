@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Keepsuit\LaravelTemporal\Support\ApplicationFactory;
-use Keepsuit\LaravelTemporal\TemporalDiscovery;
+use Keepsuit\LaravelTemporal\TemporalRegistry;
 use Spiral\Goridge\Exception\RelayException;
 use Temporal\DataConverter\DataConverterInterface;
 use Temporal\WorkerFactory;
@@ -16,8 +16,8 @@ if ($app->environment() !== 'production' && env('TEMPORAL_TESTING_ENV')) {
     \Keepsuit\LaravelTemporal\Facade\Temporal::initFakeWorker();
 }
 
-/** @var TemporalDiscovery $discovery */
-$discovery = $app->make(TemporalDiscovery::class);
+/** @var TemporalRegistry $registry */
+$registry = $app->make(TemporalRegistry::class);
 
 // factory initiates and runs task queue specific activity and workflow workers
 $factory = WorkerFactory::create(
@@ -29,11 +29,11 @@ $worker = $factory->newWorker(
     taskQueue: env('TEMPORAL_QUEUE'),
 );
 
-foreach ($discovery->getWorkflows() as $workflow) {
+foreach ($registry->workflows() as $workflow) {
     $worker->registerWorkflowTypes($workflow);
 }
 
-foreach ($discovery->getActivities() as $activity) {
+foreach ($registry->activities() as $activity) {
     $worker->registerActivity($activity, fn (ReflectionClass $class) => $app->make($class->getName()));
 }
 

@@ -9,10 +9,14 @@ use Temporal\Workflow\WorkflowInterface;
 class DiscoverWorkflows
 {
     /**
-     * Get all of the workflows by searching the given workflow directory.
+     * Get all the workflows by searching the given workflow directory.
      */
     public static function within(string $workflowPath): array
     {
+        if (! is_dir($workflowPath)) {
+            return [];
+        }
+
         /** @var Collection<class-string,class-string|null> $workflows */
         $workflows = Collection::make([]);
 

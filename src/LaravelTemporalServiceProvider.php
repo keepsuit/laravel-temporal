@@ -11,6 +11,8 @@ use Keepsuit\LaravelTemporal\Commands\TestServerCommand;
 use Keepsuit\LaravelTemporal\Commands\WorkCommand;
 use Keepsuit\LaravelTemporal\Commands\WorkflowMakeCommand;
 use Keepsuit\LaravelTemporal\DataConverter\LaravelPayloadConverter;
+use Keepsuit\LaravelTemporal\Support\DiscoverActivities;
+use Keepsuit\LaravelTemporal\Support\DiscoverWorkflows;
 use Keepsuit\LaravelTemporal\Support\ServerStateFile;
 use Keepsuit\LaravelTemporal\Testing\TemporalMocker;
 use Keepsuit\LaravelTemporal\Testing\TemporalMockerCache;
@@ -49,6 +51,8 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
 
         $this->app->bind(Contracts\Temporal::class, Temporal::class);
 
+        $this->app->scoped(TemporalRegistry::class, $this->initTemporalRegistry(...));
+
         $this->app->bind(ServerStateFile::class, fn (Application $app) => new ServerStateFile(
             $app['config']->get('temporal.state_file', storage_path('logs/temporal-worker-state.json'))
         ));
@@ -67,6 +71,37 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
             options: (new ClientOptions())->withNamespace(config('temporal.namespace')),
             converter: $app->make(DataConverterInterface::class)
         ));
+    }
+
+    protected function initTemporalRegistry(Application $app): TemporalRegistry
+    {
+        $workflowPaths = [
+            $app->path('Workflows'),
+            $app->path('Temporal/Workflows'),
+        ];
+
+        $activityPaths = [
+            $this->app->path('Workflows'),
+            $this->app->path('Activities'),
+            $this->app->path('Temporal/Activities'),
+            $this->app->path('Temporal/Workflows'),
+        ];
+
+        $registry = new TemporalRegistry();
+
+        foreach ($workflowPaths as $workflowPath) {
+            $registry->registerWorkflows(...DiscoverWorkflows::within($workflowPath));
+        }
+
+        $registry->registerWorkflows(...$app['config']->get('temporal.workflows', []));
+
+        foreach ($activityPaths as $activityPath) {
+            $registry->registerActivities(...DiscoverActivities::within($activityPath));
+        }
+
+        $registry->registerActivities(...$app['config']->get('temporal.activities', []));
+
+        return $registry;
     }
 
     protected function setupTestingEnvironment(): void

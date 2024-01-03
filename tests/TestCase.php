@@ -5,11 +5,9 @@ namespace Keepsuit\LaravelTemporal\Tests;
 use Illuminate\Config\Repository;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Keepsuit\LaravelTemporal\LaravelTemporalServiceProvider;
-use Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Activities\DemoActivityWithInterface;
-use Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Activities\DemoLocalActivity;
-use Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Workflows\ActivityOptionsWorkflow;
-use Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Workflows\DemoWorkflow;
-use Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Workflows\TesterWorkflow;
+use Keepsuit\LaravelTemporal\Support\DiscoverActivities;
+use Keepsuit\LaravelTemporal\Support\DiscoverWorkflows;
+use Keepsuit\LaravelTemporal\TemporalRegistry;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
@@ -23,26 +21,22 @@ class TestCase extends Orchestra
         );
     }
 
-    protected function getPackageProviders($app)
+    protected function getPackageProviders($app): array
     {
         return [
             LaravelTemporalServiceProvider::class,
         ];
     }
 
-    public function defineEnvironment($app)
+    public function defineEnvironment($app): void
     {
         tap($app['config'], function (Repository $config) {
             $config->set('database.default', 'testing');
-            $config->set('temporal.workflows', [
-                ActivityOptionsWorkflow::class,
-                DemoWorkflow::class,
-                TesterWorkflow::class,
-            ]);
-            $config->set('temporal.activities', [
-                DemoActivityWithInterface::class,
-                DemoLocalActivity::class,
-            ]);
+        });
+
+        tap($app->make(TemporalRegistry::class), function (TemporalRegistry $registry) {
+            $registry->registerWorkflows(...DiscoverWorkflows::within(__DIR__.'/Fixtures/WorkflowDiscovery/Workflows'))
+                ->registerActivities(...DiscoverActivities::within(__DIR__.'/Fixtures/WorkflowDiscovery/Activities'));
         });
     }
 }

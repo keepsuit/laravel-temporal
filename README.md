@@ -26,6 +26,12 @@ composer require keepsuit/laravel-temporal
 Then download the latest `roadrunner` executable for your platform:
 
 ```bash
+php artisan temporal:install
+```
+
+or
+
+```bash
 ./vendor/bin/rr get-binary
 ```
 
@@ -194,7 +200,26 @@ the `app/Temporal/Activities` directory.
 > the make commands will create the new workflow/activity in the these directories.
 
 Workflows in `app/Temporal/Workflows` and `app/Workflows` and activities in `app/Temporal/Activities`, `app/Activities`, `app/Temporal/Workflows` and `app/Workflows` are automatically registered.
-If you put your workflows and activities in other directories, you can register them manually in the `workflows` and `activities` config keys.
+If you put your workflows and activities in other directories, you can register them manually in the `workflows` and `activities` config keys or with `TemporalRegistry` in your service provider.
+
+```php
+class AppServiceProvider extends ServiceProvider
+{
+    public function register()
+    {
+        $this->callAfterResolving(\Keepsuit\LaravelTemporal\TemporalRegistry::class, function (\Keepsuit\LaravelTemporal\TemporalRegistry $registry) {
+            $registry->registerWorkflows(YourWorkflowInterface::class)
+                ->registerActivities(YourActivityInterface::class);
+        }
+        
+        // or
+        
+        Temporal::registry()
+            ->registerWorkflows(YourWorkflowInterface::class)
+            ->registerActivities(YourActivityInterface::class);
+    }
+}
+```
 
 ### Build and start a workflow
 
@@ -209,7 +234,7 @@ $workflow = Temporal::newWorkflow()
 $result = $workflow->yourMethod();
 
 // This will start a new workflow execution and return immediately
-app(\Temporal\Client\WorkflowClientInterface::class)->start($workflow);
+Temporal::workflowClient()->start($workflow);
 ```
 
 ### Build and start an activity

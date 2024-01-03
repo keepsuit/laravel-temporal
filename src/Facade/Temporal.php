@@ -2,16 +2,19 @@
 
 namespace Keepsuit\LaravelTemporal\Facade;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Facade;
 use Keepsuit\LaravelTemporal\Builder\ActivityBuilder;
 use Keepsuit\LaravelTemporal\Builder\ChildWorkflowBuilder;
 use Keepsuit\LaravelTemporal\Builder\LocalActivityBuilder;
 use Keepsuit\LaravelTemporal\Builder\WorkflowBuilder;
+use Keepsuit\LaravelTemporal\TemporalRegistry;
 use Keepsuit\LaravelTemporal\Testing\ActivityMockBuilder;
 use Keepsuit\LaravelTemporal\Testing\Fakes\TemporalFake;
 use Keepsuit\LaravelTemporal\Testing\TemporalTestingEnvironment;
 use Keepsuit\LaravelTemporal\Testing\WorkflowMockBuilder;
+use Temporal\Client\WorkflowClientInterface;
 use Temporal\Workflow;
 
 /**
@@ -65,6 +68,15 @@ class Temporal extends Facade
             DB::purge();
         }
 
+        if (env('TEMPORAL_TESTING_REGISTRY') !== null) {
+            $registryState = \Safe\json_decode((string) env('TEMPORAL_TESTING_REGISTRY'), true) ?? [];
+
+            static::$app->bind(TemporalRegistry::class, fn () => (new TemporalRegistry())
+                ->registerWorkflows(...Arr::get($registryState, 'workflows', []))
+                ->registerActivities(...Arr::get($registryState, 'activities', []))
+            );
+        }
+
         static::swap((new TemporalFake(static::$app)));
     }
 
@@ -82,5 +94,15 @@ class Temporal extends Facade
     protected static function getFacadeAccessor(): string
     {
         return \Keepsuit\LaravelTemporal\Contracts\Temporal::class;
+    }
+
+    public static function registry(): TemporalRegistry
+    {
+        return static::$app->make(TemporalRegistry::class);
+    }
+
+    public static function workflowClient(): WorkflowClientInterface
+    {
+        return static::$app->make(WorkflowClientInterface::class);
     }
 }
