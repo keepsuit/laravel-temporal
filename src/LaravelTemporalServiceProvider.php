@@ -28,6 +28,7 @@ use Temporal\DataConverter\DataConverter;
 use Temporal\DataConverter\DataConverterInterface;
 use Temporal\DataConverter\NullConverter;
 use Temporal\DataConverter\ProtoJsonConverter;
+use Temporal\Interceptor\SimplePipelineProvider;
 
 class LaravelTemporalServiceProvider extends PackageServiceProvider
 {
@@ -69,7 +70,11 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
         $this->app->bind(WorkflowClientInterface::class, fn (Application $app) => WorkflowClient::create(
             serviceClient: $app->make(ServiceClientInterface::class),
             options: (new ClientOptions())->withNamespace(config('temporal.namespace')),
-            converter: $app->make(DataConverterInterface::class)
+            converter: $app->make(DataConverterInterface::class),
+            interceptorProvider: new SimplePipelineProvider(array_map(
+                fn (string $className) => $app->make($className),
+                config('temporal.interceptors', [])
+            ))
         ));
     }
 
