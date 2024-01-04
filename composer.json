@@ -28,7 +28,7 @@
     },
     "require-dev": {
         "dereuromark/composer-prefer-lowest": "^0.1.10",
-        "driftingly/rector-laravel": "^0.26.0",
+        "driftingly/rector-laravel": "^0.27.0",
         "larastan/larastan": "^2.0.1",
         "laravel/pint": "^1.0",
         "mockery/mockery": "^1.6",
