@@ -27,7 +27,7 @@ function mockTemporalContext(?Closure $validateActivityOptions = null, ?Closure 
     $validateActivityOptions ??= fn (ActivityOptionsInterface $activityOptions) => true;
     $validateWorkflowOptions ??= fn (ChildWorkflowOptions $workflowOptions) => true;
 
-    $contextMock = \Pest\Laravel\mock(ScopedContextInterface::class);
+    $contextMock = mock(ScopedContextInterface::class);
 
     $contextMock->shouldReceive('newActivityStub')
         ->withArgs(fn (string $activity, ActivityOptionsInterface $activityOptions) => $validateActivityOptions($activityOptions))

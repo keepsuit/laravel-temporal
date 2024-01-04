@@ -19,7 +19,7 @@
         "php": "^8.1",
         "composer/class-map-generator": "^1.0",
         "illuminate/contracts": "^10.0",
-        "spatie/laravel-package-tools": "^1.9.2",
+        "spatie/laravel-package-tools": "^1.14.0",
         "spiral/roadrunner": "^2023.2.0",
         "spiral/roadrunner-cli": "^2.5",
         "symfony/process": "^6.0",
@@ -27,14 +27,16 @@
         "thecodingmachine/safe": "^2.0"
     },
     "require-dev": {
+        "dereuromark/composer-prefer-lowest": "^0.1.10",
         "driftingly/rector-laravel": "^0.26.0",
         "larastan/larastan": "^2.0.1",
         "laravel/pint": "^1.0",
+        "mockery/mockery": "^1.6",
         "nesbot/carbon": "^2.63.0",
         "nunomaduro/collision": "^7.0",
         "orchestra/testbench": "^8.0",
-        "pestphp/pest": "^2.0",
-        "pestphp/pest-plugin-laravel": "^2.0",
+        "pestphp/pest": "^2.30",
+        "pestphp/pest-plugin-laravel": "^2.2",
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan-deprecation-rules": "^1.0",
         "phpstan/phpstan-phpunit": "^1.0",
@@ -88,6 +90,6 @@
             ]
         }
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true
 }
