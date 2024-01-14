@@ -2,6 +2,7 @@
 
 namespace Keepsuit\LaravelTemporal\Interceptors;
 
+use Illuminate\Contracts\Debug\ExceptionHandler;
 use Keepsuit\LaravelTemporal\Support\CurrentApplication;
 use Temporal\Interceptor\ActivityInbound\ActivityInput;
 use Temporal\Interceptor\ActivityInboundInterceptor;
@@ -34,10 +35,10 @@ class ApplicationSandboxInterceptor implements ActivityInboundInterceptor, Workf
             $response = $closure();
 
             $sandbox->terminate();
-        } catch (Throwable $throwable) {
-            report($throwable);
 
-            $sandbox->terminate();
+            return $response;
+        } catch (Throwable $throwable) {
+            $sandbox->make(ExceptionHandler::class)->report($throwable);
 
             throw $throwable;
         } finally {
@@ -47,7 +48,5 @@ class ApplicationSandboxInterceptor implements ActivityInboundInterceptor, Workf
 
             CurrentApplication::reset();
         }
-
-        return $response;
     }
 }
