@@ -9,11 +9,13 @@ use InvalidArgumentException;
 use Keepsuit\LaravelTemporal\Support\RoadRunnerBinaryHelper;
 use Keepsuit\LaravelTemporal\Support\ServerProcessInspector;
 use Keepsuit\LaravelTemporal\Support\ServerStateFile;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 use Temporal\WorkerFactory;
 
+#[AsCommand('temporal:work')]
 class WorkCommand extends Command
 {
     use Concerns\InteractsWithIO;

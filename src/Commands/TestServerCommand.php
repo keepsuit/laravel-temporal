@@ -4,8 +4,10 @@ namespace Keepsuit\LaravelTemporal\Commands;
 
 use Illuminate\Console\Command;
 use Keepsuit\LaravelTemporal\Testing\TemporalTestingServer;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand('temporal:server')]
 class TestServerCommand extends Command
 {
     use Concerns\InteractsWithIO;
