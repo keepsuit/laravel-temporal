@@ -127,7 +127,7 @@ class InterceptorMakeCommand extends GeneratorCommand
         }
 
         $types = array_filter(
-            $this->option('type') ?? [],
+            is_array($this->option('type')) ? $this->option('type') : [],
             fn (string $type) => in_array($type, self::INTERCEPTOR_TYPES, strict: true)
         );
 
