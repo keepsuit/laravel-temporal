@@ -55,17 +55,17 @@ class WorkCommand extends Command
             ...['-o', sprintf('server.command=%s ./vendor/bin/roadrunner-temporal-worker', (new PhpExecutableFinder())->find())],
             ...['-o', sprintf('temporal.address=%s', config('temporal.address'))],
             ...['-o', sprintf('temporal.namespace=%s', config('temporal.namespace'))],
-            ...$this->option('workers') === 'auto' ? [] : ['-o', sprintf('temporal.activities.num_workers=%s', $this->option('workers'))],
-            ...$this->option('max-jobs') === '0' ? [] : ['-o', sprintf('temporal.activities.max_jobs=%s', $this->option('max-jobs'))],
+            ...$this->workerCount() > 0 ? ['-o', sprintf('temporal.activities.num_workers=%s', $this->workerCount())] : [],
+            ...$this->maxJobs() > 0 ? ['-o', sprintf('temporal.activities.max_jobs=%s', $this->maxJobs())] : [],
             ...['-o', sprintf('rpc.listen=tcp://%s:%d', $this->rpcHost(), $this->rpcPort())],
             ...['-o', 'logs.mode=production'],
-            ...['-o', app()->environment('local') ? 'logs.level=debug' : 'logs.level=warn'],
+            ...['-o', $this->laravel->environment('local') ? 'logs.level=debug' : 'logs.level=warn'],
             ...['-o', 'logs.output=stdout'],
             ...['-o', 'logs.encoding=json'],
             'serve',
         ], base_path(), [
-            'APP_ENV' => app()->environment(),
-            'APP_BASE_PATH' => base_path(),
+            'APP_ENV' => $this->laravel->environment(),
+            'APP_BASE_PATH' => $this->laravel->basePath(),
             'LARAVEL_TEMPORAL' => 1,
             'TEMPORAL_QUEUE' => $this->queue,
         ]);
@@ -106,7 +106,11 @@ class WorkCommand extends Command
      */
     protected function rpcHost(): string
     {
-        return $this->option('rpc-host') ?: '127.0.0.1';
+        if (! is_string($this->option('rpc-host'))) {
+            return '127.0.0.1';
+        }
+
+        return $this->option('rpc-host');
     }
 
     /**
@@ -122,9 +126,25 @@ class WorkCommand extends Command
     /**
      * Get the number of workers that should be started.
      */
-    protected function workerCount(): int|string
+    protected function workerCount(): int
     {
-        return $this->option('workers') == 'auto' ? 0 : $this->option('workers');
+        if (is_numeric($this->option('workers'))) {
+            return (int) $this->option('workers');
+        }
+
+        return 0;
+    }
+
+    /**
+     * Get the number of workers that should be started.
+     */
+    protected function maxJobs(): int
+    {
+        if (is_numeric($this->option('max-jobs'))) {
+            return (int) $this->option('max-jobs');
+        }
+
+        return 0;
     }
 
     /**
@@ -134,13 +154,13 @@ class WorkCommand extends Command
     {
         $path = $this->option('rr-config');
 
-        if (! $path) {
-            \Safe\touch(base_path('.rr.yaml'));
-
-            return base_path('.rr.yaml');
+        if (is_string($path)) {
+            return \Safe\realpath($path);
         }
 
-        return \Safe\realpath($path);
+        \Safe\touch(base_path('.rr.yaml'));
+
+        return base_path('.rr.yaml');
     }
 
     /**

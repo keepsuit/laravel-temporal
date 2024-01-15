@@ -38,7 +38,7 @@ return static function (RectorConfig $config): void {
         SetList::PRIVATIZATION,
         SetList::TYPE_DECLARATION,
         LevelSetList::UP_TO_PHP_81,
-        LaravelLevelSetList::UP_TO_LARAVEL_90,
+        LaravelLevelSetList::UP_TO_LARAVEL_100,
     ]);
 
     $config->skip([
