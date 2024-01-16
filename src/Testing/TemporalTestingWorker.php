@@ -53,7 +53,7 @@ class TemporalTestingWorker
         $this->roadRunnerProcess->signal(SIGTERM);
 
         do {
-            usleep(100_000);
+            usleep(1_000);
         } while ($this->roadRunnerProcess->isRunning());
     }
 

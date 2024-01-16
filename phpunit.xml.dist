@@ -23,5 +23,6 @@
     </source>
     <php>
         <server name="TEMPORAL_TESTING_DEBUG" value="false"/>
+        <server name="TEMPORAL_TESTING_SERVER_TIME_SKIPPING" value="false"/>
     </php>
 </phpunit>

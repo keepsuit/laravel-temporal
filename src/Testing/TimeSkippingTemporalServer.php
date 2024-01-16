@@ -10,11 +10,11 @@ use Symfony\Component\Process\Process;
 use Temporal\Testing\Downloader;
 use Temporal\Testing\SystemInfo;
 
-class TemporalTestingServer
+class TimeSkippingTemporalServer implements TemporalServer
 {
     protected ?Process $temporalServerProcess = null;
 
-    public function __construct(
+    final public function __construct(
         protected Output $output,
         protected Downloader $downloader,
         protected SystemInfo $systemInfo,
@@ -22,17 +22,16 @@ class TemporalTestingServer
     ) {
     }
 
-    public static function create(bool $debug = false): self
+    public static function create(): static
     {
-        return new self(
+        return new static(
             new ConsoleOutput(),
             new Downloader(new Filesystem(), HttpClient::create()),
             SystemInfo::detect(),
-            $debug
         );
     }
 
-    public function setDebugOutput(bool $debug): self
+    public function setDebugOutput(bool $debug): static
     {
         $this->debug = $debug;
 
@@ -60,7 +59,7 @@ class TemporalTestingServer
         $this->temporalServerProcess->signal(SIGTERM);
 
         do {
-            usleep(100_000);
+            usleep(1_000);
         } while ($this->temporalServerProcess->isRunning());
     }
 
@@ -78,7 +77,7 @@ class TemporalTestingServer
 
         $this->temporalServerProcess->start();
 
-        usleep(500_000);
+        usleep(10_000);
 
         if (! $this->temporalServerProcess->isRunning()) {
             $this->debugOutput('<error>error</error>');

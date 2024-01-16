@@ -7,20 +7,25 @@ use Illuminate\Foundation\Application;
 
 class TemporalTestingEnvironment
 {
-    protected TemporalTestingServer $temporalServer;
+    protected TemporalServer $temporalServer;
 
     protected TemporalTestingWorker $temporalWorker;
 
+    protected bool $debug = false;
+
     public function __construct(
-        protected bool $debug = false
+        protected bool $timeSkipping = false,
     ) {
-        $this->temporalServer = TemporalTestingServer::create();
+        $this->temporalServer = match ($this->timeSkipping) {
+            true => TimeSkippingTemporalServer::create(),
+            default => LocalTemporalServer::create(),
+        };
         $this->temporalWorker = TemporalTestingWorker::create();
     }
 
-    public static function create(bool $debug = false): self
+    public static function create(bool $timeSkipping = false): self
     {
-        return new self($debug);
+        return new self($timeSkipping);
     }
 
     public static function bootstrap(Application $app): void
