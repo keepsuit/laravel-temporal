@@ -13,7 +13,9 @@ trait WithTemporalWorker
             return;
         }
 
-        $temporalEnvironment = TemporalTestingEnvironment::create(debug: env('TEMPORAL_TESTING_DEBUG', false));
+        $temporalEnvironment = TemporalTestingEnvironment::create();
+
+        $temporalEnvironment->setDebugOutput(env('TEMPORAL_TESTING_DEBUG', false));
 
         $temporalEnvironment->start(onlyWorker: true);
 
