@@ -11,8 +11,8 @@ use Temporal\Internal\Workflow\ActivityProxy;
 use Temporal\Workflow\ActivityStubInterface;
 
 /**
- * @property DateInterval  $scheduleToCloseTimeout
- * @property DateInterval  $startToCloseTimeout
+ * @property DateInterval $scheduleToCloseTimeout
+ * @property DateInterval $startToCloseTimeout
  * @property ?RetryOptions $retryOptions
  *
  * @method self withScheduleToCloseTimeout(DateInterval $timeout)
