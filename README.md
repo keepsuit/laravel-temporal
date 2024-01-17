@@ -11,8 +11,9 @@ architecture_.
 
 This package provides:
 
-- Commands to create a new workflow and activity
+- Commands to create a new workflow, activity and interceptor
 - Command to start the worker which will execute workflows and activities from the provided task queue
+- Command to start a temporal dev server
 - Testing helpers that allows mock of workflows and activities executions
 
 ## Installation
@@ -176,7 +177,7 @@ return [
              */
             'deserialize_attribute_case' => null,
 
-            /*
+            /**
              * If true adds a `__exists` attribute to the serialized model
              * which indicate that the model is saved to database and it is used on deserialization when creating the model.
              * If false (or `__exists` is not present) the model will be created as existing model if primary key is present.
@@ -195,10 +196,10 @@ the [official documentation](https://docs.temporal.io/application-development/?l
 
 ### Create workflows and activities
 
-To create a new workflow, you can use the `make:workflow {name}` command, which will create a new workflow interface & relative class in
+To create a new workflow, you can use the `temporal:make:workflow {name}` command, which will create a new workflow interface & relative class in
 the `app/Temporal/Workflows` directory.
 
-To create a new activity, you can use the `make:activity {name}` command, which will create a new activity interface & relative class in
+To create a new activity, you can use the `temporal:make:activity {name}` command, which will create a new activity interface & relative class in
 the `app/Temporal/Activities` directory.
 
 > [!NOTE]
@@ -287,8 +288,7 @@ This package adds some laravel specific options for serialization/deserializatio
 Temporal interceptors are similar to laravel middleware and can be used to modify inbound and outbound SDK calls.
 Interceptors can be registered in the `interceptors` config key.
 See [temporal sdk v2.7](https://github.com/temporalio/sdk-php/releases/tag/v2.7.0) release notes for more information.
-
-```php
+To create a new interceptor, you can use the `temporal:make:interceptor {name}` command, which will create a new interceptor class in the `app/Temporal/Interceptors` directory.
 
 ### Run the temporal worker
 
@@ -304,6 +304,14 @@ This package provides two options to run a temporal server for testing purposes:
 
 > When using `WithTemporal` trait, you can set `TEMPORAL_TESTING_SERVER` env variable to `false`
 > to disable the testing server and run only the worker.
+
+### Time skipping
+
+The default temporal server implementation is the dev server included in the temporal cli and this doesn't support time skipping.
+In order to enable time skipping, you must:
+
+- Run the `temporal:server` command with the `--enable-time-skipping` flag.
+- Set `TEMPORAL_TESTING_SERVER_TIME_SKIPPING` env variable to `true` when using `WithTemporal` trait.
 
 ### Mocking workflows
 
