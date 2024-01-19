@@ -8,7 +8,6 @@ use Rector\CodingStyle\Rector\ArrowFunction\StaticArrowFunctionRector;
 use Rector\CodingStyle\Rector\Closure\StaticClosureRector;
 use Rector\CodingStyle\Rector\PostInc\PostIncDecToPreIncDecRector;
 use Rector\Config\RectorConfig;
-use Rector\Core\ValueObject\PhpVersion;
 use Rector\DeadCode\Rector\PropertyProperty\RemoveNullPropertyInitializationRector;
 use Rector\EarlyReturn\Rector\If_\ChangeAndIfToEarlyReturnRector;
 use Rector\EarlyReturn\Rector\Return_\ReturnBinaryOrToEarlyReturnRector;
@@ -20,7 +19,7 @@ use Rector\TypeDeclaration\Rector\ArrowFunction\AddArrowFunctionReturnTypeRector
 use Rector\TypeDeclaration\Rector\ClassMethod\ReturnTypeFromReturnDirectArrayRector;
 use Rector\TypeDeclaration\Rector\ClassMethod\ReturnTypeFromReturnNewRector;
 use Rector\TypeDeclaration\Rector\ClassMethod\ReturnTypeFromStrictTypedCallRector;
-use RectorLaravel\Set\LaravelLevelSetList;
+use Rector\ValueObject\PhpVersion;
 
 return static function (RectorConfig $config): void {
     $config->phpVersion(PhpVersion::PHP_81);
@@ -38,7 +37,6 @@ return static function (RectorConfig $config): void {
         SetList::PRIVATIZATION,
         SetList::TYPE_DECLARATION,
         LevelSetList::UP_TO_PHP_81,
-        LaravelLevelSetList::UP_TO_LARAVEL_100,
     ]);
 
     $config->skip([
