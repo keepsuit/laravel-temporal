@@ -2,8 +2,11 @@ name: PHPStan
 
 on:
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
   push:
+    branches:
+      - main
     paths:
       - '**.php'
       - 'phpstan.neon'
