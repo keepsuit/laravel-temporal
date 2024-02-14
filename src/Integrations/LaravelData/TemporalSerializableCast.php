@@ -6,8 +6,9 @@ namespace Keepsuit\LaravelTemporal\Integrations\LaravelData;
 
 use Composer\InstalledVersions;
 use Composer\Semver\VersionParser;
-use Illuminate\Support\Arr;
+use Illuminate\Container\Container;
 use Keepsuit\LaravelTemporal\Contracts\TemporalSerializable;
+use Keepsuit\LaravelTemporal\Support\TemporalSerializer;
 use Spatie\LaravelData\Casts\Cast;
 use Spatie\LaravelData\Casts\Uncastable;
 use Spatie\LaravelData\Support\Creation\CreationContext;
@@ -23,33 +24,17 @@ if (InstalledVersions::satisfies(new VersionParser(), 'spatie/laravel-data', '^4
 
         public function cast(DataProperty $property, mixed $value, array $properties, CreationContext $context): mixed
         {
+            $serializer = Container::getInstance()->make(TemporalSerializer::class);
+            assert($serializer instanceof TemporalSerializer);
+
             $acceptedType = $property->type->findAcceptedTypeForBaseType(TemporalSerializable::class);
             $type = $this->type ?? $acceptedType;
 
-            if (! class_exists($type)) {
+            try {
+                return $serializer->deserialize($value, $type, isArray: $property->type->acceptsType('array'));
+            } catch (\Throwable) {
                 return Uncastable::create();
             }
-
-            if ($value instanceof $type) {
-                return $value;
-            }
-
-            if (! is_array($value)) {
-                return Uncastable::create();
-            }
-
-            if ($acceptedType === null && $property->type->acceptsType('array')) {
-                return Arr::map($value, function ($data) use ($type) {
-                    if ($data instanceof $type) {
-                        return $data;
-                    }
-
-                    return $type::fromTemporalPayload($data);
-                });
-            }
-
-            /** @var class-string<TemporalSerializable> $type */
-            return $type::fromTemporalPayload($value);
         }
     }
 } else {
@@ -62,33 +47,17 @@ if (InstalledVersions::satisfies(new VersionParser(), 'spatie/laravel-data', '^4
 
         public function cast(DataProperty $property, mixed $value, array $context): mixed
         {
+            $serializer = Container::getInstance()->make(TemporalSerializer::class);
+            assert($serializer instanceof TemporalSerializer);
+
             $acceptedType = $property->type->findAcceptedTypeForBaseType(TemporalSerializable::class);
             $type = $this->type ?? $acceptedType;
 
-            if (! class_exists($type)) {
+            try {
+                return $serializer->deserialize($value, $type, isArray: $property->type->acceptsType('array'));
+            } catch (\Throwable) {
                 return Uncastable::create();
             }
-
-            if ($value instanceof $type) {
-                return $value;
-            }
-
-            if (! is_array($value)) {
-                return Uncastable::create();
-            }
-
-            if ($acceptedType === null && $property->type->acceptsType('array')) {
-                return Arr::map($value, function ($data) use ($type) {
-                    if ($data instanceof $type) {
-                        return $data;
-                    }
-
-                    return $type::fromTemporalPayload($data);
-                });
-            }
-
-            /** @var class-string<TemporalSerializable> $type */
-            return $type::fromTemporalPayload($value);
         }
     }
 }

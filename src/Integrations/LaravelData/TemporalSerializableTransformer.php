@@ -6,8 +6,8 @@ namespace Keepsuit\LaravelTemporal\Integrations\LaravelData;
 
 use Composer\InstalledVersions;
 use Composer\Semver\VersionParser;
-use Illuminate\Support\Arr;
-use Keepsuit\LaravelTemporal\Contracts\TemporalSerializable;
+use Illuminate\Container\Container;
+use Keepsuit\LaravelTemporal\Support\TemporalSerializer;
 use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Support\Transformation\TransformationContext;
 use Spatie\LaravelData\Transformers\Transformer;
@@ -17,21 +17,9 @@ if (InstalledVersions::satisfies(new VersionParser(), 'spatie/laravel-data', '^4
     {
         public function transform(DataProperty $property, mixed $value, TransformationContext $context): mixed
         {
-            if ($value instanceof TemporalSerializable) {
-                return $value->toTemporalPayload();
-            }
+            $serializer = Container::getInstance()->make(TemporalSerializer::class);
 
-            if (is_array($value)) {
-                return Arr::map($value, function ($data) {
-                    if ($data instanceof TemporalSerializable) {
-                        return $data->toTemporalPayload();
-                    }
-
-                    return $data;
-                });
-            }
-
-            return $value;
+            return $serializer->serialize($value);
         }
     }
 } else {
@@ -39,21 +27,9 @@ if (InstalledVersions::satisfies(new VersionParser(), 'spatie/laravel-data', '^4
     {
         public function transform(DataProperty $property, mixed $value): mixed
         {
-            if ($value instanceof TemporalSerializable) {
-                return $value->toTemporalPayload();
-            }
+            $serializer = Container::getInstance()->make(TemporalSerializer::class);
 
-            if (is_array($value)) {
-                return Arr::map($value, function ($data) {
-                    if ($data instanceof TemporalSerializable) {
-                        return $data->toTemporalPayload();
-                    }
-
-                    return $data;
-                });
-            }
-
-            return $value;
+            return $serializer->serialize($value);
         }
     }
 }
