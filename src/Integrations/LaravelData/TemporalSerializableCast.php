@@ -8,6 +8,7 @@ use Illuminate\Support\Arr;
 use Keepsuit\LaravelTemporal\Contracts\TemporalSerializable;
 use Spatie\LaravelData\Casts\Cast;
 use Spatie\LaravelData\Casts\Uncastable;
+use Spatie\LaravelData\Support\Creation\CreationContext;
 use Spatie\LaravelData\Support\DataProperty;
 
 class TemporalSerializableCast implements Cast
@@ -17,7 +18,7 @@ class TemporalSerializableCast implements Cast
     ) {
     }
 
-    public function cast(DataProperty $property, mixed $value, array $context): mixed
+    public function cast(DataProperty $property, mixed $value, array $properties, CreationContext $context): mixed
     {
         $acceptedType = $property->type->findAcceptedTypeForBaseType(TemporalSerializable::class);
         $type = $this->type ?? $acceptedType;

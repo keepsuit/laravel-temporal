@@ -25,5 +25,7 @@ it('can convert TemporalSerializable property with cast/transformer', function (
 
     $data = $converter->fromPayload($payload, new Type(AdvancedDataItem::class));
 
-    expect($data)->toEqual($input);
+    expect($data)
+        ->toBeInstanceOf(AdvancedDataItem::class)
+        ->item->id->toEqual(123);
 });

@@ -5,7 +5,8 @@ namespace Keepsuit\LaravelTemporal\DataConverter;
 use Illuminate\Database\Eloquent\Model;
 use Keepsuit\LaravelTemporal\Contracts\TemporalSerializable;
 use ReflectionClass;
-use Spatie\LaravelData\Contracts\DataObject;
+use Spatie\LaravelData\Contracts\BaseData;
+use Spatie\LaravelData\Data;
 use Temporal\Api\Common\V1\Payload;
 use Temporal\DataConverter\JsonConverter;
 use Temporal\DataConverter\Type;
@@ -24,7 +25,7 @@ class LaravelPayloadConverter extends JsonConverter
             return $this->create(\Safe\json_encode($value->value, self::JSON_FLAGS));
         }
 
-        if ($value instanceof DataObject) {
+        if ($value instanceof Data) {
             return $this->create($value->toJson(self::JSON_FLAGS));
         }
 
@@ -67,8 +68,8 @@ class LaravelPayloadConverter extends JsonConverter
                 return $class::from($data);
             }
 
-            if ($reflection->implementsInterface(DataObject::class)) {
-                /** @var class-string<DataObject> $class */
+            if ($reflection->isSubclassOf(Data::class)) {
+                /** @var class-string<Data> $class */
                 return $class::from($data);
             }
 
