@@ -11,7 +11,6 @@ use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\PropertyProperty\RemoveNullPropertyInitializationRector;
 use Rector\EarlyReturn\Rector\If_\ChangeAndIfToEarlyReturnRector;
 use Rector\EarlyReturn\Rector\Return_\ReturnBinaryOrToEarlyReturnRector;
-use Rector\Set\ValueObject\SetList;
 use Rector\TypeDeclaration\Rector\ArrowFunction\AddArrowFunctionReturnTypeRector;
 use Rector\TypeDeclaration\Rector\ClassMethod\ReturnTypeFromReturnDirectArrayRector;
 use Rector\TypeDeclaration\Rector\ClassMethod\ReturnTypeFromReturnNewRector;
@@ -19,17 +18,10 @@ use Rector\TypeDeclaration\Rector\ClassMethod\ReturnTypeFromStrictTypedCallRecto
 
 return RectorConfig::configure()
     ->withPhpSets()
+    ->withPreparedSets()
     ->withPaths([
         __DIR__.'/src',
         __DIR__.'/config',
-    ])
-    ->withSets([
-        SetList::CODE_QUALITY,
-        SetList::CODING_STYLE,
-        SetList::DEAD_CODE,
-        SetList::EARLY_RETURN,
-        SetList::PRIVATIZATION,
-        SetList::TYPE_DECLARATION,
     ])
     ->withSkip([
         AddArrowFunctionReturnTypeRector::class,
