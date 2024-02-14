@@ -5,7 +5,6 @@ namespace Keepsuit\LaravelTemporal\DataConverter;
 use Illuminate\Database\Eloquent\Model;
 use Keepsuit\LaravelTemporal\Contracts\TemporalSerializable;
 use ReflectionClass;
-use Spatie\LaravelData\Contracts\BaseData;
 use Spatie\LaravelData\Data;
 use Temporal\Api\Common\V1\Payload;
 use Temporal\DataConverter\JsonConverter;
