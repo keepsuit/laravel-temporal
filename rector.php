@@ -11,6 +11,7 @@ use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\PropertyProperty\RemoveNullPropertyInitializationRector;
 use Rector\EarlyReturn\Rector\If_\ChangeAndIfToEarlyReturnRector;
 use Rector\EarlyReturn\Rector\Return_\ReturnBinaryOrToEarlyReturnRector;
+use Rector\Php70\Rector\StmtsAwareInterface\IfIssetToCoalescingRector;
 use Rector\Php80\Rector\ClassMethod\AddParamBasedOnParentClassMethodRector;
 use Rector\TypeDeclaration\Rector\ArrowFunction\AddArrowFunctionReturnTypeRector;
 use Rector\TypeDeclaration\Rector\ClassMethod\ReturnTypeFromReturnDirectArrayRector;
@@ -30,6 +31,7 @@ return RectorConfig::configure()
         CallableThisArrayToAnonymousFunctionRector::class,
         ChangeAndIfToEarlyReturnRector::class,
         FlipTypeControlToUseExclusiveTypeRector::class,
+        IfIssetToCoalescingRector::class,
         PostIncDecToPreIncDecRector::class,
         RemoveNullPropertyInitializationRector::class,
         ReturnBinaryOrToEarlyReturnRector::class,
