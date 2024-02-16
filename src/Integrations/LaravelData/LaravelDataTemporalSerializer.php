@@ -6,7 +6,6 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Enumerable;
 use Keepsuit\LaravelTemporal\Contracts\TemporalSerializable;
 use Keepsuit\LaravelTemporal\Exceptions\TemporalSerializerException;
-use Keepsuit\LaravelTemporal\Tests\Fixtures\Converter\TemporalSerializableItem;
 use Spatie\LaravelData\Casts\Uncastable;
 use Spatie\LaravelData\Support\DataProperty;
 
@@ -65,7 +64,7 @@ class LaravelDataTemporalSerializer
     /**
      * @throws TemporalSerializerException
      */
-    protected function deserializeItem(?array $value, string $className): ?TemporalSerializableItem
+    protected function deserializeItem(?array $value, string $className): ?TemporalSerializable
     {
         if (! class_exists($className)) {
             throw TemporalSerializerException::targetClassDoesntExists($className);
