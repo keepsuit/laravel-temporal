@@ -15,7 +15,6 @@ parameters:
     treatPhpDocTypesAsCertain: false
 
     excludePaths:
-        - src/Integrations/LaravelData/TemporalSerializableCast.php
-        - src/Integrations/LaravelData/TemporalSerializableTransformer.php
+        - src/Integrations/LaravelData/TemporalSerializableData.php
 
     ignoreErrors:

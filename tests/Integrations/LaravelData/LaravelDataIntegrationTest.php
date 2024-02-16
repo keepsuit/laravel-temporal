@@ -3,7 +3,8 @@
 use Illuminate\Support\Collection;
 use Keepsuit\LaravelTemporal\DataConverter\LaravelPayloadConverter;
 use Keepsuit\LaravelTemporal\Integrations\LaravelData\LaravelDataHelpers;
-use Keepsuit\LaravelTemporal\Tests\Fixtures\Converter\AdvancedDataItem;
+use Keepsuit\LaravelTemporal\Tests\Fixtures\Converter\AdvancedDataItemV3;
+use Keepsuit\LaravelTemporal\Tests\Fixtures\Converter\AdvancedDataItemV4;
 use Keepsuit\LaravelTemporal\Tests\Fixtures\Converter\DataItemV3;
 use Keepsuit\LaravelTemporal\Tests\Fixtures\Converter\DataItemV4;
 use Keepsuit\LaravelTemporal\Tests\Fixtures\Converter\TemporalSerializableItem;
@@ -24,14 +25,28 @@ it('can deserialize Data values', function () {
 it('can convert TemporalSerializable property with cast/transformer', function () {
     $converter = new LaravelPayloadConverter();
 
-    $input = new AdvancedDataItem(new TemporalSerializableItem(123));
+    $input = new AdvancedDataItemV3(new TemporalSerializableItem(123));
 
     $payload = $converter->toPayload($input);
 
-    $data = $converter->fromPayload($payload, new Type(AdvancedDataItem::class));
+    $data = $converter->fromPayload($payload, new Type(AdvancedDataItemV3::class));
 
     expect($data)
-        ->toBeInstanceOf(AdvancedDataItem::class)
+        ->toBeInstanceOf(AdvancedDataItemV3::class)
+        ->item->id->toEqual(123);
+});
+
+it('can convert TemporalSerializable array property with cast/transformer', function () {
+    $converter = new LaravelPayloadConverter();
+
+    $input = new AdvancedDataItemV3(new TemporalSerializableItem(123));
+
+    $payload = $converter->toPayload($input);
+
+    $data = $converter->fromPayload($payload, new Type(AdvancedDataItemV3::class));
+
+    expect($data)
+        ->toBeInstanceOf(AdvancedDataItemV3::class)
         ->item->id->toEqual(123);
 });
 
@@ -75,4 +90,26 @@ it('(v4) can deserialize Data values with collection', function () {
         ->collection->toHaveCount(2)
         ->collection->get(0)->toBeInstanceOf(DataItemV4::class)
         ->collection->get(0)->id->toBe(4);
+})->skip(LaravelDataHelpers::version() !== 4);
+
+it('(v4) can convert collection of TemporalSerializable', function () {
+    $converter = new LaravelPayloadConverter();
+
+    $input = new AdvancedDataItemV4(
+        new TemporalSerializableItem(123),
+        new Collection([new TemporalSerializableItem(4), new TemporalSerializableItem(5)])
+    );
+
+    $payload = $converter->toPayload($input);
+
+    $data = $converter->fromPayload($payload, new Type(AdvancedDataItemV4::class));
+
+    expect($data)
+        ->toBeInstanceOf(AdvancedDataItemV4::class)
+        ->item->toBeInstanceOf(TemporalSerializableItem::class)
+        ->item->id->toEqual(123)
+        ->collection->toBeInstanceOf(Collection::class)
+        ->collection->toHaveCount(2)
+        ->collection->get(0)->toBeInstanceOf(TemporalSerializableItem::class)
+        ->collection->get(0)->id->toEqual(4);
 })->skip(LaravelDataHelpers::version() !== 4);
