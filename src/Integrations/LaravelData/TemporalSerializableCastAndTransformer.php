@@ -10,7 +10,7 @@ use Spatie\LaravelData\Support\Transformation\TransformationContext;
 use Spatie\LaravelData\Transformers\Transformer;
 
 if (LaravelDataHelpers::version() === 4) {
-    class TemporalSerializableData implements Cast, Transformer
+    class TemporalSerializableCastAndTransformer implements Cast, Transformer
     {
         public function __construct(
             protected ?string $type = null
@@ -33,7 +33,7 @@ if (LaravelDataHelpers::version() === 4) {
         }
     }
 } else {
-    class TemporalSerializableData implements Cast, Transformer
+    class TemporalSerializableCastAndTransformer implements Cast, Transformer
     {
         public function __construct(
             protected ?string $type = null
