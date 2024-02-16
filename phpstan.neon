@@ -14,4 +14,7 @@ parameters:
     checkGenericClassInNonGenericObjectType: false
     treatPhpDocTypesAsCertain: false
 
+    excludePaths:
+        - src/Integrations/LaravelData/TemporalSerializableCastAndTransformer.php
+
     ignoreErrors:
