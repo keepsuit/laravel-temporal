@@ -2,6 +2,8 @@
 
 namespace Keepsuit\LaravelTemporal\Support;
 
+use Safe\Exceptions\PosixException;
+
 class PosixExtension
 {
     /**
@@ -9,6 +11,12 @@ class PosixExtension
      */
     public function kill(int $processId, int $signal): bool
     {
-        return posix_kill($processId, $signal);
+        try {
+            \Safe\posix_kill($processId, $signal);
+
+            return true;
+        } catch (PosixException) {
+            return false;
+        }
     }
 }

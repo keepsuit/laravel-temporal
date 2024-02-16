@@ -11,13 +11,13 @@ use Temporal\Internal\Workflow\ActivityProxy;
 use Temporal\Workflow\ActivityStubInterface;
 
 /**
- * @property string|null   $taskQueue
- * @property DateInterval  $scheduleToCloseTimeout
- * @property DateInterval  $scheduleToStartTimeout
- * @property DateInterval  $startToCloseTimeout
- * @property DateInterval  $heartbeatTimeout
- * @property int           $cancellationType
- * @property string        $activityId
+ * @property string|null $taskQueue
+ * @property DateInterval $scheduleToCloseTimeout
+ * @property DateInterval $scheduleToStartTimeout
+ * @property DateInterval $startToCloseTimeout
+ * @property DateInterval $heartbeatTimeout
+ * @property int $cancellationType
+ * @property string $activityId
  * @property ?RetryOptions $retryOptions
  *
  * @method self withTaskQueue(?string $taskQueue)

@@ -11,6 +11,14 @@ services:
         class: Keepsuit\LaravelTemporal\PHPStan\TemporalChildWorkflowProxyExtension
         tags:
             - phpstan.broker.methodsClassReflectionExtension
+    -
+        class: Keepsuit\LaravelTemporal\PHPStan\TemporalWorkflowContextInterfaceExtension
+        tags:
+            - phpstan.broker.dynamicMethodReturnTypeExtension
+    -
+        class: Keepsuit\LaravelTemporal\PHPStan\TemporalWorkflowClientInterfaceExtension
+        tags:
+            - phpstan.broker.dynamicMethodReturnTypeExtension
 
 parameters:
     stubFiles:

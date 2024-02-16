@@ -4,22 +4,25 @@ namespace Keepsuit\LaravelTemporal\Commands;
 
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Str;
+use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Input\InputOption;
 
+#[AsCommand('temporal:make:workflow')]
 class WorkflowMakeCommand extends GeneratorCommand
 {
-    protected $signature = 'make:workflow {name}
-                            {--interface : Create an interface for the workflow instead of a class}
-                            {--scoped : Create the workflow inside a scoped directory}';
+    use Concerns\Stubs;
 
-    protected $description = 'Create a temporal workflow class';
+    protected $name = 'temporal:make:workflow';
+
+    protected $description = 'Create a new temporal workflow class';
 
     protected $type = 'Workflow';
 
     protected function getStub(): string
     {
         return match (true) {
-            $this->option('interface') => $this->resolveStubPath('/stubs/workflow_interface.stub'),
-            default => $this->resolveStubPath('/stubs/workflow.stub'),
+            $this->option('interface') => $this->resolveStubPath('workflow_interface.stub'),
+            default => $this->resolveStubPath('workflow.stub'),
         };
     }
 
@@ -42,20 +45,19 @@ class WorkflowMakeCommand extends GeneratorCommand
         return sprintf('%s\\Workflows', $rootNamespace);
     }
 
-    /**
-     * Resolve the fully-qualified path to the stub.
-     */
-    protected function resolveStubPath(string $stub): string
-    {
-        return file_exists($customPath = $this->laravel->basePath(trim($stub, '/')))
-            ? $customPath
-            : __DIR__.$stub;
-    }
-
     protected function getNameInput(): string
     {
         return Str::of(parent::getNameInput())
             ->whenEndsWith('Interface', fn ($name) => $name->replaceLast('Interface', ''))
             ->when($this->option('interface'), fn ($name) => $name->append('Interface'));
+    }
+
+    protected function getOptions(): array
+    {
+        return [
+            ['interface', 'i', InputOption::VALUE_NONE, 'Create an interface for the workflow instead of a class'],
+            ['scoped', 's', InputOption::VALUE_NONE, 'Create the workflow inside a scoped directory'],
+            ['force', 'f', InputOption::VALUE_NONE, 'Create the Interceptor class even if the file already exists'],
+        ];
     }
 }

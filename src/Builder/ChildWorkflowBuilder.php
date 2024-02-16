@@ -11,19 +11,19 @@ use Temporal\Workflow\ChildWorkflowOptions;
 use Temporal\Workflow\ChildWorkflowStubInterface;
 
 /**
- * @property string        $namespace
- * @property ?string       $workflowId
- * @property string        $taskQueue
- * @property DateInterval  $workflowExecutionTimeout
- * @property DateInterval  $workflowRunTimeout
- * @property DateInterval  $workflowTaskTimeout
- * @property int           $childWorkflowCancellationType
- * @property int           $workflowIdReusePolicy
+ * @property string $namespace
+ * @property ?string $workflowId
+ * @property string $taskQueue
+ * @property DateInterval $workflowExecutionTimeout
+ * @property DateInterval $workflowRunTimeout
+ * @property DateInterval $workflowTaskTimeout
+ * @property int $childWorkflowCancellationType
+ * @property int $workflowIdReusePolicy
  * @property ?RetryOptions $retryOptions
- * @property ?string       $cronSchedule
- * @property int           $parentClosePolicy
- * @property ?array        $memo
- * @property ?array        $searchAttributes
+ * @property ?string $cronSchedule
+ * @property int $parentClosePolicy
+ * @property ?array $memo
+ * @property ?array $searchAttributes
  *
  * @method ChildWorkflowBuilder withNamespace(string $namespace)
  * @method ChildWorkflowBuilder withWorkflowId(string $workflowId)

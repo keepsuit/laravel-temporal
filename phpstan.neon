@@ -3,7 +3,7 @@ includes:
     - phpstan-baseline.neon
 
 parameters:
-    level: 6
+    level: 7
     paths:
         - src
         - config
@@ -12,6 +12,9 @@ parameters:
     checkModelProperties: true
     checkMissingIterableValueType: false
     checkGenericClassInNonGenericObjectType: false
+    treatPhpDocTypesAsCertain: false
+
+    excludePaths:
+        - src/Integrations/LaravelData/TemporalSerializableCastAndTransformer.php
 
     ignoreErrors:
-        - '#Unable to resolve the template type TMergeRecursiveValue in call to method Illuminate\\Support\\Collection.*::mergeRecursive#'

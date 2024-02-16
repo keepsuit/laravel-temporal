@@ -79,7 +79,7 @@ class ApplicationFactory
     {
         $injectIndex = array_search($before, $bootstrappers, true);
 
-        if ($injectIndex !== false) {
+        if (is_int($injectIndex)) {
             array_splice($bootstrappers, $injectIndex, 0, [$inject]);
         }
 

@@ -7,10 +7,13 @@ use Illuminate\Support\Facades\ParallelTesting;
 use Illuminate\Support\Str;
 use Keepsuit\LaravelTemporal\Commands\ActivityMakeCommand;
 use Keepsuit\LaravelTemporal\Commands\InstallCommand;
+use Keepsuit\LaravelTemporal\Commands\InterceptorMakeCommand;
 use Keepsuit\LaravelTemporal\Commands\TestServerCommand;
 use Keepsuit\LaravelTemporal\Commands\WorkCommand;
 use Keepsuit\LaravelTemporal\Commands\WorkflowMakeCommand;
 use Keepsuit\LaravelTemporal\DataConverter\LaravelPayloadConverter;
+use Keepsuit\LaravelTemporal\Support\DiscoverActivities;
+use Keepsuit\LaravelTemporal\Support\DiscoverWorkflows;
 use Keepsuit\LaravelTemporal\Support\ServerStateFile;
 use Keepsuit\LaravelTemporal\Testing\TemporalMocker;
 use Keepsuit\LaravelTemporal\Testing\TemporalMockerCache;
@@ -26,6 +29,7 @@ use Temporal\DataConverter\DataConverter;
 use Temporal\DataConverter\DataConverterInterface;
 use Temporal\DataConverter\NullConverter;
 use Temporal\DataConverter\ProtoJsonConverter;
+use Temporal\Interceptor\SimplePipelineProvider;
 
 class LaravelTemporalServiceProvider extends PackageServiceProvider
 {
@@ -40,6 +44,7 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
                 TestServerCommand::class,
                 WorkflowMakeCommand::class,
                 ActivityMakeCommand::class,
+                InterceptorMakeCommand::class,
             ]);
     }
 
@@ -48,6 +53,8 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
         $this->setupTestingEnvironment();
 
         $this->app->bind(Contracts\Temporal::class, Temporal::class);
+
+        $this->app->scoped(TemporalRegistry::class, $this->initTemporalRegistry(...));
 
         $this->app->bind(ServerStateFile::class, fn (Application $app) => new ServerStateFile(
             $app['config']->get('temporal.state_file', storage_path('logs/temporal-worker-state.json'))
@@ -65,8 +72,43 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
         $this->app->bind(WorkflowClientInterface::class, fn (Application $app) => WorkflowClient::create(
             serviceClient: $app->make(ServiceClientInterface::class),
             options: (new ClientOptions())->withNamespace(config('temporal.namespace')),
-            converter: $app->make(DataConverterInterface::class)
+            converter: $app->make(DataConverterInterface::class),
+            interceptorProvider: new SimplePipelineProvider(array_map(
+                fn (string $className) => $app->make($className),
+                config('temporal.interceptors', [])
+            ))
         ));
+    }
+
+    protected function initTemporalRegistry(Application $app): TemporalRegistry
+    {
+        $workflowPaths = [
+            $app->path('Workflows'),
+            $app->path('Temporal/Workflows'),
+        ];
+
+        $activityPaths = [
+            $this->app->path('Workflows'),
+            $this->app->path('Activities'),
+            $this->app->path('Temporal/Activities'),
+            $this->app->path('Temporal/Workflows'),
+        ];
+
+        $registry = new TemporalRegistry();
+
+        foreach ($workflowPaths as $workflowPath) {
+            $registry->registerWorkflows(...DiscoverWorkflows::within($workflowPath));
+        }
+
+        $registry->registerWorkflows(...$app['config']->get('temporal.workflows', []));
+
+        foreach ($activityPaths as $activityPath) {
+            $registry->registerActivities(...DiscoverActivities::within($activityPath));
+        }
+
+        $registry->registerActivities(...$app['config']->get('temporal.activities', []));
+
+        return $registry;
     }
 
     protected function setupTestingEnvironment(): void

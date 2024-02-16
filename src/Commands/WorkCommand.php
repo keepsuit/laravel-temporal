@@ -9,11 +9,13 @@ use InvalidArgumentException;
 use Keepsuit\LaravelTemporal\Support\RoadRunnerBinaryHelper;
 use Keepsuit\LaravelTemporal\Support\ServerProcessInspector;
 use Keepsuit\LaravelTemporal\Support\ServerStateFile;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 use Temporal\WorkerFactory;
 
+#[AsCommand('temporal:work')]
 class WorkCommand extends Command
 {
     use Concerns\InteractsWithIO;
@@ -44,7 +46,7 @@ class WorkCommand extends Command
 
         $this->writeServerStateFile($serverStateFile);
 
-        $this->queue = ($this->argument('queue') ?: $this->laravel['config']['temporal.queue']) ?: WorkerFactory::DEFAULT_TASK_QUEUE;
+        $this->queue = ($this->argument('queue') ?: config('temporal.queue')) ?: WorkerFactory::DEFAULT_TASK_QUEUE;
 
         $server = new Process([
             $roadRunnerBinary,
@@ -53,17 +55,17 @@ class WorkCommand extends Command
             ...['-o', sprintf('server.command=%s ./vendor/bin/roadrunner-temporal-worker', (new PhpExecutableFinder())->find())],
             ...['-o', sprintf('temporal.address=%s', config('temporal.address'))],
             ...['-o', sprintf('temporal.namespace=%s', config('temporal.namespace'))],
-            ...$this->option('workers') === 'auto' ? [] : ['-o', sprintf('temporal.activities.num_workers=%s', $this->option('workers'))],
-            ...$this->option('max-jobs') === '0' ? [] : ['-o', sprintf('temporal.activities.max_jobs=%s', $this->option('max-jobs'))],
+            ...$this->workerCount() > 0 ? ['-o', sprintf('temporal.activities.num_workers=%s', $this->workerCount())] : [],
+            ...$this->maxJobs() > 0 ? ['-o', sprintf('temporal.activities.max_jobs=%s', $this->maxJobs())] : [],
             ...['-o', sprintf('rpc.listen=tcp://%s:%d', $this->rpcHost(), $this->rpcPort())],
             ...['-o', 'logs.mode=production'],
-            ...['-o', app()->environment('local') ? 'logs.level=debug' : 'logs.level=warn'],
+            ...['-o', $this->laravel->environment('local') ? 'logs.level=debug' : 'logs.level=warn'],
             ...['-o', 'logs.output=stdout'],
             ...['-o', 'logs.encoding=json'],
             'serve',
         ], base_path(), [
-            'APP_ENV' => app()->environment(),
-            'APP_BASE_PATH' => base_path(),
+            'APP_ENV' => $this->laravel->environment(),
+            'APP_BASE_PATH' => $this->laravel->basePath(),
             'LARAVEL_TEMPORAL' => 1,
             'TEMPORAL_QUEUE' => $this->queue,
         ]);
@@ -104,7 +106,11 @@ class WorkCommand extends Command
      */
     protected function rpcHost(): string
     {
-        return $this->option('rpc-host') ?: '127.0.0.1';
+        if (! is_string($this->option('rpc-host'))) {
+            return '127.0.0.1';
+        }
+
+        return $this->option('rpc-host');
     }
 
     /**
@@ -112,15 +118,33 @@ class WorkCommand extends Command
      */
     protected function rpcPort(): int
     {
-        return $this->option('rpc-port') ?: 6001;
+        $rpcPort = $this->option('rpc-port');
+
+        return is_numeric($rpcPort) ? (int) $rpcPort : 6001;
     }
 
     /**
      * Get the number of workers that should be started.
      */
-    protected function workerCount(): int|string
+    protected function workerCount(): int
     {
-        return $this->option('workers') == 'auto' ? 0 : $this->option('workers');
+        if (is_numeric($this->option('workers'))) {
+            return (int) $this->option('workers');
+        }
+
+        return 0;
+    }
+
+    /**
+     * Get the number of workers that should be started.
+     */
+    protected function maxJobs(): int
+    {
+        if (is_numeric($this->option('max-jobs'))) {
+            return (int) $this->option('max-jobs');
+        }
+
+        return 0;
     }
 
     /**
@@ -130,17 +154,13 @@ class WorkCommand extends Command
     {
         $path = $this->option('rr-config');
 
-        if (! $path) {
-            touch(base_path('.rr.yaml'));
-
-            return base_path('.rr.yaml');
+        if (is_string($path)) {
+            return \Safe\realpath($path);
         }
 
-        if (! realpath($path)) {
-            throw new InvalidArgumentException('Unable to locate specified configuration file.');
-        }
+        \Safe\touch(base_path('.rr.yaml'));
 
-        return realpath($path);
+        return base_path('.rr.yaml');
     }
 
     /**
@@ -159,18 +179,19 @@ class WorkCommand extends Command
         while ($server->isRunning()) {
             $this->writeServerOutput($server);
 
-            if ($watcher->isRunning() &&
-                $watcher->getIncrementalOutput()) {
-                $this->components->info('Application change detected. Restarting workers…');
+            if ($watcher !== null) {
+                if ($watcher->isRunning() && $watcher->getIncrementalOutput()) {
+                    $this->components->info('Application change detected. Restarting workers…');
 
-                $inspector->reloadServer();
-            } elseif ($watcher->isTerminated()) {
-                $this->error(
-                    'Watcher process has terminated. Please ensure Node and chokidar are installed.'.PHP_EOL.
-                    $watcher->getErrorOutput()
-                );
+                    $inspector->reloadServer();
+                } elseif ($watcher->isTerminated()) {
+                    $this->error(
+                        'Watcher process has terminated. Please ensure Node and chokidar are installed.'.PHP_EOL.
+                        $watcher->getErrorOutput()
+                    );
 
-                return Command::FAILURE;
+                    return Command::FAILURE;
+                }
             }
 
             usleep(500 * 1000);
@@ -189,19 +210,11 @@ class WorkCommand extends Command
 
     /**
      * Start the watcher process for the server.
-     *
-     * @return Process|object
      */
-    protected function startServerWatcher(): mixed
+    protected function startServerWatcher(): ?Process
     {
         if (! $this->option('watch')) {
-            return new class()
-            {
-                public function __call(string $method, mixed $parameters): mixed
-                {
-                    return null;
-                }
-            };
+            return null;
         }
 
         /** @var string[] $paths */
@@ -214,8 +227,8 @@ class WorkCommand extends Command
         return tap(new Process([
             (new ExecutableFinder())->find('node'),
             'file-watcher.cjs',
-            json_encode(collect($paths)->map(fn (string $path) => base_path($path)), JSON_THROW_ON_ERROR),
-        ], realpath(__DIR__.'/../../bin'), null, null, null))->start();
+            \Safe\json_encode(collect($paths)->map(fn (string $path) => base_path($path)), JSON_THROW_ON_ERROR),
+        ], \Safe\realpath(__DIR__.'/../../bin'), null, null, null))->start();
     }
 
     /**
@@ -240,7 +253,7 @@ class WorkCommand extends Command
             ->filter()
             ->each(function ($output): void {
                 try {
-                    $debug = json_decode($output, true, 512, JSON_THROW_ON_ERROR);
+                    $debug = \Safe\json_decode($output, true, 512, JSON_THROW_ON_ERROR);
                 } catch (Exception) {
                     return;
                 }
@@ -251,7 +264,20 @@ class WorkCommand extends Command
                     return;
                 }
 
-                /** @var array{level:string,msg:string,ts:float,logger:string,"workflow info"?:array} $debug */
+                /**
+                 * @var array{
+                 *     level: string,
+                 *     msg: string,
+                 *     ts: float,
+                 *     logger: string,
+                 *     "workflow info"?: array{
+                 *          WorkflowType: array{Name:string},
+                 *          TaskQueueName: string,
+                 *          Attempt: int,
+                 *          WorkflowStartTime: string
+                 *     }
+                 * } $debug
+                 */
 
                 // $level = trim($debug['level']);
                 $logger = trim($debug['logger']);
@@ -261,7 +287,7 @@ class WorkCommand extends Command
                     return;
                 }
 
-                if ($message === 'workflow execute') {
+                if ($message === 'workflow execute' && isset($debug['workflow info'])) {
                     $this->workflowInfo($debug['workflow info']);
                 }
             });

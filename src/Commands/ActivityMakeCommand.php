@@ -4,26 +4,27 @@ namespace Keepsuit\LaravelTemporal\Commands;
 
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Str;
+use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Input\InputOption;
 
+#[AsCommand('temporal:make:activity')]
 class ActivityMakeCommand extends GeneratorCommand
 {
-    protected $signature = 'make:activity {name}
-                            {--interface : Create an interface for the activity instead of a class}
-                            {--local : Create a local activity}
-                            {--scoped : Create the activity inside a scoped directory}
-                            {--for-workflow= : Create the activity in the provided workflow namespace}';
+    use Concerns\Stubs;
 
-    protected $description = 'Create a temporal activity';
+    protected $name = 'temporal:make:activity';
+
+    protected $description = 'Create a new temporal activity class';
 
     protected $type = 'Activity';
 
     protected function getStub(): string
     {
         return match (true) {
-            $this->option('interface') && $this->option('local') => $this->resolveStubPath('/stubs/local_activity_interface.stub'),
-            $this->option('interface') => $this->resolveStubPath('/stubs/activity_interface.stub'),
-            $this->option('local') => $this->resolveStubPath('/stubs/local_activity.stub'),
-            default => $this->resolveStubPath('/stubs/activity.stub'),
+            $this->option('interface') && $this->option('local') => $this->resolveStubPath('local_activity_interface.stub'),
+            $this->option('interface') => $this->resolveStubPath('activity_interface.stub'),
+            $this->option('local') => $this->resolveStubPath('local_activity.stub'),
+            default => $this->resolveStubPath('activity.stub'),
         };
     }
 
@@ -35,7 +36,7 @@ class ActivityMakeCommand extends GeneratorCommand
             default => $rootNamespace
         };
 
-        if ($this->option('for-workflow') !== null) {
+        if (is_string($this->option('for-workflow'))) {
             $namespace = Str::of($this->option('for-workflow'))
                 ->whenEndsWith('Workflow', fn ($name) => $name->replaceLast('Workflow', ''));
 
@@ -52,20 +53,21 @@ class ActivityMakeCommand extends GeneratorCommand
         return sprintf('%s\\Activities', $rootNamespace);
     }
 
-    /**
-     * Resolve the fully-qualified path to the stub.
-     */
-    protected function resolveStubPath(string $stub): string
-    {
-        return file_exists($customPath = $this->laravel->basePath(trim($stub, '/')))
-            ? $customPath
-            : __DIR__.$stub;
-    }
-
     protected function getNameInput(): string
     {
         return Str::of(parent::getNameInput())
             ->whenEndsWith('Interface', fn ($name) => $name->replaceLast('Interface', ''))
             ->when($this->option('interface'), fn ($name) => $name->append('Interface'));
+    }
+
+    protected function getOptions(): array
+    {
+        return [
+            ['interface', 'i', InputOption::VALUE_NONE, 'Create an interface for the activity instead of a class'],
+            ['local', 'l', InputOption::VALUE_NONE, 'Create a local activity'],
+            ['scoped', 's', InputOption::VALUE_NONE, 'Create the activity inside a scoped directory'],
+            ['for-workflow', 'w', InputOption::VALUE_REQUIRED, 'Create the activity in the provided workflow namespace'],
+            ['force', 'f', InputOption::VALUE_NONE, 'Create the Interceptor class even if the file already exists'],
+        ];
     }
 }

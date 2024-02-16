@@ -9,10 +9,14 @@ use Temporal\Activity\ActivityInterface;
 class DiscoverActivities
 {
     /**
-     * Get all of the workflows by searching the given workflow directory.
+     * Get all the activities by searching the given activities directory.
      */
     public static function within(string $activitiesPath): array
     {
+        if (! is_dir($activitiesPath)) {
+            return [];
+        }
+
         /** @var Collection<class-string,class-string|null> $activities */
         $activities = Collection::make();
 

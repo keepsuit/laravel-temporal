@@ -18,6 +18,7 @@ use Temporal\Client\ClientOptions;
 use Temporal\Client\GRPC\ServiceClientInterface;
 use Temporal\Client\WorkflowClientInterface;
 use Temporal\DataConverter\DataConverterInterface;
+use Temporal\Interceptor\SimplePipelineProvider;
 use Temporal\Internal\Declaration\Prototype\ActivityPrototype;
 use Temporal\Internal\Declaration\Reader\ActivityReader;
 use Temporal\Internal\Declaration\Reader\WorkflowReader;
@@ -41,6 +42,10 @@ class TemporalFake extends Temporal
             serviceClient: $this->app->make(ServiceClientInterface::class),
             options: (new ClientOptions())->withNamespace(config('temporal.namespace')),
             converter: $this->app->make(DataConverterInterface::class),
+            interceptorProvider: new SimplePipelineProvider(array_map(
+                fn (string $className) => $this->app->make($className),
+                config('temporal.interceptors', [])
+            ))
         ));
     }
 

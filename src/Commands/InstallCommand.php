@@ -6,7 +6,9 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Keepsuit\LaravelTemporal\Support\RoadRunnerBinaryHelper;
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand('temporal:install')]
 class InstallCommand extends Command
 {
     use Concerns\RoadrunnerDependencies;

@@ -4,6 +4,7 @@ namespace Keepsuit\LaravelTemporal\Testing;
 
 use Illuminate\Support\Str;
 use Keepsuit\LaravelTemporal\Support\RoadRunnerBinaryHelper;
+use Keepsuit\LaravelTemporal\TemporalRegistry;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\Output;
 use Symfony\Component\Process\PhpExecutableFinder;
@@ -52,7 +53,7 @@ class TemporalTestingWorker
         $this->roadRunnerProcess->signal(SIGTERM);
 
         do {
-            usleep(100_000);
+            usleep(1_000);
         } while ($this->roadRunnerProcess->isRunning());
     }
 
@@ -86,7 +87,8 @@ class TemporalTestingWorker
                 'LARAVEL_TEMPORAL' => 1,
                 'TEMPORAL_QUEUE' => config('temporal.queue'),
                 'TEMPORAL_TESTING_ENV' => 1,
-                'TEMPORAL_TESTING_CONFIG' => json_encode(config()->all()),
+                'TEMPORAL_TESTING_CONFIG' => \Safe\json_encode(config()->all()),
+                'TEMPORAL_TESTING_REGISTRY' => \Safe\json_encode(app(TemporalRegistry::class)->toArray()),
             ],
             timeout: 10
         );
@@ -117,7 +119,7 @@ class TemporalTestingWorker
             return $defaultWorkerPath;
         }
 
-        return realpath(__DIR__.'/../../bin/roadrunner-temporal-worker');
+        return \Safe\realpath(__DIR__.'/../../bin/roadrunner-temporal-worker');
     }
 
     protected function downloadRoadRunnerBinary(): void

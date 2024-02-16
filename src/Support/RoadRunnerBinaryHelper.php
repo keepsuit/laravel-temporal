@@ -80,8 +80,8 @@ class RoadRunnerBinaryHelper
 
         $this->binaryPath = base_path('rr');
 
-        chmod($this->binaryPath, 0755);
-        touch(base_path('.rr.yaml'));
+        \Safe\chmod($this->binaryPath, 0755);
+        \Safe\touch(base_path('.rr.yaml'));
 
         return $this->binaryPath;
     }
@@ -89,7 +89,7 @@ class RoadRunnerBinaryHelper
     public function ensureConfigFileExists(): void
     {
         if (! file_exists(base_path('.rr.yaml'))) {
-            touch(base_path('.rr.yaml'));
+            \Safe\touch(base_path('.rr.yaml'));
         }
     }
 }

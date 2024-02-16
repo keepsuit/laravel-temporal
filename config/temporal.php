@@ -81,6 +81,12 @@ return [
     ],
 
     /**
+     * Interceptors (middlewares) registered in the worker
+     */
+    'interceptors' => [
+    ],
+
+    /**
      * Manual register workflows
      */
     'workflows' => [

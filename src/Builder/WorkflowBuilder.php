@@ -11,18 +11,18 @@ use Temporal\Common\RetryOptions;
 use Temporal\Internal\Client\WorkflowProxy;
 
 /**
- * @property string|null   $runId
- * @property string        $workflowId
- * @property string        $taskQueue
- * @property bool          $eagerStart
- * @property DateInterval  $workflowExecutionTimeout
- * @property DateInterval  $workflowRunTimeout
- * @property DateInterval  $workflowTaskTimeout
- * @property int           $workflowIdReusePolicy
+ * @property string|null $runId
+ * @property string $workflowId
+ * @property string $taskQueue
+ * @property bool $eagerStart
+ * @property DateInterval $workflowExecutionTimeout
+ * @property DateInterval $workflowRunTimeout
+ * @property DateInterval $workflowTaskTimeout
+ * @property int $workflowIdReusePolicy
  * @property ?RetryOptions $retryOptions
- * @property ?string       $cronSchedule
- * @property ?array        $memo
- * @property ?array        $searchAttributes
+ * @property ?string $cronSchedule
+ * @property ?array $memo
+ * @property ?array $searchAttributes
  *
  * @method self withWorkflowId(string $workflowId)
  * @method self withTaskQueue(string $taskQueue)
