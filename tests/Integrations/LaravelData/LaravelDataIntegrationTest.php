@@ -64,7 +64,9 @@ it('(v3) can deserialize Data values with data collection', function () {
     $payload = $converter->toPayload(new DataItemV3(
         123,
         ['a' => 1, 'b' => 2],
-        DataItemV3::collection([['id' => 4], ['id' => 5]])
+        method_exists(DataItemV3::class, 'collection')
+            ? DataItemV3::collection([['id' => 4], ['id' => 5]])
+            : DataItemV3::collect([['id' => 4], ['id' => 5]], \Spatie\LaravelData\DataCollection::class)
     ));
 
     $data = $converter->fromPayload($payload, new Type(DataItemV3::class));
@@ -77,7 +79,7 @@ it('(v3) can deserialize Data values with data collection', function () {
         ->collection->toHaveCount(2)
         ->collection->toCollection()->get(0)->toBeInstanceOf(DataItemV3::class)
         ->collection->toCollection()->get(0)->id->toBe(4);
-})->skip(LaravelDataHelpers::version() !== 3);
+});
 
 it('(v4) can deserialize Data values with collection', function () {
     $converter = new LaravelPayloadConverter();
