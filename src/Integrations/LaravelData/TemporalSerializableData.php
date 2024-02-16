@@ -3,69 +3,57 @@
 namespace Keepsuit\LaravelTemporal\Integrations\LaravelData;
 
 use Illuminate\Container\Container;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Enumerable;
-use Keepsuit\LaravelTemporal\Contracts\TemporalSerializable;
-use Keepsuit\LaravelTemporal\Support\TemporalSerializer;
 use Spatie\LaravelData\Casts\Cast;
-use Spatie\LaravelData\Casts\Uncastable;
 use Spatie\LaravelData\Support\Creation\CreationContext;
 use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Support\Transformation\TransformationContext;
 use Spatie\LaravelData\Transformers\Transformer;
 
-class TemporalSerializableData implements Cast, Transformer
-{
-    public function __construct(
-        protected ?string $type = null
-    ) {
-    }
-
-    public function cast(DataProperty $property, mixed $value, array $properties, CreationContext $context): mixed
+if (LaravelDataHelpers::version() === 4) {
+    class TemporalSerializableData implements Cast, Transformer
     {
-        $serializer = Container::getInstance()->make(TemporalSerializer::class);
-        assert($serializer instanceof TemporalSerializer);
-
-        $enumerableClass = $property->type->findAcceptedTypeForBaseType(\Illuminate\Support\Enumerable::class);
-        $isArrayOrCollection = $enumerableClass !== null || $property->type->acceptsType('array');
-
-        if ($isArrayOrCollection && $this->type === null) {
-            return Uncastable::create();
+        public function __construct(
+            protected ?string $type = null
+        ) {
         }
 
-        if ($isArrayOrCollection) {
-            $items = Arr::map($value, fn ($item) => $serializer->deserialize($item, $this->type));
+        public function cast(DataProperty $property, mixed $value, array $properties, CreationContext $context): mixed
+        {
+            $serializer = Container::getInstance()->make(LaravelDataTemporalSerializer::class);
+            assert($serializer instanceof LaravelDataTemporalSerializer);
 
-            return $enumerableClass !== null ? $enumerableClass::make($items) : $items;
+            return $serializer->cast($property, $value, $this->type);
         }
 
-        $type = $this->type ?? $property->type->findAcceptedTypeForBaseType(TemporalSerializable::class);
+        public function transform(DataProperty $property, mixed $value, TransformationContext $context): mixed
+        {
+            $serializer = Container::getInstance()->make(LaravelDataTemporalSerializer::class);
 
-        try {
-            return $serializer->deserialize($value, $type);
-        } catch (\Throwable $e) {
-            ray($e);
-
-            return Uncastable::create();
+            return $serializer->transform($value);
         }
     }
-
-    public function transform(DataProperty $property, mixed $value, TransformationContext $context): mixed
+} else {
+    class TemporalSerializableData implements Cast, Transformer
     {
-        $serializer = Container::getInstance()->make(TemporalSerializer::class);
-
-        if ($value instanceof Enumerable) {
-            return $value->map(fn ($item) => $serializer->serialize($item))->toArray();
+        public function __construct(
+            protected ?string $type = null
+        ) {
         }
 
-        if (is_array($value)) {
-            return Arr::map($value, fn ($item) => $serializer->serialize($item));
+        public function cast(DataProperty $property, mixed $value, array $context): mixed
+        {
+            $serializer = Container::getInstance()->make(LaravelDataTemporalSerializer::class);
+            assert($serializer instanceof LaravelDataTemporalSerializer);
+
+            return $serializer->cast($property, $value, $this->type);
         }
 
-        if ($value instanceof TemporalSerializable) {
-            return $serializer->serialize($value);
-        }
+        public function transform(DataProperty $property, mixed $value): mixed
+        {
+            $serializer = Container::getInstance()->make(LaravelDataTemporalSerializer::class);
+            assert($serializer instanceof LaravelDataTemporalSerializer);
 
-        return $value;
+            return $serializer->transform($value);
+        }
     }
 }

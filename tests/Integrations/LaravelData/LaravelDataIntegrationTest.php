@@ -39,7 +39,10 @@ it('can convert TemporalSerializable property with cast/transformer', function (
 it('can convert TemporalSerializable array property with cast/transformer', function () {
     $converter = new LaravelPayloadConverter();
 
-    $input = new AdvancedDataItemV3(new TemporalSerializableItem(123));
+    $input = new AdvancedDataItemV3(
+        new TemporalSerializableItem(123),
+        [new TemporalSerializableItem(4), new TemporalSerializableItem(5)]
+    );
 
     $payload = $converter->toPayload($input);
 
@@ -47,7 +50,12 @@ it('can convert TemporalSerializable array property with cast/transformer', func
 
     expect($data)
         ->toBeInstanceOf(AdvancedDataItemV3::class)
-        ->item->id->toEqual(123);
+        ->item->toBeInstanceOf(TemporalSerializableItem::class)
+        ->item->id->toEqual(123)
+        ->collection->toBeArray()
+        ->collection->toHaveCount(2)
+        ->collection->{0}->toBeInstanceOf(TemporalSerializableItem::class)
+        ->collection->{0}->id->toEqual(4);
 });
 
 it('(v3) can deserialize Data values with data collection', function () {

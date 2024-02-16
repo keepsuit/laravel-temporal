@@ -53,29 +53,26 @@ class LaravelPayloadConverter extends JsonConverter
             throw new DataConverterException($throwable->getMessage(), $throwable->getCode(), $throwable);
         }
 
-        try {
-            $reflection = new ReflectionClass($typeName);
-            $class = $reflection->getName();
+        $reflection = new ReflectionClass($typeName);
+        $class = $reflection->getName();
 
-            if ($reflection->implementsInterface(TemporalSerializable::class)) {
-                /** @var class-string<TemporalSerializable> $class */
-                return $class::fromTemporalPayload($data);
-            }
+        if ($reflection->implementsInterface(TemporalSerializable::class)) {
+            /** @var class-string<TemporalSerializable> $class */
+            return $class::fromTemporalPayload($data);
+        }
 
-            if ($reflection->isEnum()) {
-                /** @var class-string<\BackedEnum> $class */
-                return $class::from($data);
-            }
+        if ($reflection->isEnum()) {
+            /** @var class-string<\BackedEnum> $class */
+            return $class::from($data);
+        }
 
-            if ($reflection->isSubclassOf(Data::class)) {
-                /** @var class-string<Data> $class */
-                return $class::from($data);
-            }
+        if ($reflection->isSubclassOf(Data::class)) {
+            /** @var class-string<Data> $class */
+            return $class::from($data);
+        }
 
-            if ($reflection->isSubclassOf(Model::class)) {
-                return $reflection->newInstance($data);
-            }
-        } catch (Throwable) {
+        if ($reflection->isSubclassOf(Model::class)) {
+            return $reflection->newInstance($data);
         }
 
         return parent::fromPayload($payload, $type);
