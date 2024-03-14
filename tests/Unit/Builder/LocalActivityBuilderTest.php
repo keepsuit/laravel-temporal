@@ -14,9 +14,9 @@ it('can build local activity with default config options', function (bool $typed
     $contextMock = mockTemporalContext(validateActivityOptions: function (LocalActivityOptions $activityOptions): bool {
         expect($activityOptions)
             ->retryOptions->not->toBeNull()
-            ->retryOptions->initialInterval->totalSeconds->toBe(RetryOptions::DEFAULT_INITIAL_INTERVAL)
+            ->retryOptions->initialInterval->totalSeconds->toEqual(RetryOptions::DEFAULT_INITIAL_INTERVAL)
             ->retryOptions->backoffCoefficient->toBe(RetryOptions::DEFAULT_BACKOFF_COEFFICIENT)
-            ->retryOptions->maximumInterval->totalSeconds->toBe(RetryOptions::DEFAULT_MAXIMUM_INTERVAL)
+            ->retryOptions->maximumInterval->totalSeconds->toEqual(RetryOptions::DEFAULT_MAXIMUM_INTERVAL)
             ->retryOptions->maximumAttempts->toBe(RetryOptions::DEFAULT_MAXIMUM_ATTEMPTS);
 
         return true;
@@ -30,9 +30,9 @@ it('can build local activity with default config options', function (bool $typed
 
     expect($builder)
         ->retryOptions->not->toBeNull()
-        ->retryOptions->initialInterval->totalSeconds->toBe(RetryOptions::DEFAULT_INITIAL_INTERVAL)
+        ->retryOptions->initialInterval->totalSeconds->toEqual(RetryOptions::DEFAULT_INITIAL_INTERVAL)
         ->retryOptions->backoffCoefficient->toBe(RetryOptions::DEFAULT_BACKOFF_COEFFICIENT)
-        ->retryOptions->maximumInterval->totalSeconds->toBe(RetryOptions::DEFAULT_MAXIMUM_INTERVAL)
+        ->retryOptions->maximumInterval->totalSeconds->toEqual(RetryOptions::DEFAULT_MAXIMUM_INTERVAL)
         ->retryOptions->maximumAttempts->toBe(RetryOptions::DEFAULT_MAXIMUM_ATTEMPTS);
 
     if ($typed) {
@@ -56,9 +56,9 @@ it('can build local activity with custom config options', function (bool $typed)
     $contextMock = mockTemporalContext(validateActivityOptions: function (LocalActivityOptions $activityOptions): bool {
         expect($activityOptions)
             ->retryOptions->not->toBeNull()
-            ->retryOptions->initialInterval->totalSeconds->toBe(5)
+            ->retryOptions->initialInterval->totalSeconds->toEqual(5.0)
             ->retryOptions->backoffCoefficient->toBe(6.0)
-            ->retryOptions->maximumInterval->totalSeconds->toBe(500)
+            ->retryOptions->maximumInterval->totalSeconds->toEqual(500.0)
             ->retryOptions->maximumAttempts->toBe(10);
 
         return true;
@@ -72,9 +72,9 @@ it('can build local activity with custom config options', function (bool $typed)
 
     expect($builder)
         ->retryOptions->not->toBeNull()
-        ->retryOptions->initialInterval->totalSeconds->toBe(5)
+        ->retryOptions->initialInterval->totalSeconds->toEqual(5.0)
         ->retryOptions->backoffCoefficient->toBe(6.0)
-        ->retryOptions->maximumInterval->totalSeconds->toBe(500)
+        ->retryOptions->maximumInterval->totalSeconds->toEqual(500.0)
         ->retryOptions->maximumAttempts->toBe(10);
 
     if ($typed) {
@@ -90,7 +90,7 @@ it('can build local activity with custom config options', function (bool $typed)
 it('can build local activity with custom options', function (bool $typed) {
     $contextMock = mockTemporalContext(validateActivityOptions: function (LocalActivityOptions $activityOptions): bool {
         expect($activityOptions)
-            ->startToCloseTimeout->totalSeconds->toBe(10)
+            ->startToCloseTimeout->totalSeconds->toEqual(10.0)
             ->retryOptions->not->toBeNull()
             ->retryOptions->maximumAttempts->toBe(5);
 
@@ -106,7 +106,7 @@ it('can build local activity with custom options', function (bool $typed) {
         ->withRetryOptions(RetryOptions::new()->withMaximumAttempts(5));
 
     expect($builder)
-        ->startToCloseTimeout->totalSeconds->toBe(10)
+        ->startToCloseTimeout->totalSeconds->toEqual(10.0)
         ->retryOptions->not->toBeNull()
         ->retryOptions->maximumAttempts->toBe(5);
 
