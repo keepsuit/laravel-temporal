@@ -285,8 +285,7 @@ This package adds some laravel specific options for serialization/deserializatio
 In order to take full advantage of `laravel-data`, it is suggested to use `v4.3.0` or higher.
 
 > [!NOTE]
-> iterables cast/transform is available only from `v4.3.0`, so older version can't take advantage of this feature.
-> The provided `TemporalSerializableCastAndTransformer` is compatible only with `laravel-data` `v4.0` or higher,
+> The provided `TemporalSerializableCastAndTransformer` is compatible only with `laravel-data` `v4.3` or higher,
 > if you are using an older version you can create your cast/transform.
 
 Changes to be made in `config/data.php`:
