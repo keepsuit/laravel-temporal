@@ -46,7 +46,7 @@
         "thecodingmachine/phpstan-safe-rule": "^1.2"
     },
     "suggest": {
-        "spatie/laravel-data": "Can be used for workflows payloads (^3.0 || ^4.0)"
+        "spatie/laravel-data": "Can be used for workflows payloads (recommended ^4.3)"
     },
     "autoload": {
         "psr-4": {
