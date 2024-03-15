@@ -279,10 +279,35 @@ This package adds some laravel specific options for serialization/deserializatio
 - Eloquent models can be correctly serialized/deserialized (with relations) adding `TemporalSerializable` interface and `TemporalEloquentSerialize` trait.
 - [spatie/laravel-data](https://github.com/spatie/laravel-data) data objects are supported out of the box.
 
-> To improve laravel-data support, this package provides `TemporalSerializableCastAndTransformer` (which implements cast and transformer for laravel-data).
-> to add support for serialization/deserialization of `TemporalSerializable` objects used as `Data` properties.
-> You can add them to `data.casts` and `data.transformers` config to add support globally,
-> or use it with `WithCast`, `WithTransformer` attributes to add support to specific data objects (in v4 the attributes can be combined with `WithCastAndTransform`).
+#### Spatie/Laravel-Data support
+
+`spatie/laravel-data` is a package that provides a simple way to work with data objects in Laravel.
+In order to take full advantage of `laravel-data`, it is suggested to use `v4.3.0` or higher.
+
+> [!NOTE]
+> The provided `TemporalSerializableCastAndTransformer` is compatible only with `laravel-data` `v4.3` or higher,
+> if you are using an older version you can create your cast/transform.
+
+Changes to be made in `config/data.php`:
+
+```php
+    // Enable iterables cast/transform
+    'features' => [
+        'cast_and_transform_iterables' => true,
+    ],
+
+    // Add support for TemporalSerializable transform
+    'transformers' => [
+        //...
+        \Keepsuit\LaravelTemporal\Contracts\TemporalSerializable::class => \Keepsuit\LaravelTemporal\Integrations\LaravelData\TemporalSerializableCastAndTransformer::class,
+    ],
+
+    // Add support for TemporalSerializable cast
+    'casts' => [
+        //...
+        \Keepsuit\LaravelTemporal\Contracts\TemporalSerializable::class => \Keepsuit\LaravelTemporal\Integrations\LaravelData\TemporalSerializableCastAndTransformer::class,
+    ],
+```
 
 ### Interceptors
 

@@ -2,18 +2,18 @@
 
 namespace Keepsuit\LaravelTemporal\Tests\Fixtures\Converter;
 
+use Illuminate\Support\Collection;
 use Spatie\LaravelData\Data;
-use Spatie\LaravelData\DataCollection;
 
-class DataItemV3 extends Data
+class DataItem extends Data
 {
     public function __construct(
         public int $id,
         public ?array $values = null,
         /**
-         * @var DataCollection<array-key,DataItemV3>|null
+         * @var Collection<array-key,DataItem>|null
          */
-        public ?DataCollection $collection = null,
+        public ?Collection $collection = null,
     ) {
     }
 }

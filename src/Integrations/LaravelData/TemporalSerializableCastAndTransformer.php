@@ -2,58 +2,51 @@
 
 namespace Keepsuit\LaravelTemporal\Integrations\LaravelData;
 
-use Illuminate\Container\Container;
+use Keepsuit\LaravelTemporal\Contracts\TemporalSerializable;
+use Keepsuit\LaravelTemporal\Exceptions\TemporalSerializerException;
 use Spatie\LaravelData\Casts\Cast;
+use Spatie\LaravelData\Casts\IterableItemCast;
+use Spatie\LaravelData\Casts\Uncastable;
 use Spatie\LaravelData\Support\Creation\CreationContext;
 use Spatie\LaravelData\Support\DataProperty;
 use Spatie\LaravelData\Support\Transformation\TransformationContext;
 use Spatie\LaravelData\Transformers\Transformer;
 
-if (LaravelDataHelpers::version() === 4) {
-    class TemporalSerializableCastAndTransformer implements Cast, Transformer
+class TemporalSerializableCastAndTransformer implements Cast, IterableItemCast, Transformer
+{
+    public function cast(DataProperty $property, mixed $value, array $properties, CreationContext $context): TemporalSerializable|Uncastable
     {
-        public function __construct(
-            protected ?string $type = null
-        ) {
-        }
-
-        public function cast(DataProperty $property, mixed $value, array $properties, CreationContext $context): mixed
-        {
-            $serializer = Container::getInstance()->make(LaravelDataTemporalSerializer::class);
-            assert($serializer instanceof LaravelDataTemporalSerializer);
-
-            return $serializer->cast($property, $value, $this->type);
-        }
-
-        public function transform(DataProperty $property, mixed $value, TransformationContext $context): mixed
-        {
-            $serializer = Container::getInstance()->make(LaravelDataTemporalSerializer::class);
-
-            return $serializer->transform($value);
-        }
+        return $this->castValue($property->type->type->findAcceptedTypeForBaseType(TemporalSerializable::class), $value);
     }
-} else {
-    class TemporalSerializableCastAndTransformer implements Cast, Transformer
+
+    public function castIterableItem(DataProperty $property, mixed $value, array $properties, CreationContext $context): TemporalSerializable|Uncastable
     {
-        public function __construct(
-            protected ?string $type = null
-        ) {
+        return $this->castValue($property->type->iterableItemType, $value);
+    }
+
+    public function transform(DataProperty $property, mixed $value, TransformationContext $context): mixed
+    {
+        if ($value instanceof TemporalSerializable) {
+            return $value->toTemporalPayload();
         }
 
-        public function cast(DataProperty $property, mixed $value, array $context): mixed
-        {
-            $serializer = Container::getInstance()->make(LaravelDataTemporalSerializer::class);
-            assert($serializer instanceof LaravelDataTemporalSerializer);
+        return $value;
+    }
 
-            return $serializer->cast($property, $value, $this->type);
+    /**
+     * @throws TemporalSerializerException
+     */
+    protected function castValue(string $className, mixed $value): TemporalSerializable|Uncastable
+    {
+        if (! class_exists($className)) {
+            return Uncastable::create();
         }
 
-        public function transform(DataProperty $property, mixed $value): mixed
-        {
-            $serializer = Container::getInstance()->make(LaravelDataTemporalSerializer::class);
-            assert($serializer instanceof LaravelDataTemporalSerializer);
-
-            return $serializer->transform($value);
+        if (! is_array($value)) {
+            return Uncastable::create();
         }
+
+        /** @var class-string<TemporalSerializable> $className */
+        return $className::fromTemporalPayload($value);
     }
 }

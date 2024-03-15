@@ -16,14 +16,11 @@ jobs:
         php: [ 8.1, 8.2 , 8.3 ]
         laravel: [ ^10.0, ^11.0 ]
         stability: [ prefer-stable, prefer-lowest ]
-        laravelData: [ ^3.0, ^4.0 ]
         exclude:
           - php: 8.1
             laravel: ^11.0
-          - laravel: ^11.0
-            laravelData: ^3.0
 
-    name: P${{ matrix.php }} - L${{ matrix.laravel }} - D${{ matrix.laravelData }} - ${{ matrix.stability }}
+    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }}
 
     steps:
       - name: Checkout code
@@ -44,7 +41,6 @@ jobs:
       - name: Install dependencies
         run: |
           composer require "illuminate/contracts:${{ matrix.laravel }}" --no-interaction --no-update
-          composer require "spatie/laravel-data:${{ matrix.laravelData }}" --no-interaction --no-update
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress
 
       - name: Execute tests
