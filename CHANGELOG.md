@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.0-beta2 - 2024-03-15
+
+### What's Changed
+
+* Bump ramsey/composer-install from 2 to 3 by @dependabot in https://github.com/keepsuit/laravel-temporal/pull/34
+* Drop laravel data v3 by @cappuc in https://github.com/keepsuit/laravel-temporal/pull/36
+* Added support for `temporal/sdk` `v2.8`
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/1.0.0-beta1...1.0.0-beta2
+
 ## v0.6.14 - 2024-01-03
 
 ### What's Changed
