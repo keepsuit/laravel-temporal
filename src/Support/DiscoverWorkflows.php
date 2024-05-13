@@ -10,6 +10,8 @@ class DiscoverWorkflows
 {
     /**
      * Get all the workflows by searching the given workflow directory.
+     *
+     * @return class-string[]
      */
     public static function within(string $workflowPath): array
     {
@@ -18,7 +20,7 @@ class DiscoverWorkflows
         }
 
         /** @var Collection<class-string,class-string|null> $workflows */
-        $workflows = Collection::make([]);
+        $workflows = Collection::make();
 
         $generator = new ClassMapGenerator();
         $generator->scanPaths($workflowPath);
@@ -26,7 +28,7 @@ class DiscoverWorkflows
         foreach (array_keys($generator->getClassMap()->getMap()) as $class) {
             $workflow = new \ReflectionClass($class);
 
-            /** @var \ReflectionClass[] $interfaces */
+            /** @var \ReflectionClass<object>[] $interfaces */
             $interfaces = array_merge(
                 $workflow->getInterfaces(),
                 [$workflow->getName() => $workflow]

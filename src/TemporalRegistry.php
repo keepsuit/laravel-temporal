@@ -11,6 +11,9 @@ class TemporalRegistry implements Arrayable
      */
     protected array $registeredWorkflows = [];
 
+    /**
+     * @var array<array-key,class-string>
+     */
     protected array $registeredActivities = [];
 
     /**

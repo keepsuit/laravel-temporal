@@ -10,6 +10,8 @@ class DiscoverActivities
 {
     /**
      * Get all the activities by searching the given activities directory.
+     *
+     * @return class-string[]
      */
     public static function within(string $activitiesPath): array
     {
@@ -26,7 +28,7 @@ class DiscoverActivities
         foreach (array_keys($generator->getClassMap()->getMap()) as $class) {
             $activity = new \ReflectionClass($class);
 
-            /** @var \ReflectionClass[] $interfaces */
+            /** @var \ReflectionClass<object>[] $interfaces */
             $interfaces = array_merge(
                 $activity->getInterfaces(),
                 [$activity->getName() => $activity],
