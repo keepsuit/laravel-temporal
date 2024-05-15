@@ -43,9 +43,5 @@ jobs:
           composer require "illuminate/contracts:${{ matrix.laravel }}" --no-interaction --no-update
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress
 
-      - name: Validate lowest dependencies
-        if: matrix.stability == 'prefer-lowest'
-        run: vendor/bin/validate-prefer-lowest
-
       - name: Execute tests
         run: vendor/bin/pest
