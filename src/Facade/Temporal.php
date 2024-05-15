@@ -2,6 +2,7 @@
 
 namespace Keepsuit\LaravelTemporal\Facade;
 
+use Closure;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Facade;
@@ -15,6 +16,7 @@ use Keepsuit\LaravelTemporal\Testing\Fakes\TemporalFake;
 use Keepsuit\LaravelTemporal\Testing\TemporalTestingEnvironment;
 use Keepsuit\LaravelTemporal\Testing\WorkflowMockBuilder;
 use Temporal\Client\WorkflowClientInterface;
+use Temporal\Worker\WorkerOptions;
 use Temporal\Workflow;
 
 /**
@@ -22,16 +24,18 @@ use Temporal\Workflow;
  * @method static ChildWorkflowBuilder newChildWorkflow()
  * @method static ActivityBuilder newActivity()
  * @method static LocalActivityBuilder newLocalActivity()
+ * @method static void buildWorkerOptionsUsing(Closure $callback)
+ * @method static WorkerOptions|null buildWorkerOptions(string $taskQueue)
  * @method static void mockWorkflows(array $workflowMocks, ?string $taskQueue = null)
  * @method static WorkflowMockBuilder mockWorkflow(string $workflowName)
  * @method static void mockActivities(array $activitiesMocks, ?string $taskQueue = null)
  * @method static ActivityMockBuilder mockActivity(string|array $activityName)
- * @method static void assertWorkflowDispatched(string $workflowName, \Closure|int|null $callback = null)
- * @method static void assertWorkflowDispatchedTimes(string $workflowName, int $times = 1, \Closure|null $callback = null)
- * @method static void assertWorkflowNotDispatched(string $workflowName, \Closure|null $callback = null)
- * @method static void assertActivityDispatched(string|array $activityName, \Closure|int|null $callback = null)
- * @method static void assertActivityDispatchedTimes(string|array $activityName, int $times = 1, \Closure|null $callback = null)
- * @method static void assertActivityNotDispatched(string|array $activityName, \Closure|null $callback = null)
+ * @method static void assertWorkflowDispatched(string $workflowName, Closure|int|null $callback = null)
+ * @method static void assertWorkflowDispatchedTimes(string $workflowName, int $times = 1, Closure|null $callback = null)
+ * @method static void assertWorkflowNotDispatched(string $workflowName, Closure|null $callback = null)
+ * @method static void assertActivityDispatched(string|array $activityName, Closure|int|null $callback = null)
+ * @method static void assertActivityDispatchedTimes(string|array $activityName, int $times = 1, Closure|null $callback = null)
+ * @method static void assertActivityNotDispatched(string|array $activityName, Closure|null $callback = null)
  */
 class Temporal extends Facade
 {

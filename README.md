@@ -320,6 +320,22 @@ To create a new interceptor, you can use the `temporal:make:interceptor {name}` 
 
 To run the temporal worker, you can use the `temporal:work {queue?}` command.
 
+If you want to customize the options of the temporal worker, you can call `Temporal::buildWorkerOptionsUsing` in your service provider:
+
+```php
+class AppServiceProvider extends ServiceProvider
+{
+    public function boot(): vodi {
+        \Keepsuit\LaravelTemporal\Facade\Temporal::buildWorkerOptionsUsing(function (string $taskQueue) {
+            // you can build different worker options based on the task queue
+            return \Temporal\Worker\WorkerOptions::new()
+                ->withMaxConcurrentActivityTaskPollers(10)
+                ->withMaxConcurrentWorkflowTaskPollers(10);
+        });
+    }
+}
+```
+
 ## Testing utilities
 
 In order to test workflows end-to-end, you need a temporal server running.
