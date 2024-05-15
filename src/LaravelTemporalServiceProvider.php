@@ -30,7 +30,6 @@ use Temporal\DataConverter\DataConverterInterface;
 use Temporal\DataConverter\NullConverter;
 use Temporal\DataConverter\ProtoJsonConverter;
 use Temporal\Interceptor\SimplePipelineProvider;
-use Temporal\Worker\WorkerOptions;
 
 class LaravelTemporalServiceProvider extends PackageServiceProvider
 {
