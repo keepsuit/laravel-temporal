@@ -143,9 +143,17 @@ class LocalTemporalServer implements TemporalServer
 
         $this->temporalServerProcess->start();
 
-        $serverStarted = $this->temporalServerProcess->waitUntil(
-            fn ($type, $output) => Str::contains((string) $output, 'http server started')
-        );
+        try {
+            $serverStarted = $this->temporalServerProcess->waitUntil(
+                fn ($type, $output) => Str::contains((string) $output, [
+                    'http server started',
+                    'Temporal server is running',
+                    'Temporal server:',
+                ])
+            );
+        } catch (\Throwable) {
+            $serverStarted = false;
+        }
 
         if (! $serverStarted) {
             $this->debugOutput('<error>error</error>');
