@@ -2,6 +2,7 @@
 <?php
 declare(strict_types=1);
 
+use Keepsuit\LaravelTemporal\Facade\Temporal;
 use Keepsuit\LaravelTemporal\Interceptors\ApplicationSandboxInterceptor;
 use Keepsuit\LaravelTemporal\Support\ApplicationFactory;
 use Keepsuit\LaravelTemporal\Support\CurrentApplication;
@@ -17,7 +18,7 @@ $app = (new ApplicationFactory($basePath))->createApplication();
 CurrentApplication::setRootApp($app);
 
 if ($app->environment() !== 'production' && env('TEMPORAL_TESTING_ENV')) {
-    \Keepsuit\LaravelTemporal\Facade\Temporal::initFakeWorker();
+    Temporal::initFakeWorker();
 }
 
 /** @var TemporalRegistry $registry */
@@ -28,9 +29,13 @@ $factory = WorkerFactory::create(
     converter: $app->make(DataConverterInterface::class)
 );
 
+$taskQueue = env('TEMPORAL_QUEUE', \Temporal\WorkerFactory::DEFAULT_TASK_QUEUE);
+assert(is_string($taskQueue), 'TEMPORAL_QUEUE must be a string');
+
 // Worker that listens on a Task Queue and hosts both workflow and activity implementations.
 $worker = $factory->newWorker(
-    taskQueue: env('TEMPORAL_QUEUE'),
+    taskQueue: $taskQueue,
+    options: Temporal::buildWorkerOptions($taskQueue),
     interceptorProvider: new SimplePipelineProvider(array_map(
         fn (string $className) => $app->make($className),
         array_merge([
