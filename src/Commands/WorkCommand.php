@@ -27,7 +27,6 @@ class WorkCommand extends Command
                         {--rpc-port= : The RPC port the server should be available on}
                         {--workers=auto : The number of workers that should be available to handle requests}
                         {--max-jobs=500 : The number of jobs to process before reloading the server}
-                        {--max-memory=100 : The maximum amount of memory usage before reloading the server}
                         {--rr-config= : The path to the RoadRunner .rr.yaml file}
                         {--watch : Automatically reload the server when the application is modified}';
 
