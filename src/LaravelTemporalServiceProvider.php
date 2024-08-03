@@ -86,7 +86,7 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
         $clientCert = config('temporal.client_cert');
         $clientKey  = config('temporal.client_key');
 
-        if (($clientKey && file_exists($clientKey)) && ($clientCert && file_exists($clientCert))) {
+        if ($clientKey && file_exists($clientKey) && $clientCert && file_exists($clientCert)) {
             return ServiceClient::createSSL(
                 $address,
                 null,
