@@ -70,7 +70,7 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
         ));
 
         $this->app->bind(WorkflowClientInterface::class, fn (Application $app) => WorkflowClient::create(
-            serviceClient: $app->make(ServiceClientInterface::class),
+            serviceClient: $this->createServiceClient($app),
             options: (new ClientOptions())->withNamespace(config('temporal.namespace')),
             converter: $app->make(DataConverterInterface::class),
             interceptorProvider: new SimplePipelineProvider(array_map(
@@ -78,6 +78,24 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
                 config('temporal.interceptors', [])
             ))
         ));
+    }
+
+    protected function createServiceClient(Application $app): ServiceClient
+    {
+        $address    = config('temporal.address');
+        $clientCert = config('temporal.client_cert');
+        $clientKey  = config('temporal.client_key');
+
+        if (($clientKey && file_exists($clientKey)) && ($clientCert && file_exists($clientCert))) {
+            return ServiceClient::createSSL(
+                $address,
+                null,
+                $clientKey,
+                $clientCert,
+            );
+        } else {
+            return ServiceClient::create($address);
+        }
     }
 
     protected function initTemporalRegistry(Application $app): TemporalRegistry
