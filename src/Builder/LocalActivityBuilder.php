@@ -33,7 +33,7 @@ class LocalActivityBuilder
 
     public static function new(): LocalActivityBuilder
     {
-        return new LocalActivityBuilder();
+        return new LocalActivityBuilder;
     }
 
     /**

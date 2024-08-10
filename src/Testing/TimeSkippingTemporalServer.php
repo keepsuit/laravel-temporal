@@ -19,14 +19,13 @@ class TimeSkippingTemporalServer implements TemporalServer
         protected Downloader $downloader,
         protected SystemInfo $systemInfo,
         protected bool $debug = false
-    ) {
-    }
+    ) {}
 
     public static function create(): static
     {
         return new static(
-            new ConsoleOutput(),
-            new Downloader(new Filesystem(), HttpClient::create()),
+            new ConsoleOutput,
+            new Downloader(new Filesystem, HttpClient::create()),
             SystemInfo::detect(),
         );
     }

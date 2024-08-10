@@ -38,7 +38,7 @@ function mockTemporalContext(?Closure $validateActivityOptions = null, ?Closure 
 
     $contextMock->shouldReceive('newChildWorkflowStub')
         ->withArgs(fn (string $workflowClass, ChildWorkflowOptions $workflowOptions) => $validateWorkflowOptions($workflowOptions))
-        ->andReturnUsing(fn (string $workflowClass, ChildWorkflowOptions $workflowOptions) => new ChildWorkflowProxy($workflowClass, (new WorkflowReader(new AttributeReader()))->fromClass($workflowClass), $workflowOptions, $contextMock));
+        ->andReturnUsing(fn (string $workflowClass, ChildWorkflowOptions $workflowOptions) => new ChildWorkflowProxy($workflowClass, (new WorkflowReader(new AttributeReader))->fromClass($workflowClass), $workflowOptions, $contextMock));
     $contextMock->shouldReceive('newUntypedChildWorkflowStub')
         ->withArgs(fn (string $workflowType, ChildWorkflowOptions $workflowOptions) => $validateWorkflowOptions($workflowOptions))
         ->andReturnUsing(fn (string $workflowType, ChildWorkflowOptions $workflowOptions) => new ChildWorkflowStub(mock(MarshallerInterface::class), $workflowType, $workflowOptions, []));

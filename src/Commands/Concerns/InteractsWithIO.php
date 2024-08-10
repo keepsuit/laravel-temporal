@@ -90,7 +90,7 @@ trait InteractsWithIO
     protected function getTerminalWidth(): int
     {
         if ($this->terminalWidth == null) {
-            $this->terminalWidth = (new Terminal())->getWidth();
+            $this->terminalWidth = (new Terminal)->getWidth();
 
             $this->terminalWidth = max($this->terminalWidth, 30);
         }

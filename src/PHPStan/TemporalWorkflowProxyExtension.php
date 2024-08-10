@@ -48,7 +48,7 @@ class TemporalWorkflowProxyExtension implements MethodsClassReflectionExtension
             return false;
         }
 
-        $methodReflection = $objectType->getMethod($methodName, new OutOfClassScope());
+        $methodReflection = $objectType->getMethod($methodName, new OutOfClassScope);
 
         if (! $methodReflection->isPublic()) {
             return false;
@@ -69,7 +69,7 @@ class TemporalWorkflowProxyExtension implements MethodsClassReflectionExtension
         $objectType = $activeTemplateTypeMap->getType('T');
         assert($objectType->isObject()->yes());
 
-        $methodReflection = $objectType->getMethod($methodName, new OutOfClassScope());
+        $methodReflection = $objectType->getMethod($methodName, new OutOfClassScope);
 
         // @phpstan-ignore-next-line
         $objectClassReflection = new \ReflectionClass($objectType->getClassName());
@@ -81,17 +81,17 @@ class TemporalWorkflowProxyExtension implements MethodsClassReflectionExtension
         assert(is_bool($objectMethodReturnTypeNullable));
 
         $returnType = match (true) {
-            $objectMethodReturnType === \Temporal\DataConverter\Type::TYPE_VOID => new VoidType(),
-            $objectMethodReturnType === \Temporal\DataConverter\Type::TYPE_BOOL => new BooleanType(),
-            $objectMethodReturnType === \Temporal\DataConverter\Type::TYPE_STRING => new StringType(),
-            $objectMethodReturnType === \Temporal\DataConverter\Type::TYPE_INT => new IntegerType(),
-            $objectMethodReturnType === \Temporal\DataConverter\Type::TYPE_FLOAT => new FloatType(),
+            $objectMethodReturnType === \Temporal\DataConverter\Type::TYPE_VOID => new VoidType,
+            $objectMethodReturnType === \Temporal\DataConverter\Type::TYPE_BOOL => new BooleanType,
+            $objectMethodReturnType === \Temporal\DataConverter\Type::TYPE_STRING => new StringType,
+            $objectMethodReturnType === \Temporal\DataConverter\Type::TYPE_INT => new IntegerType,
+            $objectMethodReturnType === \Temporal\DataConverter\Type::TYPE_FLOAT => new FloatType,
             class_exists($objectMethodReturnType) => new ObjectType($objectMethodReturnType),
-            default => new MixedType(),
+            default => new MixedType,
         };
 
         $returnType = $objectMethodReturnTypeNullable
-            ? new UnionType([$returnType, new NullType()])
+            ? new UnionType([$returnType, new NullType])
             : $returnType;
 
         return new class($classReflection, $methodName, $methodReflection, $returnType) implements MethodReflection
@@ -101,8 +101,7 @@ class TemporalWorkflowProxyExtension implements MethodsClassReflectionExtension
                 protected string $methodName,
                 protected MethodReflection $methodReflection,
                 protected Type $returnType
-            ) {
-            }
+            ) {}
 
             public function isStatic(): bool
             {

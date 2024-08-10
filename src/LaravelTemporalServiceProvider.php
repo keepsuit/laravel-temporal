@@ -63,15 +63,15 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
         $this->app->bind(ServiceClientInterface::class, fn (Application $app) => ServiceClient::create(config('temporal.address')));
 
         $this->app->bind(DataConverterInterface::class, fn (Application $app) => new DataConverter(
-            new NullConverter(),
-            new BinaryConverter(),
-            new ProtoJsonConverter(),
-            new LaravelPayloadConverter()
+            new NullConverter,
+            new BinaryConverter,
+            new ProtoJsonConverter,
+            new LaravelPayloadConverter
         ));
 
         $this->app->bind(WorkflowClientInterface::class, fn (Application $app) => WorkflowClient::create(
             serviceClient: $this->createServiceClient($app),
-            options: (new ClientOptions())->withNamespace(config('temporal.namespace')),
+            options: (new ClientOptions)->withNamespace(config('temporal.namespace')),
             converter: $app->make(DataConverterInterface::class),
             interceptorProvider: new SimplePipelineProvider(array_map(
                 fn (string $className) => $app->make($className),
@@ -112,7 +112,7 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
             $this->app->path('Temporal/Workflows'),
         ];
 
-        $registry = new TemporalRegistry();
+        $registry = new TemporalRegistry;
 
         foreach ($workflowPaths as $workflowPath) {
             $registry->registerWorkflows(...DiscoverWorkflows::within($workflowPath));

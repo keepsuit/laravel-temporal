@@ -44,7 +44,7 @@ class ActivityBuilder
 
     public static function new(): ActivityBuilder
     {
-        return new ActivityBuilder();
+        return new ActivityBuilder;
     }
 
     public static function newLocal(): LocalActivityBuilder

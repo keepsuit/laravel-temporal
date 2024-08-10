@@ -8,9 +8,7 @@ class ActivityMockBuilder
 {
     protected ?string $taskQueue = null;
 
-    public function __construct(protected string $activityName)
-    {
-    }
+    public function __construct(protected string $activityName) {}
 
     public function onTaskQueue(string $taskQueue): self
     {

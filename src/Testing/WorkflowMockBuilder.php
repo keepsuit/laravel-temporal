@@ -8,9 +8,7 @@ class WorkflowMockBuilder
 {
     protected ?string $taskQueue = null;
 
-    public function __construct(protected string $workflowName)
-    {
-    }
+    public function __construct(protected string $workflowName) {}
 
     public function onTaskQueue(string $taskQueue): self
     {

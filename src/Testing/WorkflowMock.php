@@ -10,8 +10,7 @@ class WorkflowMock
     public function __construct(
         public readonly string $workflowName,
         public readonly ?string $taskQueue
-    ) {
-    }
+    ) {}
 
     public function assertDispatched(\Closure|int|null $callback = null): void
     {

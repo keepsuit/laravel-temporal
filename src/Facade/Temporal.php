@@ -75,7 +75,7 @@ class Temporal extends Facade
         if (env('TEMPORAL_TESTING_REGISTRY') !== null) {
             $registryState = \Safe\json_decode((string) env('TEMPORAL_TESTING_REGISTRY'), true) ?? [];
 
-            static::$app->bind(TemporalRegistry::class, fn () => (new TemporalRegistry())
+            static::$app->bind(TemporalRegistry::class, fn () => (new TemporalRegistry)
                 ->registerWorkflows(...Arr::get($registryState, 'workflows', []))
                 ->registerActivities(...Arr::get($registryState, 'activities', []))
             );

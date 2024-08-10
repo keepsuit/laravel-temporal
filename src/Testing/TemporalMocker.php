@@ -6,9 +6,7 @@ use Closure;
 
 class TemporalMocker
 {
-    public function __construct(protected TemporalMockerCache $cache)
-    {
-    }
+    public function __construct(protected TemporalMockerCache $cache) {}
 
     public function localOnly(): void
     {

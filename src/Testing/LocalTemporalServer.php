@@ -25,13 +25,12 @@ class LocalTemporalServer implements TemporalServer
     final public function __construct(
         protected Output $output,
         protected bool $debug = false
-    ) {
-    }
+    ) {}
 
     public static function create(): static
     {
         return new static(
-            new ConsoleOutput()
+            new ConsoleOutput
         );
     }
 
@@ -77,7 +76,7 @@ class LocalTemporalServer implements TemporalServer
             return $this->binaryPath = base_path('temporal');
         }
 
-        $binaryPath = (new ExecutableFinder())->find('temporal', null, [base_path()]);
+        $binaryPath = (new ExecutableFinder)->find('temporal', null, [base_path()]);
 
         if ($binaryPath) {
             return $this->binaryPath = $binaryPath;
@@ -149,6 +148,7 @@ class LocalTemporalServer implements TemporalServer
                     'http server started',
                     'Temporal server is running',
                     'Temporal server:',
+                    'Server:',
                 ])
             );
         } catch (\Throwable) {

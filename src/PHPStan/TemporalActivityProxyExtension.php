@@ -39,7 +39,7 @@ class TemporalActivityProxyExtension implements MethodsClassReflectionExtension
             return false;
         }
 
-        $methodReflection = $objectType->getMethod($methodName, new OutOfClassScope());
+        $methodReflection = $objectType->getMethod($methodName, new OutOfClassScope);
 
         return $methodReflection->isPublic();
     }
@@ -50,7 +50,7 @@ class TemporalActivityProxyExtension implements MethodsClassReflectionExtension
 
         $objectType = $activeTemplateTypeMap->getType('T');
 
-        $methodReflection = $objectType->getMethod($methodName, new OutOfClassScope());
+        $methodReflection = $objectType->getMethod($methodName, new OutOfClassScope);
 
         $methodReturnType = ParametersAcceptorSelector::selectSingle($methodReflection->getVariants())->getReturnType();
 
@@ -63,8 +63,7 @@ class TemporalActivityProxyExtension implements MethodsClassReflectionExtension
                 protected string $methodName,
                 protected MethodReflection $methodReflection,
                 protected Type $returnType
-            ) {
-            }
+            ) {}
 
             public function isStatic(): bool
             {

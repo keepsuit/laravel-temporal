@@ -38,7 +38,7 @@ class Temporal implements Contracts\Temporal
 
     public function buildWorkerOptions(string $taskQueue): WorkerOptions
     {
-        if (static::$buildWorkerOptionsCallback) {
+        if (static::$buildWorkerOptionsCallback !== null) {
             $workerOptions = call_user_func(static::$buildWorkerOptionsCallback, $taskQueue);
 
             if ($workerOptions instanceof WorkerOptions) {

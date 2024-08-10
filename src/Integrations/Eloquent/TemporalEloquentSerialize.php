@@ -62,7 +62,7 @@ trait TemporalEloquentSerialize
 
     public static function fromTemporalPayload(array $payload): static
     {
-        $model = (new static());
+        $model = (new static);
 
         /** @var Collection $attributes */
         $attributes = Collection::make($payload)

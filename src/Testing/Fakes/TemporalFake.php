@@ -40,7 +40,7 @@ class TemporalFake extends Temporal
     {
         $this->app->instance(WorkflowClientInterface::class, new FakeWorkflowClient(
             serviceClient: $this->app->make(ServiceClientInterface::class),
-            options: (new ClientOptions())->withNamespace(config('temporal.namespace')),
+            options: (new ClientOptions)->withNamespace(config('temporal.namespace')),
             converter: $this->app->make(DataConverterInterface::class),
             interceptorProvider: new SimplePipelineProvider(array_map(
                 fn (string $className) => $this->app->make($className),
@@ -214,7 +214,7 @@ class TemporalFake extends Temporal
         }
 
         try {
-            return (new WorkflowReader(new AttributeReader()))->fromClass($workflowName)->getID();
+            return (new WorkflowReader(new AttributeReader))->fromClass($workflowName)->getID();
         } catch (\Exception) {
             return $workflowName;
         }
@@ -255,7 +255,7 @@ class TemporalFake extends Temporal
 
         try {
             /** @var ActivityPrototype[] $activities */
-            $activities = (new ActivityReader(new AttributeReader()))->fromClass($activityName[0]);
+            $activities = (new ActivityReader(new AttributeReader))->fromClass($activityName[0]);
 
             if ($activities === []) {
                 return null;

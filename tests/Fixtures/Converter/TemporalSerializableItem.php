@@ -6,9 +6,7 @@ use Keepsuit\LaravelTemporal\Contracts\TemporalSerializable;
 
 class TemporalSerializableItem implements TemporalSerializable
 {
-    public function __construct(public int $id)
-    {
-    }
+    public function __construct(public int $id) {}
 
     public function toTemporalPayload(): array
     {
