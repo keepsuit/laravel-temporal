@@ -7,6 +7,29 @@ return [
     'address' => env('TEMPORAL_ADDRESS', 'localhost:7233'),
 
     /**
+     * TLS configuration (optional)
+     * Allows to configure the client to use a secure connection to the server.
+     */
+    'tls' => [
+        /**
+         * Path to the client key file (/path/to/client.key)
+         */
+        'client_key' => env('TEMPORAL_TLS_CLIENT_KEY'),
+        /**
+         * Path to the client cert file (/path/to/client.pem)
+         */
+        'client_cert' => env('TEMPORAL_TLS_CLIENT_CERT'),
+        /**
+         * Path to the root CA certificate file (/path/to/ca.cert)
+         */
+        'root_ca' => env('TEMPORAL_TLS_ROOT_CA'),
+        /**
+         * Override server name (default is hostname) to verify against the server certificate
+         */
+        'server_name' => env('TEMPORAL_TLS_SERVER_NAME'),
+    ],
+
+    /**
      * Temporal namespace
      */
     'namespace' => env('TEMPORAL_NAMESPACE', \Temporal\Client\ClientOptions::DEFAULT_NAMESPACE),
