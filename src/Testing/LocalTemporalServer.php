@@ -149,6 +149,7 @@ class LocalTemporalServer implements TemporalServer
                     'http server started',
                     'Temporal server is running',
                     'Temporal server:',
+                    'Server:',
                 ])
             );
         } catch (\Throwable) {
