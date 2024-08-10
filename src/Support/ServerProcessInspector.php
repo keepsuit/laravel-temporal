@@ -10,8 +10,7 @@ class ServerProcessInspector
         protected ServerStateFile $serverStateFile,
         protected PosixExtension $posix,
         protected RoadRunnerBinaryHelper $roadRunnerFinder
-    ) {
-    }
+    ) {}
 
     /**
      * Determine if the RoadRunner server process is running.

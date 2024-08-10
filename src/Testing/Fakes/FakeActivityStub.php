@@ -15,9 +15,7 @@ class FakeActivityStub implements ActivityStubInterface
 {
     private mixed $result = null;
 
-    public function __construct(protected ActivityStubInterface $stub)
-    {
-    }
+    public function __construct(protected ActivityStubInterface $stub) {}
 
     public function getOptions(): ActivityOptionsInterface
     {

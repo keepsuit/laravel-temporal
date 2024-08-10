@@ -17,9 +17,7 @@ class FakeChildWorkflowStub implements ChildWorkflowStubInterface
 
     protected mixed $result = null;
 
-    public function __construct(protected ChildWorkflowStubInterface $stub)
-    {
-    }
+    public function __construct(protected ChildWorkflowStubInterface $stub) {}
 
     public function getExecution(): PromiseInterface
     {

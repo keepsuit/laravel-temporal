@@ -11,9 +11,7 @@ use RuntimeException;
 
 class ApplicationFactory
 {
-    public function __construct(protected string $basePath)
-    {
-    }
+    public function __construct(protected string $basePath) {}
 
     /**
      * Create a new application instance.

@@ -14,6 +14,5 @@ class DataItem extends Data
          * @var Collection<array-key,DataItem>|null
          */
         public ?Collection $collection = null,
-    ) {
-    }
+    ) {}
 }

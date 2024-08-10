@@ -18,14 +18,13 @@ class TemporalTestingWorker
         protected Output $output,
         protected RoadRunnerBinaryHelper $roadRunnerBinary,
         protected bool $debug = false
-    ) {
-    }
+    ) {}
 
     public static function create(bool $debug = false): self
     {
         return new self(
-            new ConsoleOutput(),
-            new RoadRunnerBinaryHelper(),
+            new ConsoleOutput,
+            new RoadRunnerBinaryHelper,
             $debug
         );
     }
@@ -68,7 +67,7 @@ class TemporalTestingWorker
             command: [
                 $this->roadRunnerBinary->binaryPath(),
                 ...['-o', sprintf('version=%s', $this->roadRunnerBinary->configVersion())],
-                ...['-o', sprintf('server.command=%s %s', (new PhpExecutableFinder())->find(), $this->findWorkerPath())],
+                ...['-o', sprintf('server.command=%s %s', (new PhpExecutableFinder)->find(), $this->findWorkerPath())],
                 ...['-o', sprintf('temporal.address=%s', config('temporal.address'))],
                 ...['-o', sprintf('temporal.namespace=%s', config('temporal.namespace'))],
                 ...['-o', sprintf('temporal.activities.num_workers=%s', 1)],

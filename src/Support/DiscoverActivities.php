@@ -22,7 +22,7 @@ class DiscoverActivities
         /** @var Collection<class-string,class-string|null> $activities */
         $activities = Collection::make();
 
-        $generator = new ClassMapGenerator();
+        $generator = new ClassMapGenerator;
         $generator->scanPaths($activitiesPath);
 
         foreach (array_keys($generator->getClassMap()->getMap()) as $class) {

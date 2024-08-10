@@ -12,8 +12,7 @@ class FakeWorkflowRun implements WorkflowRunInterface
     public function __construct(
         protected WorkflowStubInterface $stub,
         protected mixed $returnValue = null
-    ) {
-    }
+    ) {}
 
     public function getExecution(): WorkflowExecution
     {

@@ -9,7 +9,7 @@ use Keepsuit\LaravelTemporal\Tests\Fixtures\Converter\TemporalSerializableItem;
 use Temporal\DataConverter\Type;
 
 it('can serialize values', function ($value, mixed $result) {
-    $converter = new LaravelPayloadConverter();
+    $converter = new LaravelPayloadConverter;
 
     $payload = $converter->toPayload($value);
 
@@ -21,7 +21,7 @@ it('can serialize values', function ($value, mixed $result) {
 ]);
 
 it('can deserialize values', function ($input, $type) {
-    $converter = new LaravelPayloadConverter();
+    $converter = new LaravelPayloadConverter;
 
     $payload = $converter->toPayload($input);
 

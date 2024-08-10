@@ -8,7 +8,7 @@ use Keepsuit\LaravelTemporal\Tests\Fixtures\Converter\TemporalSerializableItem;
 use Temporal\DataConverter\Type;
 
 it('can deserialize Data values', function () {
-    $converter = new LaravelPayloadConverter();
+    $converter = new LaravelPayloadConverter;
 
     $payload = $converter->toPayload(new DataItem(123));
 
@@ -20,7 +20,7 @@ it('can deserialize Data values', function () {
 });
 
 it('can convert TemporalSerializable property with cast/transformer', function () {
-    $converter = new LaravelPayloadConverter();
+    $converter = new LaravelPayloadConverter;
 
     $input = new AdvancedDataItem(new TemporalSerializableItem(123));
 
@@ -34,7 +34,7 @@ it('can convert TemporalSerializable property with cast/transformer', function (
 });
 
 it('can convert TemporalSerializable array property with cast/transformer', function () {
-    $converter = new LaravelPayloadConverter();
+    $converter = new LaravelPayloadConverter;
 
     $input = new AdvancedDataItem(
         new TemporalSerializableItem(123),
@@ -56,7 +56,7 @@ it('can convert TemporalSerializable array property with cast/transformer', func
 });
 
 it('can deserialize Data values with collection', function () {
-    $converter = new LaravelPayloadConverter();
+    $converter = new LaravelPayloadConverter;
 
     $payload = $converter->toPayload(new DataItem(
         123,
@@ -77,7 +77,7 @@ it('can deserialize Data values with collection', function () {
 });
 
 it('can convert collection of TemporalSerializable', function () {
-    $converter = new LaravelPayloadConverter();
+    $converter = new LaravelPayloadConverter;
 
     $input = new AdvancedDataItem(
         new TemporalSerializableItem(123),

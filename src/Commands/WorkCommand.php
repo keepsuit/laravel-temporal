@@ -51,7 +51,7 @@ class WorkCommand extends Command
             $roadRunnerBinary,
             ...['-c', $this->configPath()],
             ...['-o', sprintf('version=%s', $configVersion)],
-            ...['-o', sprintf('server.command=%s ./vendor/bin/roadrunner-temporal-worker', (new PhpExecutableFinder())->find())],
+            ...['-o', sprintf('server.command=%s ./vendor/bin/roadrunner-temporal-worker', (new PhpExecutableFinder)->find())],
             ...['-o', sprintf('temporal.address=%s', config('temporal.address'))],
             ...['-o', sprintf('temporal.namespace=%s', config('temporal.namespace'))],
             ...$this->workerCount() > 0 ? ['-o', sprintf('temporal.activities.num_workers=%s', $this->workerCount())] : [],
@@ -224,7 +224,7 @@ class WorkCommand extends Command
         }
 
         return tap(new Process([
-            (new ExecutableFinder())->find('node'),
+            (new ExecutableFinder)->find('node'),
             'file-watcher.cjs',
             \Safe\json_encode(collect($paths)->map(fn (string $path) => base_path($path)), JSON_THROW_ON_ERROR),
         ], \Safe\realpath(__DIR__.'/../../bin'), null, null, null))->start();

@@ -7,9 +7,7 @@ use Safe\Exceptions\FilesystemException;
 
 class ServerStateFile
 {
-    public function __construct(protected string $path)
-    {
-    }
+    public function __construct(protected string $path) {}
 
     /**
      * Read the server state from the server state file.

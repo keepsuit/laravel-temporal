@@ -11,7 +11,7 @@ class InterceptorSingleton
     public static function getInstance(): InterceptorSingleton
     {
         if (self::$instance === null) {
-            self::$instance = new InterceptorSingleton();
+            self::$instance = new InterceptorSingleton;
         }
 
         return self::$instance;

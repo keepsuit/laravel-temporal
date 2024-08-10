@@ -52,12 +52,12 @@ class WorkflowBuilder
 
     public static function new(): WorkflowBuilder
     {
-        return new WorkflowBuilder();
+        return new WorkflowBuilder;
     }
 
     public static function newChild(): ChildWorkflowBuilder
     {
-        return new ChildWorkflowBuilder();
+        return new ChildWorkflowBuilder;
     }
 
     public function withRunId(?string $runId): self

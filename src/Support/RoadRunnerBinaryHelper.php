@@ -24,7 +24,7 @@ class RoadRunnerBinaryHelper
             return $this->binaryPath = base_path('rr');
         }
 
-        $roadRunnerBinary = (new ExecutableFinder())->find('rr', null, [base_path()]);
+        $roadRunnerBinary = (new ExecutableFinder)->find('rr', null, [base_path()]);
 
         if ($roadRunnerBinary === null) {
             return null;
@@ -69,7 +69,7 @@ class RoadRunnerBinaryHelper
         }
 
         $process = new Process(array_filter([
-            (new PhpExecutableFinder())->find(),
+            (new PhpExecutableFinder)->find(),
             './vendor/bin/rr',
             'get-binary',
             '-n',

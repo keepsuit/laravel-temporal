@@ -13,6 +13,5 @@ class AdvancedDataItem extends Data
          * @var Collection<array-key,TemporalSerializableItem>|null
          */
         public ?Collection $collection = null,
-    ) {
-    }
+    ) {}
 }

@@ -22,7 +22,7 @@ class DiscoverWorkflows
         /** @var Collection<class-string,class-string|null> $workflows */
         $workflows = Collection::make();
 
-        $generator = new ClassMapGenerator();
+        $generator = new ClassMapGenerator;
         $generator->scanPaths($workflowPath);
 
         foreach (array_keys($generator->getClassMap()->getMap()) as $class) {

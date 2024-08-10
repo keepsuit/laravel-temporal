@@ -5,6 +5,4 @@ namespace Keepsuit\LaravelTemporal\Integrations\LaravelData;
 /**
  * @deprecated Use TemporalSerializableCastAndTransformer instead
  */
-class TemporalSerializableCast extends TemporalSerializableCastAndTransformer
-{
-}
+class TemporalSerializableCast extends TemporalSerializableCastAndTransformer {}

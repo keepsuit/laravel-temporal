@@ -55,7 +55,7 @@ class ChildWorkflowBuilder
 
     public static function new(): ChildWorkflowBuilder
     {
-        return new ChildWorkflowBuilder();
+        return new ChildWorkflowBuilder;
     }
 
     /**
