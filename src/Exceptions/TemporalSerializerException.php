@@ -8,11 +8,11 @@ class TemporalSerializerException extends Exception
 {
     public static function targetClassDoesntExists(string $className): self
     {
-        return new self("Cannot deserialize value, class `$className` does not exist");
+        return new self(sprintf('Cannot deserialize value, class `%s` does not exist', $className));
     }
 
     public static function targetClassIsNotSerializable(string $className): self
     {
-        return new self("Cannot deserialize value, class `$className` does not implement `TemporalSerializable` interface");
+        return new self(sprintf('Cannot deserialize value, class `%s` does not implement `TemporalSerializable` interface', $className));
     }
 }
