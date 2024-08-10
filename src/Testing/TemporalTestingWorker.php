@@ -63,6 +63,11 @@ class TemporalTestingWorker
 
     protected function startTemporalWorker(): void
     {
+        $clientKey = config('temporal.tls.client_key');
+        $clientCert = config('temporal.tls.client_cert');
+        $rootCa = config('temporal.tls.root_ca');
+        $serverName = config('temporal.tls.server_name');
+
         $this->roadRunnerProcess = new Process(
             command: [
                 $this->roadRunnerBinary->binaryPath(),
@@ -70,6 +75,11 @@ class TemporalTestingWorker
                 ...['-o', sprintf('server.command=%s %s', (new PhpExecutableFinder)->find(), $this->findWorkerPath())],
                 ...['-o', sprintf('temporal.address=%s', config('temporal.address'))],
                 ...['-o', sprintf('temporal.namespace=%s', config('temporal.namespace'))],
+                ...(is_string($clientKey) && is_string($clientCert))
+                    ? ['-o', sprintf('temporal.tls.key=%s', $clientKey), '-o', sprintf('temporal.tls.cert=%s', $clientCert), '-o', 'temporal.tls.client_auth_type=require_and_verify_client_cert']
+                    : [],
+                ...is_string($rootCa) ? ['-o', sprintf('temporal.tls.root_ca=%s', $rootCa)] : [],
+                ...is_string($serverName) ? ['-o', sprintf('temporal.tls.server_name=%s', $serverName)] : [],
                 ...['-o', sprintf('temporal.activities.num_workers=%s', 1)],
                 ...['-o', sprintf('rpc.listen=tcp://127.0.0.1:%d', config('temporal.rpc_port', 6001))],
                 ...['-o', 'logs.mode=none'],

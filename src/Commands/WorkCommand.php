@@ -47,6 +47,11 @@ class WorkCommand extends Command
 
         $this->queue = ($this->argument('queue') ?: config('temporal.queue')) ?: WorkerFactory::DEFAULT_TASK_QUEUE;
 
+        $clientKey = config('temporal.tls.client_key');
+        $clientCert = config('temporal.tls.client_cert');
+        $rootCa = config('temporal.tls.root_ca');
+        $serverName = config('temporal.tls.server_name');
+
         $server = new Process([
             $roadRunnerBinary,
             ...['-c', $this->configPath()],
@@ -54,6 +59,11 @@ class WorkCommand extends Command
             ...['-o', sprintf('server.command=%s ./vendor/bin/roadrunner-temporal-worker', (new PhpExecutableFinder)->find())],
             ...['-o', sprintf('temporal.address=%s', config('temporal.address'))],
             ...['-o', sprintf('temporal.namespace=%s', config('temporal.namespace'))],
+            ...(is_string($clientKey) && is_string($clientCert))
+                ? ['-o', sprintf('temporal.tls.key=%s', $clientKey), '-o', sprintf('temporal.tls.cert=%s', $clientCert), '-o', 'temporal.tls.client_auth_type=require_and_verify_client_cert']
+                : [],
+            ...is_string($rootCa) ? ['-o', sprintf('temporal.tls.root_ca=%s', $rootCa)] : [],
+            ...is_string($serverName) ? ['-o', sprintf('temporal.tls.server_name=%s', $serverName)] : [],
             ...$this->workerCount() > 0 ? ['-o', sprintf('temporal.activities.num_workers=%s', $this->workerCount())] : [],
             ...$this->maxJobs() > 0 ? ['-o', sprintf('temporal.activities.max_jobs=%s', $this->maxJobs())] : [],
             ...['-o', sprintf('rpc.listen=tcp://%s:%d', $this->rpcHost(), $this->rpcPort())],

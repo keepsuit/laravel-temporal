@@ -60,7 +60,26 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
             $app['config']->get('temporal.state_file', storage_path('logs/temporal-worker-state.json'))
         ));
 
-        $this->app->bind(ServiceClientInterface::class, fn (Application $app) => ServiceClient::create(config('temporal.address')));
+        $this->app->scoped(ServiceClientInterface::class, function (Application $app): ServiceClientInterface {
+            $address = config('temporal.address');
+
+            $clientKey = config('temporal.tls.client_key');
+            $clientCert = config('temporal.tls.client_cert');
+            $rootCa = config('temporal.tls.root_ca');
+            $serverName = config('temporal.tls.server_name');
+
+            if (is_string($clientKey) && $clientKey !== '' && is_string($clientCert) && $clientCert !== '') {
+                return ServiceClient::createSSL(
+                    $address,
+                    $rootCa,
+                    $clientKey,
+                    $clientCert,
+                    $serverName
+                );
+            } else {
+                return ServiceClient::create($address);
+            }
+        });
 
         $this->app->bind(DataConverterInterface::class, fn (Application $app) => new DataConverter(
             new NullConverter,
@@ -69,7 +88,7 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
             new LaravelPayloadConverter
         ));
 
-        $this->app->bind(WorkflowClientInterface::class, fn (Application $app) => WorkflowClient::create(
+        $this->app->scoped(WorkflowClientInterface::class, fn (Application $app) => WorkflowClient::create(
             serviceClient: $app->make(ServiceClientInterface::class),
             options: (new ClientOptions)->withNamespace(config('temporal.namespace')),
             converter: $app->make(DataConverterInterface::class),
