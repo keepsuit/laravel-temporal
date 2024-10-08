@@ -209,4 +209,16 @@ class FakeWorkflowContext implements WorkflowContextInterface
     {
         return $this->sideEffect(static fn (): UuidInterface => Uuid::uuid7($dateTime));
     }
+
+    public function registerUpdate(string $name, callable $handler, ?callable $validator): static
+    {
+        $this->context->registerUpdate($name, $handler, $validator);
+
+        return $this;
+    }
+
+    public function allHandlersFinished(): bool
+    {
+        return $this->context->allHandlersFinished();
+    }
 }

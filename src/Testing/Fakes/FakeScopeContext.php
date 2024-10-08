@@ -23,4 +23,16 @@ class FakeScopeContext extends FakeWorkflowContext implements ScopedContextInter
         //@phpstan-ignore-next-line
         return $this->context->asyncDetached($handler);
     }
+
+    public function registerUpdate(string $name, callable $handler, ?callable $validator): static
+    {
+        $this->context->registerUpdate($name, $handler, $validator);
+
+        return $this;
+    }
+
+    public function allHandlersFinished(): bool
+    {
+        return $this->context->allHandlersFinished();
+    }
 }

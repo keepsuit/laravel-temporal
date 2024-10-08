@@ -8,7 +8,6 @@ use PHPStan\Reflection\ClassReflection;
 use PHPStan\Reflection\FunctionVariant;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Reflection\MethodsClassReflectionExtension;
-use PHPStan\Reflection\ParametersAcceptorSelector;
 use PHPStan\TrinaryLogic;
 use PHPStan\Type\Generic\GenericObjectType;
 use PHPStan\Type\Type;
@@ -52,7 +51,7 @@ class TemporalActivityProxyExtension implements MethodsClassReflectionExtension
 
         $methodReflection = $objectType->getMethod($methodName, new OutOfClassScope);
 
-        $methodReturnType = ParametersAcceptorSelector::selectSingle($methodReflection->getVariants())->getReturnType();
+        $methodReturnType = $methodReflection->getVariants()[0]->getReturnType();
 
         $returnType = new GenericObjectType(CompletableResultInterface::class, [$methodReturnType]);
 
@@ -97,7 +96,7 @@ class TemporalActivityProxyExtension implements MethodsClassReflectionExtension
 
             public function getVariants(): array
             {
-                $parameterAcceptor = ParametersAcceptorSelector::selectSingle($this->methodReflection->getVariants());
+                $parameterAcceptor = $this->methodReflection->getVariants()[0];
 
                 return [
                     new FunctionVariant(

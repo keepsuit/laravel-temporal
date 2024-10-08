@@ -8,7 +8,6 @@ use PHPStan\Reflection\ClassReflection;
 use PHPStan\Reflection\FunctionVariant;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Reflection\MethodsClassReflectionExtension;
-use PHPStan\Reflection\ParametersAcceptorSelector;
 use PHPStan\TrinaryLogic;
 use PHPStan\Type\BooleanType;
 use PHPStan\Type\FloatType;
@@ -139,7 +138,7 @@ class TemporalChildWorkflowProxyExtension implements MethodsClassReflectionExten
 
             public function getVariants(): array
             {
-                $parameterAcceptor = ParametersAcceptorSelector::selectSingle($this->methodReflection->getVariants());
+                $parameterAcceptor = $this->methodReflection->getVariants()[0];
 
                 return [
                     new FunctionVariant(

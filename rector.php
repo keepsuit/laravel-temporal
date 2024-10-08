@@ -25,12 +25,6 @@ return RectorConfig::configure()
         codingStyle: true,
         typeDeclarations: true,
     )
-    ->withImportNames(
-        importNames: false,
-        importDocBlockNames: false,
-        importShortClasses: false,
-        removeUnusedImports: true
-    )
     ->withSkip([
         AddArrowFunctionReturnTypeRector::class,
         AddParamBasedOnParentClassMethodRector::class,
