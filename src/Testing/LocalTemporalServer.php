@@ -13,6 +13,7 @@ use Symfony\Component\Console\Output\Output;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
+use Throwable;
 
 class LocalTemporalServer implements TemporalServer
 {
@@ -94,8 +95,8 @@ class LocalTemporalServer implements TemporalServer
         $response = $client->request('GET', self::TEMPORAL_CLI_RELEASES);
         $content = $response->toArray();
 
-        $asset = Arr::first($content['assets'], fn (array $asset) => rescue(
-            fn () => \Safe\preg_match(sprintf('#temporal_cli_.+_%s_%s\..+#', $os, $arch), $asset['name']) === 1,
+        $asset = Arr::first($content['assets'], fn(array $asset) => rescue(
+            fn() => \Safe\preg_match(sprintf('#temporal_cli_.+_%s_%s\..+#', $os, $arch), $asset['name']) === 1,
             false
         ));
 
@@ -144,14 +145,13 @@ class LocalTemporalServer implements TemporalServer
 
         try {
             $serverStarted = $this->temporalServerProcess->waitUntil(
-                fn ($type, $output) => Str::contains((string) $output, [
-                    'http server started',
-                    'Temporal server is running',
-                    'Temporal server:',
-                    'Server:',
+                fn($type, $output) => Str::contains((string) $output, [
+                    "Server:  localhost:{$temporalPort}",
+                    'UI:      http://localhost:8233',
+                    'Metrics: http://localhost:40977/metrics',
                 ])
             );
-        } catch (\Throwable) {
+        } catch (Throwable) {
             $serverStarted = false;
         }
 
