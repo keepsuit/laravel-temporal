@@ -28,6 +28,7 @@ use Temporal\DataConverter\BinaryConverter;
 use Temporal\DataConverter\DataConverter;
 use Temporal\DataConverter\DataConverterInterface;
 use Temporal\DataConverter\NullConverter;
+use Temporal\DataConverter\ProtoConverter;
 use Temporal\DataConverter\ProtoJsonConverter;
 use Temporal\Interceptor\SimplePipelineProvider;
 
@@ -85,6 +86,7 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
             new NullConverter,
             new BinaryConverter,
             new ProtoJsonConverter,
+            new ProtoConverter,
             new LaravelPayloadConverter
         ));
 
@@ -137,7 +139,7 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
         }
 
         if (ParallelTesting::token() !== false) {
-            config()->set('temporal.rpc_port', env('TEMPORAL_TESTING_RPC_PORT', 6001) + ParallelTesting::token());
+            config()->set('temporal.rpc_port', (int) env('TEMPORAL_TESTING_RPC_PORT', 6001) + (int) ParallelTesting::token());
 
             if (env('TEMPORAL_TESTING_SERVER', true)) {
                 [$host, $port] = Str::of(config('temporal.address'))->explode(':', 2)->all();
