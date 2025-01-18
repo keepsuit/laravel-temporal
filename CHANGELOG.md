@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.0.1 - 2025-01-18
+
+### What's changed
+
+- Allow `temporal/sdk` `2.12`
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/1.0.0...1.0.1
+
 ## 1.0.0-beta2 - 2024-03-15
 
 ### What's Changed
