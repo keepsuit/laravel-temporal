@@ -9,6 +9,7 @@ use Temporal\Activity\ActivityOptions;
 use Temporal\Activity\ActivityOptionsInterface;
 use Temporal\Activity\LocalActivityOptions;
 use Temporal\DataConverter\EncodedValues;
+use Temporal\DataConverter\Type;
 use Temporal\Workflow\ActivityStubInterface;
 
 class FakeActivityStub implements ActivityStubInterface
@@ -22,7 +23,7 @@ class FakeActivityStub implements ActivityStubInterface
         return $this->stub->getOptions();
     }
 
-    public function execute(string $name, array $args = [], $returnType = null, bool $isLocalActivity = false): PromiseInterface
+    public function execute(string $name, array $args = [], Type|string|\ReflectionClass|\ReflectionType|null $returnType = null, bool $isLocalActivity = false): PromiseInterface
     {
         /** @var ActivityOptions|LocalActivityOptions $options */
         $options = $this->getOptions();
@@ -43,7 +44,7 @@ class FakeActivityStub implements ActivityStubInterface
             $resolve($this->result);
         });
 
-        //@phpstan-ignore-next-line
+        // @phpstan-ignore-next-line
         return EncodedValues::decodePromise($request);
     }
 

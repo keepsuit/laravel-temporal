@@ -52,13 +52,13 @@ class FakeWorkflowContext implements WorkflowContextInterface
 
     public function registerQuery(string $queryType, callable $handler): WorkflowContextInterface
     {
-        //@phpstan-ignore-next-line
+        // @phpstan-ignore-next-line
         return $this->context->registerQuery($queryType, $handler);
     }
 
     public function registerSignal(string $queryType, callable $handler): WorkflowContextInterface
     {
-        //@phpstan-ignore-next-line
+        // @phpstan-ignore-next-line
         return $this->context->registerSignal($queryType, $handler);
     }
 

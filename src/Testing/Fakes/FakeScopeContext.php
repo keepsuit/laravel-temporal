@@ -14,13 +14,13 @@ class FakeScopeContext extends FakeWorkflowContext implements ScopedContextInter
 
     public function async(callable $handler): CancellationScopeInterface
     {
-        //@phpstan-ignore-next-line
+        // @phpstan-ignore-next-line
         return $this->context->async($handler);
     }
 
     public function asyncDetached(callable $handler): CancellationScopeInterface
     {
-        //@phpstan-ignore-next-line
+        // @phpstan-ignore-next-line
         return $this->context->asyncDetached($handler);
     }
 
