@@ -4,6 +4,9 @@ namespace Keepsuit\LaravelTemporal;
 
 use Illuminate\Contracts\Support\Arrayable;
 
+/**
+ * @implements Arrayable<array-key,array<array-key,class-string>>
+ */
 class TemporalRegistry implements Arrayable
 {
     /**

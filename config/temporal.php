@@ -158,4 +158,24 @@ return [
             'include_metadata_field' => false,
         ],
     ],
+
+    /**
+     * Testing
+     */
+    'testing' => [
+        /**
+         * Run the temporal server in testing environment, set to false to use an external server.
+         */
+        'server' => env('TEMPORAL_TESTING_SERVER', true),
+
+        /**
+         * Enable time skipping
+         */
+        'time_skipping' => env('TEMPORAL_TESTING_SERVER_TIME_SKIPPING', false),
+
+        /**
+         * Enable debug output
+         */
+        'debug' => env('TEMPORAL_TESTING_DEBUG', false),
+    ],
 ];

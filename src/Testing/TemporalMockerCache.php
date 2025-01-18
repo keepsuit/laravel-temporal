@@ -18,6 +18,9 @@ final class TemporalMockerCache
 
     private readonly StorageInterface $cache;
 
+    /**
+     * @var Collection<string,mixed>
+     */
     private readonly Collection $localCache;
 
     private bool $localOnly = false;

@@ -32,7 +32,11 @@ class TemporalWorkflowContextInterfaceExtension implements DynamicMethodReturnTy
         $className = $methodCall->getArgs()[0]->value;
         $classNameType = $scope->getType($className);
 
-        if ($classNameType->isClassStringType()->yes()) {
+        $isClassString = method_exists($classNameType, 'isClassStringType')
+            ? $classNameType->isClassStringType()->yes()
+            : $classNameType->isClassString()->yes();
+
+        if ($isClassString) {
             return match ($methodReflection->getName()) {
                 'newActivityStub' => new GenericObjectType(ActivityProxy::class, [$classNameType->getClassStringObjectType()]),
                 'newChildWorkflowStub' => new GenericObjectType(ChildWorkflowProxy::class, [$classNameType->getClassStringObjectType()]),

@@ -49,7 +49,7 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
             ]);
     }
 
-    public function registeringPackage(): void
+    public function packageRegistered(): void
     {
         $this->setupTestingEnvironment();
 
@@ -139,9 +139,10 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
         }
 
         if (ParallelTesting::token() !== false) {
-            config()->set('temporal.rpc_port', (int) env('TEMPORAL_TESTING_RPC_PORT', 6001) + (int) ParallelTesting::token());
+            $rpcPort = (int) config('temporal.rpc_port', 6001);
+            config()->set('temporal.rpc_port', $rpcPort + (int) ParallelTesting::token());
 
-            if (env('TEMPORAL_TESTING_SERVER', true)) {
+            if (config('temporal.testing.server', true)) {
                 [$host, $port] = Str::of(config('temporal.address'))->explode(':', 2)->all();
                 config()->set('temporal.address', sprintf('%s:%s', $host, (int) $port + (int) ParallelTesting::token()));
             } else {

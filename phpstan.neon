@@ -16,5 +16,8 @@ parameters:
         - src/Integrations/LaravelData/TemporalSerializableCastAndTransformer.php
 
     ignoreErrors:
+        - identifier: trait.unused
         - identifier: missingType.generics
         - identifier: missingType.iterableValue
+        - identifier: larastan.noEnvCallsOutsideOfConfig
+          path: config/*
