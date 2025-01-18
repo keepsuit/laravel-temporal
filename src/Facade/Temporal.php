@@ -63,17 +63,17 @@ class Temporal extends Facade
             return;
         }
 
-        if (! env('LARAVEL_TEMPORAL') || ! env('TEMPORAL_TESTING_ENV')) {
+        if (! isset($_SERVER['LARAVEL_TEMPORAL']) || ! isset($_SERVER['TEMPORAL_TESTING_ENV'])) {
             throw new \RuntimeException('This method can be called only from temporal test worker');
         }
 
-        if (env('TEMPORAL_TESTING_CONFIG') !== null) {
-            config()->set(\Safe\json_decode((string) env('TEMPORAL_TESTING_CONFIG'), true) ?? []);
+        if (isset($_SERVER['TEMPORAL_TESTING_CONFIG'])) {
+            config()->set(\Safe\json_decode((string) $_SERVER['TEMPORAL_TESTING_CONFIG'], true) ?? []);
             DB::purge();
         }
 
-        if (env('TEMPORAL_TESTING_REGISTRY') !== null) {
-            $registryState = \Safe\json_decode((string) env('TEMPORAL_TESTING_REGISTRY'), true) ?? [];
+        if (isset($_SERVER['TEMPORAL_TESTING_REGISTRY'])) {
+            $registryState = \Safe\json_decode((string) $_SERVER['TEMPORAL_TESTING_REGISTRY'], true) ?? [];
 
             static::$app->bind(TemporalRegistry::class, fn () => (new TemporalRegistry)
                 ->registerWorkflows(...Arr::get($registryState, 'workflows', []))

@@ -13,11 +13,11 @@ trait WithTemporal
             return;
         }
 
-        $temporalEnvironment = TemporalTestingEnvironment::create(env('TEMPORAL_TESTING_SERVER_TIME_SKIPPING', false));
+        $temporalEnvironment = TemporalTestingEnvironment::create(config('temporal.testing.time_skipping', false));
 
-        $temporalEnvironment->setDebugOutput(env('TEMPORAL_TESTING_DEBUG', false));
+        $temporalEnvironment->setDebugOutput(config('temporal.testing.debug', false));
 
-        $temporalEnvironment->start(onlyWorker: ! env('TEMPORAL_TESTING_SERVER', true));
+        $temporalEnvironment->start(onlyWorker: ! config('temporal.testing.server', true));
 
         $GLOBALS['_temporal_environment'] = $temporalEnvironment;
 
