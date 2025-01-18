@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.0.2 - 2025-01-18
+
+### What's Changed
+
+* Phpstan 2 by @cappuc in https://github.com/keepsuit/laravel-temporal/pull/44
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/1.0.1...1.0.2
+
 ## v1.0.1 - 2025-01-18
 
 ### What's changed
