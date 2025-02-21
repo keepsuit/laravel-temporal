@@ -1,5 +1,14 @@
 # Changelog
 
+## v.1.0.3 - 2025-02-21
+
+### What's Changed
+
+* Support `thecodingmachine/safe` 3.0
+* Bump aglipanci/laravel-pint-action from 2.4 to 2.5 by @dependabot in https://github.com/keepsuit/laravel-temporal/pull/45
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/1.0.2...1.0.3
+
 ## v1.0.2 - 2025-01-18
 
 ### What's Changed
