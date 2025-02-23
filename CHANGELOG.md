@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.1.0 - 2025-02-23
+
+### What's changed
+
+- Allow `temporal/sdk` 2.13
+- Support `laravel` 12
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/1.0.3...1.1.0
+
 ## v.1.0.3 - 2025-02-21
 
 ### What's Changed
