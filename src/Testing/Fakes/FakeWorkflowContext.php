@@ -7,6 +7,7 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use React\Promise\PromiseInterface;
 use Temporal\Activity\ActivityOptionsInterface;
+use Temporal\Common\SearchAttributes\SearchAttributeUpdate;
 use Temporal\DataConverter\Type;
 use Temporal\DataConverter\ValuesInterface;
 use Temporal\Internal\Workflow\ActivityProxy;
@@ -220,5 +221,15 @@ class FakeWorkflowContext implements WorkflowContextInterface
     public function allHandlersFinished(): bool
     {
         return $this->context->allHandlersFinished();
+    }
+
+    public function upsertMemo(array $values): void
+    {
+        $this->context->upsertMemo($values);
+    }
+
+    public function upsertTypedSearchAttributes(SearchAttributeUpdate ...$updates): void
+    {
+        $this->context->upsertTypedSearchAttributes(...$updates);
     }
 }
