@@ -24,7 +24,7 @@ class LaravelPayloadConverter extends JsonConverter
             return $this->create(\Safe\json_encode($value->value, self::JSON_FLAGS));
         }
 
-        if ($value instanceof Data) {
+        if (class_exists(Data::class) && $value instanceof Data) {
             return $this->create($value->toJson(self::JSON_FLAGS));
         }
 
