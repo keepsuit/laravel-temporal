@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.1.1 - 2025-04-09
+
+### What's changed
+
+- Fix requirement of `spatie/laravel-data`
+- Fix interface signature changed
+- Fix ci tests
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/1.1.0...1.1.1
+
 ## v1.1.0 - 2025-02-23
 
 ### What's changed
