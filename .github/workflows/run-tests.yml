@@ -47,7 +47,7 @@ jobs:
         run: |
           composer require "illuminate/contracts:${{ matrix.laravel }}" --no-interaction --no-update
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress
-          composer prepare
+          cd ./vendor/orchestra/testbench-core/laravel && php ./vendor/bin/rr get-binary --ansi && rm -rf .rr.yaml
 
       - name: Execute tests
         run: vendor/bin/pest
