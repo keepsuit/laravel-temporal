@@ -4,7 +4,7 @@ return [
     /**
      * Temporal server address
      */
-    'address' => env('TEMPORAL_ADDRESS', 'localhost:7233'),
+    'address' => env('TEMPORAL_ADDRESS', '127.0.0.1:7233'),
 
     /**
      * TLS configuration (optional)
