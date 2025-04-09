@@ -63,7 +63,7 @@ class FakeWorkflowContext implements WorkflowContextInterface
         return $this->context->registerSignal($queryType, $handler);
     }
 
-    public function request(RequestInterface $request, bool $cancellable = true): PromiseInterface
+    public function request(RequestInterface $request, bool $cancellable = true, bool $waitResponse = true): PromiseInterface
     {
         return $this->context->request($request, $cancellable);
     }
