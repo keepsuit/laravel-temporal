@@ -62,18 +62,24 @@ trait TemporalEloquentSerialize
 
     public static function fromTemporalPayload(array $payload): static
     {
-        $model = (new static);
+        $reflectionClass = new \ReflectionClass(static::class);
+
+        /** @var Collection<array-key,string> $attributes */
+        $relations = collect($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC))
+            ->filter(function (\ReflectionMethod $reflectionMethod): bool {
+                $returnType = $reflectionMethod->getReturnType();
+
+                return $returnType instanceof \ReflectionNamedType
+                    && is_subclass_of($returnType->getName(), Relation::class);
+            })
+            ->map(fn (\ReflectionMethod $reflectionMethod) => $reflectionMethod->getName())
+            ->values();
+
+        $model = new static;
 
         /** @var Collection $attributes */
         $attributes = Collection::make($payload)
             ->mapWithKeys(fn (mixed $value, string $key) => [$model->mapAttributeKeyFromTemporal($key) => $value]);
-
-        $relationships = $attributes->mapWithKeys(fn (mixed $value, string $key) => match (true) {
-            $model->isRelation($key) => [$key => $key],
-            $model->isRelation(Str::snake($key)) => [$key => Str::snake($key)],
-            $model->isRelation(Str::camel($key)) => [$key => Str::camel($key)],
-            default => [],
-        });
 
         /** @var bool $exists */
         $exists = $attributes->get('__exists', $attributes->get($model->getKeyName()) !== null);
@@ -83,30 +89,29 @@ trait TemporalEloquentSerialize
 
         $instance = $model->newInstance([], $exists);
 
-        $instance->forceFill($attributes->except($relationships->keys()->merge(['__exists', '__dirty']))->all());
+        $instance->forceFill($attributes->except($relations->merge(['__exists', '__dirty']))->all());
 
         if (! $dirty) {
             $instance->syncOriginal();
         }
 
-        foreach ($relationships as $attributeKey => $relationship) {
-            /** @var Relation $relation */
-            $relation = $model->$relationship();
+        foreach ($relations as $relationName) {
+            $relation = $model->{$relationName}();
 
-            if ($relation === null) {
+            if (! ($relation instanceof Relation)) {
                 continue;
             }
 
             $relatedModel = $relation->getRelated();
 
             if ($relation instanceof BelongsTo || $relation instanceof HasOne) {
-                $instance->setRelation($relationship, self::buildRelatedInstance($relatedModel, $attributes->get($attributeKey)));
+                $instance->setRelation($relationName, self::buildRelatedInstance($relatedModel, $attributes->get($relationName)));
 
                 continue;
             }
 
-            $instance->setRelation($relationship, $relatedModel->newCollection(
-                Collection::make($attributes->get($attributeKey))
+            $instance->setRelation($relationName, $relatedModel->newCollection(
+                Collection::make($attributes->get($relationName))
                     ->map(fn (array $data) => static::buildRelatedInstance($relatedModel, $data))
                     ->filter()
                     ->all()
