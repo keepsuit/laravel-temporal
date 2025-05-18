@@ -6,6 +6,7 @@ use Rector\CodeQuality\Rector\Identical\FlipTypeControlToUseExclusiveTypeRector;
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\PropertyProperty\RemoveNullPropertyInitializationRector;
 use Rector\Php70\Rector\StmtsAwareInterface\IfIssetToCoalescingRector;
+use Rector\Php74\Rector\Closure\ClosureToArrowFunctionRector;
 use Rector\Php80\Rector\ClassMethod\AddParamBasedOnParentClassMethodRector;
 use Rector\TypeDeclaration\Rector\ArrowFunction\AddArrowFunctionReturnTypeRector;
 use Rector\TypeDeclaration\Rector\ClassMethod\ReturnTypeFromReturnDirectArrayRector;
@@ -28,6 +29,7 @@ return RectorConfig::configure()
     ->withSkip([
         AddArrowFunctionReturnTypeRector::class,
         AddParamBasedOnParentClassMethodRector::class,
+        ClosureToArrowFunctionRector::class,
         FlipTypeControlToUseExclusiveTypeRector::class,
         IfIssetToCoalescingRector::class,
         RemoveNullPropertyInitializationRector::class,

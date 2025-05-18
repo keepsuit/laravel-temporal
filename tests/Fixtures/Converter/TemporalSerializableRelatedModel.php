@@ -3,18 +3,18 @@
 namespace Keepsuit\LaravelTemporal\Tests\Fixtures\Converter;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Keepsuit\LaravelTemporal\Contracts\TemporalSerializable;
 use Keepsuit\LaravelTemporal\Integrations\Eloquent\TemporalEloquentSerialize;
 
-class SampleModel extends Model implements TemporalSerializable
+class TemporalSerializableRelatedModel extends Model implements TemporalSerializable
 {
     use TemporalEloquentSerialize;
 
     protected $guarded = [];
 
-    public function related(): HasMany
+    public function owner(): BelongsTo
     {
-        return $this->hasMany(SampleRelatedModel::class);
+        return $this->belongsTo(TemporalSerializableModel::class);
     }
 }
