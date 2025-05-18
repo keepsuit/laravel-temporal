@@ -1,6 +1,19 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Method Keepsuit\\\\LaravelTemporal\\\\Contracts\\\\TemporalSerializable\\:\\:fromTemporalPayload\\(\\) has no return type specified\\.$#"
+			message: '#^Method Keepsuit\\LaravelTemporal\\Contracts\\TemporalSerializable\:\:fromTemporalPayload\(\) has no return type specified\.$#'
+			identifier: missingType.return
 			count: 1
 			path: src/Contracts/TemporalSerializable.php
+
+		-
+			message: '#^Unable to resolve the template type TMakeKey in call to method static method Illuminate\\Support\\Collection\<\(int\|string\),mixed\>\:\:make\(\)$#'
+			identifier: argument.templateType
+			count: 1
+			path: src/Integrations/Eloquent/TemporalEloquentSerializer.php
+
+		-
+			message: '#^Unable to resolve the template type TMakeValue in call to method static method Illuminate\\Support\\Collection\<\(int\|string\),mixed\>\:\:make\(\)$#'
+			identifier: argument.templateType
+			count: 1
+			path: src/Integrations/Eloquent/TemporalEloquentSerializer.php
