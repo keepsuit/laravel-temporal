@@ -29,7 +29,7 @@ $factory = WorkerFactory::create(
     converter: $app->make(DataConverterInterface::class)
 );
 
-$taskQueue = env('TEMPORAL_QUEUE', \Temporal\WorkerFactory::DEFAULT_TASK_QUEUE);
+$taskQueue = env('TEMPORAL_QUEUE', \Temporal\Worker\WorkerFactoryInterface::DEFAULT_TASK_QUEUE);
 assert(is_string($taskQueue), 'TEMPORAL_QUEUE must be a string');
 
 // Worker that listens on a Task Queue and hosts both workflow and activity implementations.

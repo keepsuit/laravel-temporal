@@ -3,6 +3,7 @@
 namespace Keepsuit\LaravelTemporal\Testing\Fakes;
 
 use DateTimeInterface;
+use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use React\Promise\PromiseInterface;
@@ -231,5 +232,31 @@ class FakeWorkflowContext implements WorkflowContextInterface
     public function upsertTypedSearchAttributes(SearchAttributeUpdate ...$updates): void
     {
         $this->context->upsertTypedSearchAttributes(...$updates);
+    }
+
+    public function registerDynamicSignal(callable $handler): WorkflowContextInterface
+    {
+        $this->context->registerDynamicSignal($handler);
+
+        return $this;
+    }
+
+    public function registerDynamicQuery(callable $handler): WorkflowContextInterface
+    {
+        $this->context->registerDynamicQuery($handler);
+
+        return $this;
+    }
+
+    public function registerDynamicUpdate(callable $handler, ?callable $validator = null): WorkflowContextInterface
+    {
+        $this->context->registerDynamicUpdate($handler);
+
+        return $this;
+    }
+
+    public function getLogger(): LoggerInterface
+    {
+        return $this->context->getLogger();
     }
 }
