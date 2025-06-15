@@ -17,3 +17,15 @@ parameters:
 			identifier: argument.templateType
 			count: 1
 			path: src/Integrations/Eloquent/TemporalEloquentSerializer.php
+
+		-
+			message: '#^Method Keepsuit\\LaravelTemporal\\Testing\\Fakes\\FakeWorkflowContext\:\:await\(\) has parameter \$conditions with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Testing/Fakes/FakeWorkflowContext.php
+
+		-
+			message: '#^Method Keepsuit\\LaravelTemporal\\Testing\\Fakes\\FakeWorkflowContext\:\:awaitWithTimeout\(\) has parameter \$conditions with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Testing/Fakes/FakeWorkflowContext.php

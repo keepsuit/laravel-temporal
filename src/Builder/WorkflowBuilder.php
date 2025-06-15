@@ -9,6 +9,7 @@ use Temporal\Client\WorkflowOptions;
 use Temporal\Client\WorkflowStubInterface;
 use Temporal\Common\RetryOptions;
 use Temporal\Internal\Client\WorkflowProxy;
+use Temporal\Worker\WorkerFactoryInterface;
 
 /**
  * @property string|null $runId
@@ -46,7 +47,7 @@ class WorkflowBuilder
     public function __construct()
     {
         $this->workflowOptions = WorkflowOptions::new()
-            ->withTaskQueue(config('temporal.queue'))
+            ->withTaskQueue(config('temporal.queue') ?? WorkerFactoryInterface::DEFAULT_TASK_QUEUE)
             ->withRetryOptions($this->getDefaultRetryOptions(config('temporal.retry.workflow')));
     }
 

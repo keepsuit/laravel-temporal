@@ -82,7 +82,7 @@ class TemporalTestingWorker
                 ...is_string($serverName) ? ['-o', sprintf('temporal.tls.server_name=%s', $serverName)] : [],
                 ...['-o', sprintf('temporal.activities.num_workers=%s', 1)],
                 ...['-o', sprintf('rpc.listen=tcp://127.0.0.1:%d', config('temporal.rpc_port', 6001))],
-                ...['-o', 'logs.mode=none'],
+                ...['-o', sprintf('logs.mode=%s', $this->debug ? 'development' : 'none')],
                 ...['-o', 'kv.test.driver=memory'],
                 ...['-o', 'kv.test.config.interval=10'],
                 'serve',
