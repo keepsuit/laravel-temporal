@@ -178,7 +178,7 @@ class WorkCommand extends Command
     protected function runServer(Process $server, ServerProcessInspector $inspector): ?int
     {
         while (! $server->isStarted()) {
-            sleep(1);
+            \Safe\sleep(1);
         }
 
         $this->writeServerRunningMessage();
