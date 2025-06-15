@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.2.0 - 2025-06-15
+
+### What's Changed
+
+* Updated eloquent model serialization by @cappuc in https://github.com/keepsuit/laravel-temporal/pull/50
+* dropped support for `temporal/sdk:2.7` and added test for each temporal version by @cappuc in https://github.com/keepsuit/laravel-temporal/pull/52
+* added support for `temporal/sdk:2.14` by @cappuc in https://github.com/keepsuit/laravel-temporal/pull/51
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/1.1.1...1.2.0
+
 ## v1.1.1 - 2025-04-09
 
 ### What's changed
