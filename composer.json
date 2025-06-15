@@ -23,7 +23,7 @@
         "spiral/roadrunner": "^2023.2 || ^2024.0",
         "spiral/roadrunner-cli": "^2.5",
         "symfony/process": "^6.0 || ^7.0",
-        "temporal/sdk": ">=2.7.4 <2.14.0",
+        "temporal/sdk": ">=2.8.0 <2.14.0",
         "thecodingmachine/safe": "^2.0 || ^3.0"
     },
     "require-dev": {
