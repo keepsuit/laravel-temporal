@@ -37,7 +37,7 @@ return [
     /**
      * Default task queue
      */
-    'queue' => \Temporal\WorkerFactory::DEFAULT_TASK_QUEUE,
+    'queue' => \Temporal\Worker\WorkerFactoryInterface::DEFAULT_TASK_QUEUE,
 
     /**
      * Default retry policy
