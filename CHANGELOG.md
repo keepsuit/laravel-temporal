@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.2.1 - 2025-06-18
+
+### What's Changed
+
+* Bump stefanzweifel/git-auto-commit-action from 5 to 6 by @dependabot in https://github.com/keepsuit/laravel-temporal/pull/54
+* Update temporal.php config after update version by @agoalofalife in https://github.com/keepsuit/laravel-temporal/pull/55
+
+### New Contributors
+
+* @agoalofalife made their first contribution in https://github.com/keepsuit/laravel-temporal/pull/55
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/1.2.0...1.2.1
+
 ## v1.2.0 - 2025-06-15
 
 ### What's Changed
