@@ -101,33 +101,12 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
         ));
     }
 
-    protected function initTemporalRegistry(Application $app): TemporalRegistry
+    protected function initTemporalRegistry(): TemporalRegistry
     {
-        $workflowPaths = [
-            $app->path('Workflows'),
-            $app->path('Temporal/Workflows'),
-        ];
-
-        $activityPaths = [
-            $this->app->path('Workflows'),
-            $this->app->path('Activities'),
-            $this->app->path('Temporal/Activities'),
-            $this->app->path('Temporal/Workflows'),
-        ];
-
         $registry = new TemporalRegistry;
 
-        foreach ($workflowPaths as $workflowPath) {
-            $registry->registerWorkflows(...DiscoverWorkflows::within($workflowPath));
-        }
-
-        $registry->registerWorkflows(...$app['config']->get('temporal.workflows', []));
-
-        foreach ($activityPaths as $activityPath) {
-            $registry->registerActivities(...DiscoverActivities::within($activityPath));
-        }
-
-        $registry->registerActivities(...$app['config']->get('temporal.activities', []));
+        $registry->registerWorkflows(...DiscoverWorkflows::within(app_path()));
+        $registry->registerActivities(...DiscoverActivities::within(app_path()));
 
         return $registry;
     }
