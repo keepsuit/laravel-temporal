@@ -233,7 +233,7 @@ class AppServiceProvider extends ServiceProvider
             // or with discovery
             $registry->registerWorkflows(...DiscoverWorkflows::within('/some/custom/path'));
             $registry->registerActivities(...DiscoverActivities::within('/some/custom/path'));
-        }
+        });
     }
 }
 ```
