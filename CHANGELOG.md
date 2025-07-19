@@ -1,5 +1,17 @@
 # Changelog
 
+## v2.0.0 - 2025-07-19
+
+### What's Changed
+
+- Drop support for php 8.1, laravel 10, temporal/sdk < 2.15
+- Drop registration of workflows/activities from config
+- Discover workflows/activities from whole `app` directory
+- Pass laravel logger to temporal worker
+- Enabled `workflowDeferredHandlerStart` feature flag (this enforce correct behaviour of `signal with start` [see release](https://github.com/temporalio/sdk-php/releases/tag/v2.11.0)
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/1.2.1...2.0.0
+
 ## v1.2.1 - 2025-06-18
 
 ### What's Changed
