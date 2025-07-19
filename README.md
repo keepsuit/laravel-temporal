@@ -160,18 +160,6 @@ return [
     ],
 
     /**
-     * Manual register workflows
-     */
-    'workflows' => [
-    ],
-
-    /**
-     * Manual register activities
-     */
-    'activities' => [
-    ],
-
-    /**
      * Directories to watch when server is started with `--watch` flag
      */
     'watch' => [
@@ -229,24 +217,23 @@ the `app/Temporal/Activities` directory.
 > If you already have workflow/activities in `app/Workflows` and `app/Activities` directories,
 > the make commands will create the new workflow/activity in the these directories.
 
-Workflows in `app/Temporal/Workflows` and `app/Workflows` and activities in `app/Temporal/Activities`, `app/Activities`, `app/Temporal/Workflows` and `app/Workflows` are automatically registered.
-If you put your workflows and activities in other directories, you can register them manually in the `workflows` and `activities` config keys or with `TemporalRegistry` in your service provider.
+Workflows and activities inside `app` are automatically registered.
+If you need to register workflows and activities from other paths (ex. from a package), you can register them manually with `TemporalRegistry` in your service provider.
 
 ```php
 class AppServiceProvider extends ServiceProvider
 {
     public function register()
     {
+        // Register the workflows and activities when TemporalRegistry is resolved
         $this->callAfterResolving(\Keepsuit\LaravelTemporal\TemporalRegistry::class, function (\Keepsuit\LaravelTemporal\TemporalRegistry $registry) {
-            $registry->registerWorkflows(YourWorkflowInterface::class)
-                ->registerActivities(YourActivityInterface::class);
-        }
-        
-        // or
-        
-        Temporal::registry()
-            ->registerWorkflows(YourWorkflowInterface::class)
-            ->registerActivities(YourActivityInterface::class);
+            $registry->registerWorkflows(YourWorkflowInterface::class);
+            $registry->registerActivities(YourActivityInterface::class);
+                
+            // or with discovery
+            $registry->registerWorkflows(...DiscoverWorkflows::within('/some/custom/path'));
+            $registry->registerActivities(...DiscoverActivities::within('/some/custom/path'));
+        });
     }
 }
 ```

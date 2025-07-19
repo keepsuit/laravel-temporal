@@ -44,7 +44,6 @@ class FakeActivityStub implements ActivityStubInterface
             $resolve($this->result);
         });
 
-        // @phpstan-ignore-next-line
         return EncodedValues::decodePromise($request);
     }
 

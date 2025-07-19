@@ -14,6 +14,8 @@ use Temporal\WorkerFactory;
 
 $basePath = require __DIR__.'/bootstrap.php';
 
+\Temporal\Worker\FeatureFlags::$workflowDeferredHandlerStart = true;
+
 $app = (new ApplicationFactory($basePath))->createApplication();
 CurrentApplication::setRootApp($app);
 
@@ -41,7 +43,8 @@ $worker = $factory->newWorker(
         array_merge([
             ApplicationSandboxInterceptor::class,
         ], $app['config']->get('temporal.interceptors', []))
-    ))
+    )),
+    logger: $app['log']
 );
 
 foreach ($registry->workflows() as $workflow) {

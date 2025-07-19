@@ -110,18 +110,6 @@ return [
     ],
 
     /**
-     * Manual register workflows
-     */
-    'workflows' => [
-    ],
-
-    /**
-     * Manual register activities
-     */
-    'activities' => [
-    ],
-
-    /**
      * Directories to watch when server is started with `--watch` flag
      */
     'watch' => [

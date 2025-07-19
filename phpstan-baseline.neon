@@ -1,6 +1,36 @@
 parameters:
 	ignoreErrors:
 		-
+			message: '#^Parameter \#1 \$workflowID of method Temporal\\Client\\WorkflowClientInterface\:\:newUntypedRunningWorkflowStub\(\) expects non\-empty\-string, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Builder/WorkflowBuilder.php
+
+		-
+			message: '#^Parameter \#1 \$workflowType of method Temporal\\Client\\WorkflowClientInterface\:\:newUntypedWorkflowStub\(\) expects non\-empty\-string, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Builder/WorkflowBuilder.php
+
+		-
+			message: '#^Parameter \#2 \$runID of method Temporal\\Client\\WorkflowClientInterface\:\:newUntypedRunningWorkflowStub\(\) expects non\-empty\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Builder/WorkflowBuilder.php
+
+		-
+			message: '#^Parameter \#2 \$workflowID of method Temporal\\Client\\WorkflowClientInterface\:\:newRunningWorkflowStub\(\) expects non\-empty\-string, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Builder/WorkflowBuilder.php
+
+		-
+			message: '#^Parameter \#3 \$workflowType of method Temporal\\Client\\WorkflowClientInterface\:\:newUntypedRunningWorkflowStub\(\) expects non\-empty\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Builder/WorkflowBuilder.php
+
+		-
 			message: '#^Method Keepsuit\\LaravelTemporal\\Contracts\\TemporalSerializable\:\:fromTemporalPayload\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -19,6 +49,42 @@ parameters:
 			path: src/Integrations/Eloquent/TemporalEloquentSerializer.php
 
 		-
+			message: '#^Method Keepsuit\\LaravelTemporal\\Testing\\Fakes\\FakeActivityStub\:\:execute\(\) should return Temporal\\Internal\\Transport\\CompletableResultInterface but returns React\\Promise\\PromiseInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Testing/Fakes/FakeActivityStub.php
+
+		-
+			message: '#^Method Keepsuit\\LaravelTemporal\\Testing\\Fakes\\FakeChildWorkflowStub\:\:execute\(\) should return Temporal\\Internal\\Transport\\CompletableResultInterface but returns React\\Promise\\PromiseInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Testing/Fakes/FakeChildWorkflowStub.php
+
+		-
+			message: '#^Method Keepsuit\\LaravelTemporal\\Testing\\Fakes\\FakeChildWorkflowStub\:\:getResult\(\) has parameter \$returnType with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Testing/Fakes/FakeChildWorkflowStub.php
+
+		-
+			message: '#^Method Keepsuit\\LaravelTemporal\\Testing\\Fakes\\FakeChildWorkflowStub\:\:start\(\) should return Temporal\\Internal\\Transport\\CompletableResultInterface\<Temporal\\Workflow\\WorkflowExecution\> but returns React\\Promise\\PromiseInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Testing/Fakes/FakeChildWorkflowStub.php
+
+		-
+			message: '#^Call to an undefined method Temporal\\Workflow\\WorkflowContextInterface\:\:async\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Testing/Fakes/FakeScopeContext.php
+
+		-
+			message: '#^Call to an undefined method Temporal\\Workflow\\WorkflowContextInterface\:\:asyncDetached\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Testing/Fakes/FakeScopeContext.php
+
+		-
 			message: '#^Method Keepsuit\\LaravelTemporal\\Testing\\Fakes\\FakeWorkflowContext\:\:await\(\) has parameter \$conditions with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -27,5 +93,29 @@ parameters:
 		-
 			message: '#^Method Keepsuit\\LaravelTemporal\\Testing\\Fakes\\FakeWorkflowContext\:\:awaitWithTimeout\(\) has parameter \$conditions with no type specified\.$#'
 			identifier: missingType.parameter
+			count: 1
+			path: src/Testing/Fakes/FakeWorkflowContext.php
+
+		-
+			message: '#^Method Keepsuit\\LaravelTemporal\\Testing\\Fakes\\FakeWorkflowContext\:\:newActivityStub\(\) should return T of object but returns Temporal\\Internal\\Workflow\\ActivityProxy\<object\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Testing/Fakes/FakeWorkflowContext.php
+
+		-
+			message: '#^Method Keepsuit\\LaravelTemporal\\Testing\\Fakes\\FakeWorkflowContext\:\:newChildWorkflowStub\(\) should return T of object but returns Temporal\\Internal\\Workflow\\ChildWorkflowProxy\<object\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Testing/Fakes/FakeWorkflowContext.php
+
+		-
+			message: '#^Method Keepsuit\\LaravelTemporal\\Testing\\Fakes\\FakeWorkflowContext\:\:registerQuery\(\) should return \$this\(Keepsuit\\LaravelTemporal\\Testing\\Fakes\\FakeWorkflowContext\) but returns Temporal\\Workflow\\WorkflowContextInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Testing/Fakes/FakeWorkflowContext.php
+
+		-
+			message: '#^Method Keepsuit\\LaravelTemporal\\Testing\\Fakes\\FakeWorkflowContext\:\:registerSignal\(\) should return \$this\(Keepsuit\\LaravelTemporal\\Testing\\Fakes\\FakeWorkflowContext\) but returns Temporal\\Workflow\\WorkflowContextInterface\.$#'
+			identifier: return.type
 			count: 1
 			path: src/Testing/Fakes/FakeWorkflowContext.php

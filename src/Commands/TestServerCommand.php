@@ -38,7 +38,7 @@ class TestServerCommand extends Command
         $this->writeServerRunningMessage();
 
         do {
-            sleep(1);
+            \Safe\sleep(1);
         } while ($this->temporalServer->isRunning());
 
         return 0;
