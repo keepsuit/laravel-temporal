@@ -14,6 +14,8 @@ use Temporal\WorkerFactory;
 
 $basePath = require __DIR__.'/bootstrap.php';
 
+\Temporal\Worker\FeatureFlags::$workflowDeferredHandlerStart = true;
+
 $app = (new ApplicationFactory($basePath))->createApplication();
 CurrentApplication::setRootApp($app);
 
