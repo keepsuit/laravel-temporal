@@ -19,6 +19,7 @@ use Temporal\Workflow\ChildWorkflowOptions;
 use Temporal\Workflow\ChildWorkflowStubInterface;
 use Temporal\Workflow\ContinueAsNewOptions;
 use Temporal\Workflow\ExternalWorkflowStubInterface;
+use Temporal\Workflow\TimerOptions;
 use Temporal\Workflow\WorkflowContextInterface;
 use Temporal\Workflow\WorkflowExecution;
 use Temporal\Workflow\WorkflowInfo;
@@ -47,26 +48,24 @@ class FakeWorkflowContext implements WorkflowContextInterface
         return $this->context->getInput();
     }
 
-    public function getLastCompletionResult($type = null)
+    public function getLastCompletionResult($type = null): mixed
     {
         return $this->context->getLastCompletionResult($type);
     }
 
-    public function registerQuery(string $queryType, callable $handler): WorkflowContextInterface
+    public function registerQuery(string $queryType, callable $handler, string $description): WorkflowContextInterface
     {
-        // @phpstan-ignore-next-line
-        return $this->context->registerQuery($queryType, $handler);
+        return $this->context->registerQuery($queryType, $handler, $description);
     }
 
-    public function registerSignal(string $queryType, callable $handler): WorkflowContextInterface
+    public function registerSignal(string $queryType, callable $handler, string $description): WorkflowContextInterface
     {
-        // @phpstan-ignore-next-line
-        return $this->context->registerSignal($queryType, $handler);
+        return $this->context->registerSignal($queryType, $handler, $description);
     }
 
     public function request(RequestInterface $request, bool $cancellable = true, bool $waitResponse = true): PromiseInterface
     {
-        return $this->context->request($request, $cancellable);
+        return $this->context->request($request, $cancellable, $waitResponse);
     }
 
     public function getVersion(string $changeId, int $minSupported, int $maxSupported): PromiseInterface
@@ -89,7 +88,7 @@ class FakeWorkflowContext implements WorkflowContextInterface
         return $this->context->panic($failure);
     }
 
-    public function timer($interval): PromiseInterface
+    public function timer($interval, ?TimerOptions $options = null): PromiseInterface
     {
         return $this->context->timer($interval);
     }
@@ -119,7 +118,6 @@ class FakeWorkflowContext implements WorkflowContextInterface
             ->each(fn (\ReflectionProperty $property) => $property->setAccessible(true))
             ->mapWithKeys(fn (\ReflectionProperty $property) => [$property->getName() => $property->getValue($workflowProxy)]);
 
-        // @phpstan-ignore-next-line
         return new ChildWorkflowProxy(
             $properties->get('class'),
             $properties->get('workflow'),
@@ -162,7 +160,6 @@ class FakeWorkflowContext implements WorkflowContextInterface
             ->each(fn (\ReflectionProperty $property) => $property->setAccessible(true))
             ->mapWithKeys(fn (\ReflectionProperty $property) => [$property->getName() => $property->getValue($activityProxy)]);
 
-        // @phpstan-ignore-next-line
         return new ActivityProxy(
             $properties->get('class'),
             $properties->get('activities'),
@@ -212,9 +209,9 @@ class FakeWorkflowContext implements WorkflowContextInterface
         return $this->sideEffect(static fn (): UuidInterface => Uuid::uuid7($dateTime));
     }
 
-    public function registerUpdate(string $name, callable $handler, ?callable $validator): static
+    public function registerUpdate(string $name, callable $handler, ?callable $validator, string $description): static
     {
-        $this->context->registerUpdate($name, $handler, $validator);
+        $this->context->registerUpdate($name, $handler, $validator, $description);
 
         return $this;
     }

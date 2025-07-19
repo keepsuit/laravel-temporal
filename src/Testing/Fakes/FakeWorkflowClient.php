@@ -27,7 +27,7 @@ class FakeWorkflowClient extends WorkflowClient
 
         $this->getTemporalMocker()->recordWorkflowDispatch($workflowStub->getWorkflowType(), $workflowStub->getOptions()->taskQueue, $args);
 
-        $execution = new WorkflowExecution(Str::uuid(), Str::uuid());
+        $execution = new WorkflowExecution(Str::uuid()->toString(), Str::uuid()->toString());
 
         $workflowStub->setExecution($execution);
 

@@ -48,7 +48,7 @@ class WorkflowBuilder
     {
         $this->workflowOptions = WorkflowOptions::new()
             ->withTaskQueue(config('temporal.queue') ?? WorkerFactoryInterface::DEFAULT_TASK_QUEUE)
-            ->withRetryOptions($this->getDefaultRetryOptions(config('temporal.retry.workflow')));
+            ->withRetryOptions($this->getDefaultRetryOptions(config('temporal.retry.workflow') ?? []));
     }
 
     public static function new(): WorkflowBuilder

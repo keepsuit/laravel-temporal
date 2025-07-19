@@ -36,7 +36,7 @@ class FakeChildWorkflowStub implements ChildWorkflowStubInterface
 
     public function execute(array $args = [], $returnType = null): PromiseInterface
     {
-        // @phpstan-ignore-next-line
+
         return $this->start(...$args)->then(fn () => $this->getResult($returnType));
     }
 
@@ -55,14 +55,12 @@ class FakeChildWorkflowStub implements ChildWorkflowStubInterface
         $this->result = $mock->__invoke(...$args);
 
         $started = new Promise(function (callable $resolve): void {
-            $resolve(new WorkflowExecution(Str::uuid(), Str::uuid()));
+            $resolve(new WorkflowExecution(Str::uuid()->toString(), Str::uuid()->toString()));
         });
 
-        // @phpstan-ignore-next-line
         return EncodedValues::decodePromise($started);
     }
 
-    // @phpstan-ignore-next-line
     public function getResult($returnType = null): PromiseInterface
     {
         if (! $this->hasMock) {
