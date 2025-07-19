@@ -90,7 +90,7 @@ class FakeWorkflowContext implements WorkflowContextInterface
 
     public function timer($interval, ?TimerOptions $options = null): PromiseInterface
     {
-        return $this->context->timer($interval);
+        return $this->context->timer($interval, $options);
     }
 
     public function continueAsNew(string $type, array $args = [], ?ContinueAsNewOptions $options = null): PromiseInterface
