@@ -6,6 +6,7 @@ use DateInterval;
 use InvalidArgumentException;
 use Keepsuit\LaravelTemporal\Facade\Temporal;
 use Temporal\Activity\ActivityOptions;
+use Temporal\Common\Priority;
 use Temporal\Common\RetryOptions;
 use Temporal\Internal\Workflow\ActivityProxy;
 use Temporal\Workflow\ActivityStubInterface;
@@ -19,6 +20,8 @@ use Temporal\Workflow\ActivityStubInterface;
  * @property int $cancellationType
  * @property string $activityId
  * @property ?RetryOptions $retryOptions
+ * @property Priority $priority
+ * @property string $summary
  *
  * @method self withTaskQueue(?string $taskQueue)
  * @method self withScheduleToCloseTimeout(DateInterval $timeout)
@@ -28,6 +31,8 @@ use Temporal\Workflow\ActivityStubInterface;
  * @method self withCancellationType(int $type)
  * @method self withActivityId(string $activityId)
  * @method self withRetryOptions(?RetryOptions $options)
+ * @method self withPriority(Priority $priority)
+ * @method self withSummary(string $summary)
  */
 class ActivityBuilder
 {

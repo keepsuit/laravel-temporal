@@ -7,7 +7,11 @@ use InvalidArgumentException;
 use Temporal\Client\WorkflowClientInterface;
 use Temporal\Client\WorkflowOptions;
 use Temporal\Client\WorkflowStubInterface;
+use Temporal\Common\IdReusePolicy;
+use Temporal\Common\Priority;
 use Temporal\Common\RetryOptions;
+use Temporal\Common\TypedSearchAttributes;
+use Temporal\Common\WorkflowIdConflictPolicy;
 use Temporal\Internal\Client\WorkflowProxy;
 use Temporal\Worker\WorkerFactoryInterface;
 
@@ -18,23 +22,36 @@ use Temporal\Worker\WorkerFactoryInterface;
  * @property bool $eagerStart
  * @property DateInterval $workflowExecutionTimeout
  * @property DateInterval $workflowRunTimeout
+ * @property DateInterval $workflowStartDelay
  * @property DateInterval $workflowTaskTimeout
  * @property int $workflowIdReusePolicy
+ * @property WorkflowIdConflictPolicy $workflowIdConflictPolicy
  * @property ?RetryOptions $retryOptions
  * @property ?string $cronSchedule
  * @property ?array $memo
  * @property ?array $searchAttributes
+ * @property ?TypedSearchAttributes $typedSearchAttributes
+ * @property string $staticDetails
+ * @property string $staticSummary
+ * @property Priority $priority
  *
  * @method self withWorkflowId(string $workflowId)
  * @method self withTaskQueue(string $taskQueue)
+ * @method self withEagerStart(bool $value = true)
  * @method self withWorkflowExecutionTimeout(DateInterval $timeout)
  * @method self withWorkflowRunTimeout(DateInterval $timeout)
  * @method self withWorkflowTaskTimeout(DateInterval $timeout)
- * @method self withWorkflowIdReusePolicy(int $policy)
+ * @method self withWorkflowStartDelay(DateInterval $delay)
+ * @method self withWorkflowIdReusePolicy(IdReusePolicy|int $policy)
+ * @method self withWorkflowIdConflictPolicy(WorkflowIdConflictPolicy $policy)
  * @method self withRetryOptions(?RetryOptions $options)
  * @method self withCronSchedule(?string $expression)
  * @method self withMemo(?array $memo)
  * @method self withSearchAttributes(?array $searchAttributes)
+ * @method self withTypedSearchAttributes(TypedSearchAttributes $attributes)
+ * @method self withStaticSummary(string $summary)
+ * @method self withStaticDetails(string $details)
+ * @method self withPriority(Priority $priority)
  */
 class WorkflowBuilder
 {
