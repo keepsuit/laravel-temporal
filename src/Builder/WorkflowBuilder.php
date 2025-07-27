@@ -78,6 +78,10 @@ class WorkflowBuilder
         return new ChildWorkflowBuilder;
     }
 
+    /**
+     * @deprecated 2.1.0 Use WorkflowBuilder::buildRunning($runId) instead
+     * @see Keepsuit\LaravelTemporal\Builder\WorkflowBuilder::buildRunning()
+     */
     public function withRunId(?string $runId): self
     {
         $self = clone $this;
@@ -102,6 +106,29 @@ class WorkflowBuilder
 
         return $this->getWorkflowClient()
             ->newWorkflowStub($class, $this->workflowOptions);
+    }
+
+    /**
+     * @template T of object
+     *
+     * @param  class-string<T>  $class
+     * @param  non-empty-string|null  $runId
+     * @return WorkflowProxy<T>
+     */
+    public function buildRunning(string $class, ?string $runId = null): WorkflowProxy
+    {
+        return $this->getWorkflowClient()
+            ->newRunningWorkflowStub($class, $this->workflowOptions->workflowId, $runId);
+    }
+
+    /**
+     * @param  non-empty-string  $workflowType
+     * @param  non-empty-string|null  $runId
+     */
+    public function buildRunningUntyped(string $workflowType, ?string $runId = null): WorkflowStubInterface
+    {
+        return $this->getWorkflowClient()
+            ->newUntypedRunningWorkflowStub($this->workflowOptions->workflowId, $runId, $workflowType);
     }
 
     public function buildUntyped(string $workflowType): WorkflowStubInterface
