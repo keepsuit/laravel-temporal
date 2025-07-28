@@ -80,7 +80,7 @@ class WorkflowBuilder
 
     /**
      * @deprecated 2.1.0 Use WorkflowBuilder::buildRunning($runId) instead
-     * @see Keepsuit\LaravelTemporal\Builder\WorkflowBuilder::buildRunning()
+     * @see WorkflowBuilder::buildRunning()
      */
     public function withRunId(?string $runId): self
     {
@@ -100,12 +100,24 @@ class WorkflowBuilder
     public function build(string $class): WorkflowProxy
     {
         if ($this->runId !== null) {
-            return $this->getWorkflowClient()
-                ->newRunningWorkflowStub($class, $this->workflowOptions->workflowId, $this->runId);
+            return $this->buildRunning($class, $this->runId ?: null);
         }
 
         return $this->getWorkflowClient()
             ->newWorkflowStub($class, $this->workflowOptions);
+    }
+
+    /**
+     * @param  non-empty-string  $workflowType
+     */
+    public function buildUntyped(string $workflowType): WorkflowStubInterface
+    {
+        if ($this->runId !== null) {
+            return $this->buildRunningUntyped($workflowType, $this->runId ?: null);
+        }
+
+        return $this->getWorkflowClient()
+            ->newUntypedWorkflowStub($workflowType, $this->workflowOptions);
     }
 
     /**
@@ -117,6 +129,8 @@ class WorkflowBuilder
      */
     public function buildRunning(string $class, ?string $runId = null): WorkflowProxy
     {
+        assert($this->workflowOptions->workflowId !== '', 'Workflow ID is required to build a running workflow.');
+
         return $this->getWorkflowClient()
             ->newRunningWorkflowStub($class, $this->workflowOptions->workflowId, $runId);
     }
@@ -127,19 +141,10 @@ class WorkflowBuilder
      */
     public function buildRunningUntyped(string $workflowType, ?string $runId = null): WorkflowStubInterface
     {
+        assert($this->workflowOptions->workflowId !== '', 'Workflow ID is required to build a running workflow.');
+
         return $this->getWorkflowClient()
             ->newUntypedRunningWorkflowStub($this->workflowOptions->workflowId, $runId, $workflowType);
-    }
-
-    public function buildUntyped(string $workflowType): WorkflowStubInterface
-    {
-        if ($this->runId !== null) {
-            return $this->getWorkflowClient()
-                ->newUntypedRunningWorkflowStub($this->workflowOptions->workflowId, $this->runId, $workflowType);
-        }
-
-        return $this->getWorkflowClient()
-            ->newUntypedWorkflowStub($workflowType, $this->workflowOptions);
     }
 
     public function __call(string $name, array $arguments): self
