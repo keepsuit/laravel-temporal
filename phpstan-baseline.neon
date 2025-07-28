@@ -1,36 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Parameter \#1 \$workflowID of method Temporal\\Client\\WorkflowClientInterface\:\:newUntypedRunningWorkflowStub\(\) expects non\-empty\-string, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Builder/WorkflowBuilder.php
-
-		-
-			message: '#^Parameter \#1 \$workflowType of method Temporal\\Client\\WorkflowClientInterface\:\:newUntypedWorkflowStub\(\) expects non\-empty\-string, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Builder/WorkflowBuilder.php
-
-		-
-			message: '#^Parameter \#2 \$runID of method Temporal\\Client\\WorkflowClientInterface\:\:newUntypedRunningWorkflowStub\(\) expects non\-empty\-string\|null, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Builder/WorkflowBuilder.php
-
-		-
-			message: '#^Parameter \#2 \$workflowID of method Temporal\\Client\\WorkflowClientInterface\:\:newRunningWorkflowStub\(\) expects non\-empty\-string, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Builder/WorkflowBuilder.php
-
-		-
-			message: '#^Parameter \#3 \$workflowType of method Temporal\\Client\\WorkflowClientInterface\:\:newUntypedRunningWorkflowStub\(\) expects non\-empty\-string\|null, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Builder/WorkflowBuilder.php
-
-		-
 			message: '#^Method Keepsuit\\LaravelTemporal\\Contracts\\TemporalSerializable\:\:fromTemporalPayload\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1

@@ -174,3 +174,45 @@ it('can build running workflow', function (bool $typed) {
     'typed' => true,
     'untyped' => false,
 ]);
+
+it('can build running workflow with buildRunning method', function (bool $typed) {
+    $builder = WorkflowBuilder::new();
+
+    $workflow = match ($typed) {
+        true => $builder->buildRunning(DemoWorkflow::class, 'test-run-id'),
+        false => $builder->buildRunningUntyped('demo.greet', 'test-run-id'),
+    };
+
+    $stub = match ($typed) {
+        true => invade($workflow)->stub,
+        false => $workflow,
+    };
+    assert($stub instanceof WorkflowStub);
+
+    expect($stub->getExecution())
+        ->getRunID()->toBe('test-run-id');
+})->with([
+    'typed' => true,
+    'untyped' => false,
+]);
+
+it('can build running workflow with buildRunning method no run id', function (bool $typed) {
+    $builder = WorkflowBuilder::new();
+
+    $workflow = match ($typed) {
+        true => $builder->buildRunning(DemoWorkflow::class),
+        false => $builder->buildRunningUntyped('demo.greet'),
+    };
+
+    $stub = match ($typed) {
+        true => invade($workflow)->stub,
+        false => $workflow,
+    };
+    assert($stub instanceof WorkflowStub);
+
+    expect($stub->getExecution())
+        ->getRunID()->toBeNull();
+})->with([
+    'typed' => true,
+    'untyped' => false,
+]);
