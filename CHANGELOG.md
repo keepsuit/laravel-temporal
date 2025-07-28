@@ -1,5 +1,18 @@
 # Changelog
 
+## v2.1.0 - 2025-07-28
+
+### What's Changed
+
+* Bump aglipanci/laravel-pint-action from 2.5 to 2.6 by @dependabot[bot] in https://github.com/keepsuit/laravel-temporal/pull/58
+* feat: add buildRunning method for already running workflows by @andrewbroberg in https://github.com/keepsuit/laravel-temporal/pull/57
+
+### New Contributors
+
+* @andrewbroberg made their first contribution in https://github.com/keepsuit/laravel-temporal/pull/57
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/2.0.0...2.1.0
+
 ## v2.0.0 - 2025-07-19
 
 ### What's Changed
