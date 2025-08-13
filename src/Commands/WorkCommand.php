@@ -252,11 +252,41 @@ class WorkCommand extends Command
         $this->components->warn('Press Ctrl+C to stop the worker');
     }
 
+
+    protected function getServerOutput($server)
+    {
+        $output = [
+            $server->getIncrementalOutput(),
+            $server->getIncrementalErrorOutput(),
+        ];
+
+        $server->clearOutput()->clearErrorOutput();
+
+        return $output;
+    }
+
     /**
      * Write the server process output to the console.
      */
     protected function writeServerOutput(Process $server): void
     {
+        Str::of($server->getIncrementalErrorOutput())
+        ->explode("\n")
+        ->filter()
+        ->each(function ($output): void {
+            try {
+                $debug = \Safe\json_decode($output, true, 512, JSON_THROW_ON_ERROR);
+            } catch (Exception) {
+                return;
+            }
+
+            if (! is_array($debug)) {
+                $this->info($output);
+
+                return;
+            }
+            $this->workflowInfo($debug['workflow info']);
+        });
         Str::of($server->getIncrementalOutput())
             ->explode("\n")
             ->filter()
@@ -264,12 +294,6 @@ class WorkCommand extends Command
                 try {
                     $debug = \Safe\json_decode($output, true, 512, JSON_THROW_ON_ERROR);
                 } catch (Exception) {
-                    return;
-                }
-
-                if (! is_array($debug)) {
-                    $this->info($output);
-
                     return;
                 }
 
@@ -288,12 +312,43 @@ class WorkCommand extends Command
                  * } $debug
                  */
 
-                // $level = trim($debug['level']);
+                $level = trim($debug['level']);
                 $logger = trim($debug['logger']);
                 $message = trim($debug['msg']);
 
-                if ($logger !== 'temporal') {
+                $ignoreMessages = [
+                    'destroy signal received',
+                    'req-resp mode',
+                    'scan command',
+                    'sending stop request to the worker',
+                    'stop signal received, grace timeout is: ',
+                    'exit forced',
+                    'worker allocated',
+                    'worker is allocated',
+                    'worker constructed',
+                    'worker destructed',
+                    'worker destroyed',
+                    '[INFO] RoadRunner server started; version:',
+                    '[INFO] sdnotify: not notified',
+                    'exiting; byeee!!',
+                    'storage cleaning happened too recently',
+                    'write error',
+                    'unable to determine directory for user configuration; falling back to current directory',
+                    '$HOME environment variable is empty',
+                    'unable to get instance ID',
+                ];
+
+                if ($logger !== 'temporal' && $debug['msg'] && ! in_array($debug['msg'], $ignoreMessages)) {
+                    $this->info($output);
                     return;
+                }
+
+                if($message=== 'workflow registered') {
+                    $this->info("Workflow Registered : Queue: ".$debug['taskqueue']." Workflow: ".$debug['workflow name']);
+                }
+
+                if($message=== 'activity registered') {
+                    $this->info("Activity Registered : Queue: ".$debug['taskqueue']." Activity: ".$debug['workflow name']);
                 }
 
                 if ($message === 'workflow execute' && isset($debug['workflow info'])) {
