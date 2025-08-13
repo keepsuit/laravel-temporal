@@ -252,41 +252,11 @@ class WorkCommand extends Command
         $this->components->warn('Press Ctrl+C to stop the worker');
     }
 
-
-    protected function getServerOutput($server)
-    {
-        $output = [
-            $server->getIncrementalOutput(),
-            $server->getIncrementalErrorOutput(),
-        ];
-
-        $server->clearOutput()->clearErrorOutput();
-
-        return $output;
-    }
-
     /**
      * Write the server process output to the console.
      */
     protected function writeServerOutput(Process $server): void
     {
-        Str::of($server->getIncrementalErrorOutput())
-        ->explode("\n")
-        ->filter()
-        ->each(function ($output): void {
-            try {
-                $debug = \Safe\json_decode($output, true, 512, JSON_THROW_ON_ERROR);
-            } catch (Exception) {
-                return;
-            }
-
-            if (! is_array($debug)) {
-                $this->info($output);
-
-                return;
-            }
-            $this->workflowInfo($debug['workflow info']);
-        });
         Str::of($server->getIncrementalOutput())
             ->explode("\n")
             ->filter()
