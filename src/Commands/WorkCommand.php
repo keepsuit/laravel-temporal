@@ -56,7 +56,7 @@ class WorkCommand extends Command
             $roadRunnerBinary,
             ...['-c', $this->configPath()],
             ...['-o', sprintf('version=%s', $configVersion)],
-            ...['-o', sprintf('server.command=%s ./vendor/bin/roadrunner-temporal-worker', (new PhpExecutableFinder)->find())],
+            ...['-o', sprintf('server.command=%s,./vendor/bin/roadrunner-temporal-worker', (new PhpExecutableFinder)->find())],
             ...['-o', sprintf('temporal.address=%s', config('temporal.address'))],
             ...['-o', sprintf('temporal.namespace=%s', config('temporal.namespace'))],
             ...(is_string($clientKey) && is_string($clientCert))
