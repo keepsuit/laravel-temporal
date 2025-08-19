@@ -1,5 +1,14 @@
 # Changelog
 
+## v2.1.1 - 2025-08-19
+
+### What's Changed
+
+* Bump actions/checkout from 4 to 5 by @dependabot[bot] in https://github.com/keepsuit/laravel-temporal/pull/63
+* fix: unable to use php binary with space in the path by @andrewbroberg in https://github.com/keepsuit/laravel-temporal/pull/62
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/2.1.0...2.1.1
+
 ## v2.1.0 - 2025-07-28
 
 ### What's Changed
