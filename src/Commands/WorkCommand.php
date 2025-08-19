@@ -15,6 +15,9 @@ use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 use Temporal\WorkerFactory;
 
+/**
+ * @phpstan-import-type DebugOutput from Concerns\InteractsWithIO
+ */
 #[AsCommand('temporal:work')]
 class WorkCommand extends Command
 {
@@ -262,68 +265,19 @@ class WorkCommand extends Command
             ->filter()
             ->each(function ($output): void {
                 try {
-                    $debug = \Safe\json_decode($output, true, 512, JSON_THROW_ON_ERROR);
+                    /** @var DebugOutput $debug */
+                    $debug = \Safe\json_decode($output, associative: true, flags: JSON_THROW_ON_ERROR);
                 } catch (Exception) {
-                    return;
-                }
-
-                /**
-                 * @var array{
-                 *     level: string,
-                 *     msg: string,
-                 *     ts: float,
-                 *     logger: string,
-                 *     "workflow info"?: array{
-                 *          WorkflowType: array{Name:string},
-                 *          TaskQueueName: string,
-                 *          Attempt: int,
-                 *          WorkflowStartTime: string
-                 *     }
-                 * } $debug
-                 */
-
-                $level = trim($debug['level']);
-                $logger = trim($debug['logger']);
-                $message = trim($debug['msg']);
-
-                $ignoreMessages = [
-                    'destroy signal received',
-                    'req-resp mode',
-                    'scan command',
-                    'sending stop request to the worker',
-                    'stop signal received, grace timeout is: ',
-                    'exit forced',
-                    'worker allocated',
-                    'worker is allocated',
-                    'worker constructed',
-                    'worker destructed',
-                    'worker destroyed',
-                    '[INFO] RoadRunner server started; version:',
-                    '[INFO] sdnotify: not notified',
-                    'exiting; byeee!!',
-                    'storage cleaning happened too recently',
-                    'write error',
-                    'unable to determine directory for user configuration; falling back to current directory',
-                    '$HOME environment variable is empty',
-                    'unable to get instance ID',
-                ];
-
-                if ($logger !== 'temporal' && $debug['msg'] && ! in_array($debug['msg'], $ignoreMessages)) {
                     $this->info($output);
+
                     return;
                 }
 
-                if($message=== 'workflow registered') {
-                    $this->info("Workflow Registered : Queue: ".$debug['taskqueue']." Workflow: ".$debug['workflow name']);
-                }
-
-                if($message=== 'activity registered') {
-                    $this->info("Activity Registered : Queue: ".$debug['taskqueue']." Activity: ".$debug['workflow name']);
-                }
-
-                if ($message === 'workflow execute' && isset($debug['workflow info'])) {
-                    $this->workflowInfo($debug['workflow info']);
-                }
+                match ($debug['logger']) {
+                    'temporal' => $this->handleTemporalLog($debug),
+                    'server' => $this->handleServerLog($debug),
+                    default => null,
+                };
             });
 
         Str::of($server->getIncrementalErrorOutput())

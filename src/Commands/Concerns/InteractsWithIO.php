@@ -10,6 +10,22 @@ use Symfony\Component\Console\Terminal;
 /**
  * @mixin Command
  * @mixin \Illuminate\Console\Concerns\InteractsWithIO
+ *
+ * @phpstan-type DebugOutput array{
+ *      level: string,
+ *      msg: string,
+ *      ts: float,
+ *      logger: string,
+ *      "workflow info"?: WorkflowInfoOutput,
+ *      "workflow name"?: string,
+ *      "taskqueue"?: string,
+ * }
+ * @phpstan-type WorkflowInfoOutput array{
+ *      WorkflowType: array{Name:string},
+ *      TaskQueueName: string,
+ *      Attempt: int,
+ *      WorkflowStartTime: string
+ * }
  */
 trait InteractsWithIO
 {
@@ -26,6 +42,7 @@ trait InteractsWithIO
     protected array $ignoreMessages = [
         'worker is allocated',
         'worker destroyed',
+        'destroy signal received',
         'stderr',
         '[INFO] RoadRunner server started; version:',
         '[INFO] sdnotify: not notified',
@@ -42,14 +59,33 @@ trait InteractsWithIO
     }
 
     /**
+     * @param  DebugOutput  $debug
+     */
+    protected function handleTemporalLog(array $debug): void
+    {
+        $message = $debug['msg'] ?? '';
+
+        if ($message === 'workflow execute' && isset($debug['workflow info'])) {
+            $this->workflowInfo($debug['workflow info']);
+
+            return;
+        }
+    }
+
+    /**
+     * @param  DebugOutput  $debug
+     */
+    protected function handleServerLog(array $debug): void
+    {
+        if ($debug['level'] === 'info') {
+            $this->raw($debug['msg']);
+        }
+    }
+
+    /**
      * Write information about a request to the console.
      *
-     * @param  array{
-     *              WorkflowType: array{Name:string},
-     *              TaskQueueName: string,
-     *              Attempt: int,
-     *              WorkflowStartTime: string
-     *         }  $workflowInfo
+     * @param  WorkflowInfoOutput  $workflowInfo
      */
     public function workflowInfo(array $workflowInfo, int|string|null $verbosity = null): void
     {
