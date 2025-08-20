@@ -44,6 +44,7 @@ trait InteractsWithIO
         'worker destroyed',
         'destroy signal received',
         'stderr',
+        'stop signal received, grace timeout is: ',
         '[INFO] RoadRunner server started; version:',
         '[INFO] sdnotify: not notified',
     ];

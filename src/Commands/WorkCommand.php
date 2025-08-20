@@ -71,9 +71,10 @@ class WorkCommand extends Command
             ...$this->maxJobs() > 0 ? ['-o', sprintf('temporal.activities.max_jobs=%s', $this->maxJobs())] : [],
             ...['-o', sprintf('rpc.listen=tcp://%s:%d', $this->rpcHost(), $this->rpcPort())],
             ...['-o', 'logs.mode=production'],
-            ...['-o', $this->laravel->environment('local') ? 'logs.level=debug' : 'logs.level=warn'],
+            ...['-o', $this->laravel->environment('local') ? 'logs.level=debug' : 'logs.level=info'],
             ...['-o', 'logs.output=stdout'],
             ...['-o', 'logs.encoding=json'],
+            ...['-s'],
             'serve',
         ], base_path(), [
             'APP_ENV' => $this->laravel->environment(),
@@ -268,7 +269,7 @@ class WorkCommand extends Command
                     /** @var DebugOutput $debug */
                     $debug = \Safe\json_decode($output, associative: true, flags: JSON_THROW_ON_ERROR);
                 } catch (Exception) {
-                    $this->info($output);
+                    $this->raw($output);
 
                     return;
                 }
