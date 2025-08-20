@@ -1,5 +1,17 @@
 # Changelog
 
+## v2.1.2 - 2025-08-20
+
+### What's Changed
+
+* Logging fix by @challapradyumna in https://github.com/keepsuit/laravel-temporal/pull/60
+
+### New Contributors
+
+* @challapradyumna made their first contribution in https://github.com/keepsuit/laravel-temporal/pull/60
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/2.1.1...2.1.2
+
 ## v2.1.1 - 2025-08-19
 
 ### What's Changed
