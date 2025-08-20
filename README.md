@@ -335,7 +335,7 @@ If you want to customize the options of the temporal worker, you can call `Tempo
 ```php
 class AppServiceProvider extends ServiceProvider
 {
-    public function boot(): vodi {
+    public function boot(): void {
         \Keepsuit\LaravelTemporal\Facade\Temporal::buildWorkerOptionsUsing(function (string $taskQueue) {
             // you can build different worker options based on the task queue
             return \Temporal\Worker\WorkerOptions::new()
