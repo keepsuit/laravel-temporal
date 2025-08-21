@@ -72,7 +72,7 @@ class TemporalTestingWorker
             command: [
                 $this->roadRunnerBinary->binaryPath(),
                 ...['-o', sprintf('version=%s', $this->roadRunnerBinary->configVersion())],
-                ...['-o', sprintf('server.command=%s %s', (new PhpExecutableFinder)->find(), $this->findWorkerPath())],
+                ...['-o', sprintf('server.command=%s,%s', (new PhpExecutableFinder)->find(), $this->findWorkerPath())],
                 ...['-o', sprintf('temporal.address=%s', config('temporal.address'))],
                 ...['-o', sprintf('temporal.namespace=%s', config('temporal.namespace'))],
                 ...(is_string($clientKey) && is_string($clientCert))
