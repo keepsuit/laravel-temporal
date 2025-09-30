@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.1.3 - 2025-09-30
+
+### What's Changed
+
+* Fix typo in  README.md by @agoalofalife in https://github.com/keepsuit/laravel-temporal/pull/64
+* fix: unable to use php binary with space in the path TemporalTestingWorker by @andrewbroberg in https://github.com/keepsuit/laravel-temporal/pull/65
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/2.1.2...2.1.3
+
 ## v2.1.2 - 2025-08-20
 
 ### What's Changed
