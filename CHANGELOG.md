@@ -1,5 +1,14 @@
 # Changelog
 
+## v2.2.0 - 2025-10-26
+
+### What's Changed
+
+* Bump stefanzweifel/git-auto-commit-action from 6 to 7 by @dependabot[bot] in https://github.com/keepsuit/laravel-temporal/pull/67
+* Bump temporal sdk to 2.16 by @cappuc in https://github.com/keepsuit/laravel-temporal/pull/69
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/2.1.3...2.2.0
+
 ## 2.1.3 - 2025-09-30
 
 ### What's Changed
