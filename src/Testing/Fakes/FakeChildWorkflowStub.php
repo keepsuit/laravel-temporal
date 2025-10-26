@@ -36,7 +36,6 @@ class FakeChildWorkflowStub implements ChildWorkflowStubInterface
 
     public function execute(array $args = [], $returnType = null): PromiseInterface
     {
-
         return $this->start(...$args)->then(fn () => $this->getResult($returnType));
     }
 

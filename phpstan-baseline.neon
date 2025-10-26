@@ -25,7 +25,7 @@ parameters:
 			path: src/Testing/Fakes/FakeActivityStub.php
 
 		-
-			message: '#^Method Keepsuit\\LaravelTemporal\\Testing\\Fakes\\FakeChildWorkflowStub\:\:execute\(\) should return Temporal\\Internal\\Transport\\CompletableResultInterface but returns React\\Promise\\PromiseInterface\.$#'
+			message: '#^Method Keepsuit\\LaravelTemporal\\Testing\\Fakes\\FakeChildWorkflowStub\:\:execute\(\) should return Temporal\\Internal\\Transport\\CompletableResultInterface but returns React\\Promise\\PromiseInterface\<mixed\>\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Testing/Fakes/FakeChildWorkflowStub.php
