@@ -264,7 +264,7 @@ class WorkCommand extends Command
         Str::of($server->getIncrementalOutput())
             ->explode("\n")
             ->filter()
-            ->each(function ($output): void {
+            ->each(function (string $output): void {
                 try {
                     /** @var DebugOutput $debug */
                     $debug = \Safe\json_decode($output, associative: true, flags: JSON_THROW_ON_ERROR);
