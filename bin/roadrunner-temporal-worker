@@ -15,6 +15,7 @@ use Temporal\WorkerFactory;
 $basePath = require __DIR__.'/bootstrap.php';
 
 \Temporal\Worker\FeatureFlags::$workflowDeferredHandlerStart = true;
+\Temporal\Worker\FeatureFlags::$cancelAbandonedChildWorkflows = false;
 
 $app = (new ApplicationFactory($basePath))->createApplication();
 CurrentApplication::setRootApp($app);
