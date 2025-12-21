@@ -351,10 +351,10 @@ class AppServiceProvider extends ServiceProvider
 In order to test workflows end-to-end, you need a temporal server running.
 This package provides two options to run a temporal server for testing purposes:
 
-- Run `temporal:server` command, which will start a temporal testing server and use the `WithTemporalWorker` trait which will start a test worker
+- Run `temporal:server` command, which will start a temporal testing server and use the `Keepsuit\LaravelTemporal\Testing\WithTemporalWorker` trait which will start a test worker
 - Use the `WithTemporal` trait, which will start a temporal testing server and the test worker when running test and stop it on finish
 
-> When using `WithTemporal` trait, you can set `TEMPORAL_TESTING_SERVER` env variable to `false`
+> When using `Keepsuit\LaravelTemporal\Testing\WithTemporal` trait, you can set `TEMPORAL_TESTING_SERVER` env variable to `false`
 > to disable the testing server and run only the worker.
 
 ### Time skipping
@@ -363,7 +363,38 @@ The default temporal server implementation is the dev server included in the tem
 In order to enable time skipping, you must:
 
 - Run the `temporal:server` command with the `--enable-time-skipping` flag.
-- Set `TEMPORAL_TESTING_SERVER_TIME_SKIPPING` env variable to `true` when using `WithTemporal` trait.
+- Set `TEMPORAL_TESTING_SERVER_TIME_SKIPPING` env variable to `true` when using `Keepsuit\LaravelTemporal\Testing\WithTemporal` trait.
+
+When time skipping is enabled, the server doesn't wait for timers and continues immediately. 
+In order to control time behavior in your tests, you can add the `Keepsuit\LaravelTemporal\Testing\WithoutTimeSkipping` trait to your test class 
+and control time skipping with `Keepsuit\LaravelTemporal\Testing\TemporalTestTime` methods.
+
+```php
+use Keepsuit\LaravelTemporal\Facade\Temporal;
+use Keepsuit\LaravelTemporal\Testing\TemporalTestTime;
+use Keepsuit\LaravelTemporal\Testing\WithoutTimeSkipping;
+use Keepsuit\LaravelTemporal\Testing\WithTemporal;
+use Tests\TestCase;
+
+class YourWorkflowTest extends TestCase
+{
+    use WithTemporal;
+    use WithoutTimeSkipping;
+
+    public function test_workflow_with_timers()
+    {
+       $workflow = Temporal::newWorkflow()
+            ->build(YourWorkflowInterface::class);
+            
+       $run = Temporal::workflowClient()->start($workflow);
+       
+       // Advance time by 5 minutes
+       TemporalTestTime::sleep(5 * 60);
+       
+       // Your assertions...
+    }
+}
+```
 
 ### Mocking workflows
 
