@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Rector\CodeQuality\Rector\Identical\FlipTypeControlToUseExclusiveTypeRector;
-use Rector\CodingStyle\Rector\FunctionLike\FunctionLikeToFirstClassCallableRector;
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\PropertyProperty\RemoveNullPropertyInitializationRector;
 use Rector\Php70\Rector\StmtsAwareInterface\IfIssetToCoalescingRector;
@@ -32,7 +31,6 @@ return RectorConfig::configure()
         AddParamBasedOnParentClassMethodRector::class,
         ClosureToArrowFunctionRector::class,
         FlipTypeControlToUseExclusiveTypeRector::class,
-        FunctionLikeToFirstClassCallableRector::class,
         IfIssetToCoalescingRector::class,
         RemoveNullPropertyInitializationRector::class,
         ReturnTypeFromReturnDirectArrayRector::class,

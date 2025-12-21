@@ -17,6 +17,7 @@ use Keepsuit\LaravelTemporal\Support\DiscoverWorkflows;
 use Keepsuit\LaravelTemporal\Support\ServerStateFile;
 use Keepsuit\LaravelTemporal\Testing\TemporalMocker;
 use Keepsuit\LaravelTemporal\Testing\TemporalMockerCache;
+use Keepsuit\LaravelTemporal\Testing\TemporalTestTime;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Temporal\Client\ClientOptions;
@@ -132,5 +133,9 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
         $this->app->singleton(TemporalMocker::class, fn (Application $app) => new TemporalMocker(
             cache: TemporalMockerCache::create()
         ));
+
+        $this->app->singleton(TemporalTestTime::class, function (): TemporalTestTime {
+            return new TemporalTestTime(config('temporal.address'));
+        });
     }
 }
