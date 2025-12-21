@@ -144,7 +144,7 @@ class LocalTemporalServer implements TemporalServer
 
         try {
             $serverStarted = $this->temporalServerProcess->waitUntil(
-                fn ($type, $output) => Str::contains((string) $output, [
+                fn ($type, $output) => Str::contains($output, [
                     'http server started',
                     'Temporal server is running',
                     'Temporal server:',

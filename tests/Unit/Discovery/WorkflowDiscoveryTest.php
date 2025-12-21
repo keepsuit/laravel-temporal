@@ -2,6 +2,7 @@
 
 use Keepsuit\LaravelTemporal\Support\DiscoverWorkflows;
 use Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Workflows\ActivityOptionsWorkflow;
+use Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Workflows\AsyncWorkflow;
 use Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Workflows\DemoWorkflow;
 use Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Workflows\DemoWorkflowInterfaceOnly;
 use Keepsuit\LaravelTemporal\Tests\Fixtures\WorkflowDiscovery\Workflows\DemoWorkflowWithoutInterface;
@@ -15,6 +16,7 @@ it('can discovery workflows', function () {
 
     expect($workflows)->toBe([
         ActivityOptionsWorkflow::class,
+        AsyncWorkflow::class,
         DemoWorkflow::class,
         DemoWorkflowInterfaceOnly::class,
         DemoWorkflowWithoutInterface::class,

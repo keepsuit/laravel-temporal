@@ -108,7 +108,7 @@ class TemporalTestingWorker
 
         try {
             $roadRunnerStarted = $this->roadRunnerProcess->waitUntil(
-                fn ($type, $output) => Str::contains((string) $output, 'RoadRunner server started')
+                fn ($type, $output) => Str::contains($output, 'RoadRunner server started')
             );
         } catch (\Throwable) {
             $roadRunnerStarted = false;
