@@ -383,15 +383,15 @@ class YourWorkflowTest extends TestCase
 
     public function test_workflow_with_timers()
     {
-       $workflow = Temporal::newWorkflow()
+        $workflow = Temporal::newWorkflow()
             ->build(YourWorkflowInterface::class);
             
-       $run = Temporal::workflowClient()->start($workflow);
-       
-       // Advance time by 5 minutes
-       TemporalTestTime::sleep(5 * 60);
-       
-       // Your assertions...
+        $run = Temporal::workflowClient()->start($workflow);
+        
+        // Advance time by 5 minutes
+        TemporalTestTime::sleep(5 * 60);
+        
+        // Your assertions...
     }
 }
 ```
