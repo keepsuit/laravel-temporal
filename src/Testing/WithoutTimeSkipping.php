@@ -6,7 +6,7 @@ trait WithoutTimeSkipping
 {
     protected function setUpWithoutTimeSkipping(): void
     {
-        if (! config('temporal.testing.time_skipping')) {
+        if (! TemporalTestTime::timeSkippingIsEnabled()) {
             return;
         }
 
@@ -15,7 +15,7 @@ trait WithoutTimeSkipping
 
     protected function tearDownWithoutTimeSkipping(): void
     {
-        if (! config('temporal.testing.time_skipping')) {
+        if (! TemporalTestTime::timeSkippingIsEnabled()) {
             return;
         }
 

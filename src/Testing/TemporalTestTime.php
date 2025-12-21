@@ -20,6 +20,11 @@ final class TemporalTestTime
         return Container::getInstance()->make(TemporalTestTime::class);
     }
 
+    public static function timeSkippingIsEnabled(): bool
+    {
+        return config()->boolean('temporal.testing.time_skipping', false);
+    }
+
     public static function testService(): TestService
     {
         return self::instance()->service;

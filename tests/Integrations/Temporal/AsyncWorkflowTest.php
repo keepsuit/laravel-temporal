@@ -22,4 +22,4 @@ test('time skipping', function () {
     TemporalTestTime::sleep(3);
 
     expect($run->getResult())->toBe('ok');
-})->skip(fn () => ! config('temporal.testing.time_skipping'));
+})->skip(fn () => ! TemporalTestTime::timeSkippingIsEnabled());
