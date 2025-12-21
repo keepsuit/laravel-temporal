@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.2.1 - 2025-12-21
+
+### What's Changed
+
+* Bump actions/checkout from 5 to 6 by @dependabot[bot] in https://github.com/keepsuit/laravel-temporal/pull/70
+* time testing utilities by @cappuc in https://github.com/keepsuit/laravel-temporal/pull/72
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/2.2.0...2.2.1
+
 ## v2.2.0 - 2025-10-26
 
 ### What's Changed
