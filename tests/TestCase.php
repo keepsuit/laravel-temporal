@@ -4,6 +4,7 @@ namespace Keepsuit\LaravelTemporal\Tests;
 
 use Illuminate\Config\Repository;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Keepsuit\LaravelTemporal\LaravelTemporalServiceProvider;
 use Keepsuit\LaravelTemporal\Support\DiscoverActivities;
 use Keepsuit\LaravelTemporal\Support\DiscoverWorkflows;
 use Keepsuit\LaravelTemporal\TemporalRegistry;
@@ -12,7 +13,12 @@ use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {
-    protected $enablesPackageDiscoveries = true;
+    protected function getPackageProviders($app)
+    {
+        return [
+            LaravelTemporalServiceProvider::class,
+        ];
+    }
 
     protected function setUp(): void
     {

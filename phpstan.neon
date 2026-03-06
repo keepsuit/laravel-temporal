@@ -19,5 +19,6 @@ parameters:
         - identifier: trait.unused
         - identifier: missingType.generics
         - identifier: missingType.iterableValue
+        - identifier: instanceof.alwaysTrue
         - identifier: larastan.noEnvCallsOutsideOfConfig
           path: config/*

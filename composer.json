@@ -32,7 +32,6 @@
         "laravel/pint": "^1.17",
         "mockery/mockery": "^1.6",
         "nesbot/carbon": "^2.63 || ^3.0",
-        "nunomaduro/collision": "^8.0",
         "orchestra/testbench": "^9.1 || ^10.0 || ^11.0",
         "pestphp/pest": "^3.0 || ^4.4",
         "pestphp/pest-plugin-laravel": "^3.0 || ^4.1",

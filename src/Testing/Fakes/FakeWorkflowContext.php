@@ -256,4 +256,19 @@ class FakeWorkflowContext implements WorkflowContextInterface
     {
         return $this->context->getLogger();
     }
+
+    public function getInstance(): object
+    {
+        return $this->context->getInstance();
+    }
+
+    public function getCurrentDetails(): ?string
+    {
+        return $this->context->getCurrentDetails();
+    }
+
+    public function setCurrentDetails(?string $details): void
+    {
+        $this->context->setCurrentDetails($details);
+    }
 }
