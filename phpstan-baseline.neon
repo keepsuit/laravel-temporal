@@ -1,6 +1,12 @@
 parameters:
 	ignoreErrors:
 		-
+			message: '#^Method Keepsuit\\LaravelTemporal\\Commands\\InterceptorMakeCommand\:\:getOptions\(\) should return array\<array\{0\: non\-empty\-string, 1\?\: non\-empty\-array\<string\>\|string, 2\?\: 1\|2\|4\|8\|16, 3\?\: string, 4\?\: mixed, 5\?\: \(Closure\(Symfony\\Component\\Console\\Completion\\CompletionInput, Symfony\\Component\\Console\\Completion\\CompletionSuggestions\)\: list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\)\|list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\}\|Symfony\\Component\\Console\\Input\\InputOption\> but returns array\{array\{''type'', ''t'', 10, ''Temporal…'', null, array\{''workflow_client…'', ''workflow_inbound…'', ''workflow_outbound…'', ''activity_inbound'', ''grpc_client'', ''workflow_outbound…''\}\}, array\{''force'', ''f'', 1, ''Create the…''\}\}\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Commands/InterceptorMakeCommand.php
+
+		-
 			message: '#^Method Keepsuit\\LaravelTemporal\\Contracts\\TemporalSerializable\:\:fromTemporalPayload\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1

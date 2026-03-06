@@ -106,7 +106,7 @@ class InterceptorMakeCommand extends GeneratorCommand
             [
                 'type',
                 't',
-                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+                InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
                 'Temporal interceptor type',
                 null,
                 self::INTERCEPTOR_TYPES,

@@ -87,6 +87,7 @@ trait InteractsWithIO
      * Write information about a request to the console.
      *
      * @param  WorkflowInfoOutput  $workflowInfo
+     * @param  'v'|'vv'|'vvv'|'quiet'|'normal'|\Symfony\Component\Console\Output\OutputInterface::VERBOSITY_*|null  $verbosity
      */
     public function workflowInfo(array $workflowInfo, int|string|null $verbosity = null): void
     {
