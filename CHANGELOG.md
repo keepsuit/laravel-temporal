@@ -1,5 +1,18 @@
 # Changelog
 
+## v2.3.0 - 2026-03-06
+
+### What's Changed
+
+* Laravel 13.x Compatibility by @laravel-shift in https://github.com/keepsuit/laravel-temporal/pull/73
+* support temporal sdk 2.17 by @cappuc in https://github.com/keepsuit/laravel-temporal/pull/74
+
+### New Contributors
+
+* @laravel-shift made their first contribution in https://github.com/keepsuit/laravel-temporal/pull/73
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/2.2.1...2.3.0
+
 ## 2.2.1 - 2025-12-21
 
 ### What's Changed
