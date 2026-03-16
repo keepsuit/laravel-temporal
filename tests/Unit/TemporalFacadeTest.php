@@ -1,32 +1,39 @@
 <?php
 
+use Keepsuit\LaravelTemporal\Builder\ActivityBuilder;
+use Keepsuit\LaravelTemporal\Builder\ChildWorkflowBuilder;
+use Keepsuit\LaravelTemporal\Builder\LocalActivityBuilder;
+use Keepsuit\LaravelTemporal\Builder\WorkflowBuilder;
+use Keepsuit\LaravelTemporal\Temporal;
+use Keepsuit\LaravelTemporal\Testing\Fakes\TemporalFake;
+
 it('can resolve the temporal facade', function () {
-    expect(\Keepsuit\LaravelTemporal\Facade\Temporal::getFacadeRoot())
-        ->toBeInstanceOf(\Keepsuit\LaravelTemporal\Temporal::class);
+    expect(Keepsuit\LaravelTemporal\Facade\Temporal::getFacadeRoot())
+        ->toBeInstanceOf(Temporal::class);
 });
 
 it('can fake the temporal facade', function () {
-    \Keepsuit\LaravelTemporal\Facade\Temporal::fake();
+    Keepsuit\LaravelTemporal\Facade\Temporal::fake();
 
-    expect(\Keepsuit\LaravelTemporal\Facade\Temporal::getFacadeRoot())
-        ->toBeInstanceOf(\Keepsuit\LaravelTemporal\Testing\Fakes\TemporalFake::class);
+    expect(Keepsuit\LaravelTemporal\Facade\Temporal::getFacadeRoot())
+        ->toBeInstanceOf(TemporalFake::class);
 });
 
 it('can resolve temporal instance from interface', function () {
-    expect(app(\Keepsuit\LaravelTemporal\Contracts\Temporal::class))
-        ->toBeInstanceOf(\Keepsuit\LaravelTemporal\Temporal::class);
+    expect(app(Keepsuit\LaravelTemporal\Contracts\Temporal::class))
+        ->toBeInstanceOf(Temporal::class);
 });
 
 it('can provide builders', function () {
-    expect(\Keepsuit\LaravelTemporal\Facade\Temporal::newWorkflow())
-        ->toBeInstanceOf(\Keepsuit\LaravelTemporal\Builder\WorkflowBuilder::class);
+    expect(Keepsuit\LaravelTemporal\Facade\Temporal::newWorkflow())
+        ->toBeInstanceOf(WorkflowBuilder::class);
 
-    expect(\Keepsuit\LaravelTemporal\Facade\Temporal::newChildWorkflow())
-        ->toBeInstanceOf(\Keepsuit\LaravelTemporal\Builder\ChildWorkflowBuilder::class);
+    expect(Keepsuit\LaravelTemporal\Facade\Temporal::newChildWorkflow())
+        ->toBeInstanceOf(ChildWorkflowBuilder::class);
 
-    expect(\Keepsuit\LaravelTemporal\Facade\Temporal::newActivity())
-        ->toBeInstanceOf(\Keepsuit\LaravelTemporal\Builder\ActivityBuilder::class);
+    expect(Keepsuit\LaravelTemporal\Facade\Temporal::newActivity())
+        ->toBeInstanceOf(ActivityBuilder::class);
 
-    expect(\Keepsuit\LaravelTemporal\Facade\Temporal::newLocalActivity())
-        ->toBeInstanceOf(\Keepsuit\LaravelTemporal\Builder\LocalActivityBuilder::class);
+    expect(Keepsuit\LaravelTemporal\Facade\Temporal::newLocalActivity())
+        ->toBeInstanceOf(LocalActivityBuilder::class);
 });

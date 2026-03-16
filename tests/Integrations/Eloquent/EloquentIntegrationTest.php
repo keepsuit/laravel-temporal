@@ -1,8 +1,11 @@
 <?php
 
+use Illuminate\Database\Eloquent\Collection;
 use Keepsuit\LaravelTemporal\DataConverter\LaravelPayloadConverter;
 use Keepsuit\LaravelTemporal\Tests\Fixtures\Converter\TemporalSerializableModel;
 use Keepsuit\LaravelTemporal\Tests\Fixtures\Converter\TemporalSerializableRelatedModel;
+use Temporal\Api\Common\V1\Payload;
+use Temporal\DataConverter\Type;
 
 it('can serialize Eloquent model', function () {
     $model = new TemporalSerializableModel(['id' => 123]);
@@ -16,7 +19,7 @@ it('can serialize Eloquent model', function () {
 
 it('can serialize Eloquent model with relations', function () {
     $model = new TemporalSerializableModel(['id' => 123]);
-    $model->setRelation('related', new \Illuminate\Database\Eloquent\Collection([new TemporalSerializableRelatedModel(['id' => 456])]));
+    $model->setRelation('related', new Collection([new TemporalSerializableRelatedModel(['id' => 456])]));
 
     $converter = new LaravelPayloadConverter;
 
@@ -33,10 +36,10 @@ it('can serialize Eloquent model with relations', function () {
 it('can unserialize Eloquent model', function () {
     $converter = new LaravelPayloadConverter;
 
-    $payload = (new \Temporal\Api\Common\V1\Payload)
+    $payload = (new Payload)
         ->setData(json_encode(['id' => 123], LaravelPayloadConverter::JSON_FLAGS));
 
-    $data = $converter->fromPayload($payload, new \Temporal\DataConverter\Type(TemporalSerializableModel::class));
+    $data = $converter->fromPayload($payload, new Type(TemporalSerializableModel::class));
 
     expect($data)
         ->toBeInstanceOf(TemporalSerializableModel::class)
@@ -46,7 +49,7 @@ it('can unserialize Eloquent model', function () {
 it('can unserialize Eloquent model with relations', function () {
     $converter = new LaravelPayloadConverter;
 
-    $payload = (new \Temporal\Api\Common\V1\Payload)
+    $payload = (new Payload)
         ->setData(json_encode([
             'id' => 123,
             'related' => [
@@ -54,13 +57,13 @@ it('can unserialize Eloquent model with relations', function () {
             ],
         ], LaravelPayloadConverter::JSON_FLAGS));
 
-    $data = $converter->fromPayload($payload, new \Temporal\DataConverter\Type(TemporalSerializableModel::class));
+    $data = $converter->fromPayload($payload, new Type(TemporalSerializableModel::class));
 
     expect($data)
         ->toBeInstanceOf(TemporalSerializableModel::class)
         ->id->toBe(123)
         ->relationLoaded('related')->toBeTrue()
-        ->related->toBeInstanceOf(\Illuminate\Database\Eloquent\Collection::class)
+        ->related->toBeInstanceOf(Collection::class)
         ->related->first()->toBeInstanceOf(TemporalSerializableRelatedModel::class)
         ->related->first()->id->toBe(456);
 });

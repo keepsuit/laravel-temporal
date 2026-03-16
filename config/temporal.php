@@ -1,5 +1,8 @@
 <?php
 
+use Temporal\Client\ClientOptions;
+use Temporal\Worker\WorkerFactoryInterface;
+
 return [
     /**
      * Temporal server address
@@ -32,12 +35,12 @@ return [
     /**
      * Temporal namespace
      */
-    'namespace' => env('TEMPORAL_NAMESPACE', \Temporal\Client\ClientOptions::DEFAULT_NAMESPACE),
+    'namespace' => env('TEMPORAL_NAMESPACE', ClientOptions::DEFAULT_NAMESPACE),
 
     /**
      * Default task queue
      */
-    'queue' => \Temporal\Worker\WorkerFactoryInterface::DEFAULT_TASK_QUEUE,
+    'queue' => WorkerFactoryInterface::DEFAULT_TASK_QUEUE,
 
     /**
      * Default retry policy

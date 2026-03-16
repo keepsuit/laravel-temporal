@@ -5,6 +5,7 @@ namespace Keepsuit\LaravelTemporal\Commands\Concerns;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Terminal;
 
 /**
@@ -87,7 +88,7 @@ trait InteractsWithIO
      * Write information about a request to the console.
      *
      * @param  WorkflowInfoOutput  $workflowInfo
-     * @param  'v'|'vv'|'vvv'|'quiet'|'normal'|\Symfony\Component\Console\Output\OutputInterface::VERBOSITY_*|null  $verbosity
+     * @param  'v'|'vv'|'vvv'|'quiet'|'normal'|OutputInterface::VERBOSITY_*|null  $verbosity
      */
     public function workflowInfo(array $workflowInfo, int|string|null $verbosity = null): void
     {

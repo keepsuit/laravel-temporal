@@ -62,7 +62,7 @@ class InterceptorMakeCommand extends GeneratorCommand
                 'workflow_inbound_calls' => WorkflowInboundCallsInterceptor::class,
                 'workflow_outbound_calls' => WorkflowOutboundCallsInterceptor::class,
                 'activity_inbound' => ActivityInboundInterceptor::class,
-                'grpc_client' => GRPCClientInterceptor::class,
+                'grpc_client' => GrpcClientInterceptor::class,
                 'workflow_outbound_request' => WorkflowOutboundRequestInterceptor::class,
                 default => null,
             })
