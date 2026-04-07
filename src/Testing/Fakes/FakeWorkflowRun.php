@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Keepsuit\LaravelTemporal\Testing\Fakes;
 
 use Temporal\Client\Workflow\WorkflowExecutionDescription;
