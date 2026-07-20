@@ -1,5 +1,19 @@
 # Changelog
 
+## v2.3.1 - 2026-07-20
+
+### What's Changed
+
+* Bump ramsey/composer-install from 3 to 4 by @dependabot[bot] in https://github.com/keepsuit/laravel-temporal/pull/75
+* Bump actions/checkout from 6 to 7 by @dependabot[bot] in https://github.com/keepsuit/laravel-temporal/pull/77
+* feat: graceful worker shutdown on SIGINT/SIGTERM by @kyle-leasecake in https://github.com/keepsuit/laravel-temporal/pull/78
+
+### New Contributors
+
+* @kyle-leasecake made their first contribution in https://github.com/keepsuit/laravel-temporal/pull/78
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/2.3.0...2.3.1
+
 ## v2.3.0 - 2026-03-06
 
 ### What's Changed
