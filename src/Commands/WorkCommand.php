@@ -37,6 +37,8 @@ class WorkCommand extends Command
 
     protected ?string $queue = null;
 
+    protected ?Process $server = null;
+
     public function handle(
         ServerStateFile $serverStateFile,
         ServerProcessInspector $inspector,
@@ -55,7 +57,7 @@ class WorkCommand extends Command
         $rootCa = config('temporal.tls.root_ca');
         $serverName = config('temporal.tls.server_name');
 
-        $server = new Process([
+        $this->server = $server = new Process([
             $roadRunnerBinary,
             ...['-c', $this->configPath()],
             ...['-o', sprintf('version=%s', $configVersion)],
@@ -98,6 +100,20 @@ class WorkCommand extends Command
     public function getSubscribedSignals(): array
     {
         return [SIGINT, SIGTERM];
+    }
+
+    /**
+     * Gracefully stop the worker when a subscribed signal is received.
+     */
+    public function handleSignal(int $signal, int|false $previousExitCode = 0): int|false
+    {
+        if (in_array($signal, [SIGINT, SIGTERM], true)) {
+            $this->server?->stop((int) config('temporal.shutdown_grace_period'));
+
+            return is_int($previousExitCode) ? $previousExitCode : Command::SUCCESS;
+        }
+
+        return parent::handleSignal($signal, $previousExitCode);
     }
 
     /**

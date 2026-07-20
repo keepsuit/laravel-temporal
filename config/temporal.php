@@ -45,6 +45,11 @@ return [
     'queue' => WorkerFactoryInterface::DEFAULT_TASK_QUEUE,
 
     /**
+     * Graceful shutdown grace period (in seconds)
+     */
+    'shutdown_grace_period' => env('TEMPORAL_SHUTDOWN_GRACE_PERIOD', 25),
+
+    /**
      * Default retry policy
      */
     'retry' => [

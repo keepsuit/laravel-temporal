@@ -90,6 +90,11 @@ return [
     'queue' => \Temporal\WorkerFactory::DEFAULT_TASK_QUEUE,
 
     /**
+     * Graceful shutdown grace period (in seconds)
+     */
+    'shutdown_grace_period' => env('TEMPORAL_SHUTDOWN_GRACE_PERIOD', 25),
+
+    /**
      * Default retry policy
      */
     'retry' => [
@@ -329,6 +334,8 @@ To create a new interceptor, you can use the `temporal:make:interceptor {name}` 
 ### Run the temporal worker
 
 To run the temporal worker, you can use the `temporal:work {queue?}` command.
+
+The worker shuts down gracefully on `SIGINT` and `SIGTERM`, draining in-flight activities before stopping. You can tune how long it waits with the `shutdown_grace_period` config option.
 
 If you want to customize the options of the temporal worker, you can call `Temporal::buildWorkerOptionsUsing` in your service provider:
 
