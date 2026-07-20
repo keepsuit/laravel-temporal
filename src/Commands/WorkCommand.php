@@ -57,7 +57,7 @@ class WorkCommand extends Command
         $rootCa = config('temporal.tls.root_ca');
         $serverName = config('temporal.tls.server_name');
 
-        $this->server = $server = new Process([
+        $this->server = new Process([
             $roadRunnerBinary,
             ...['-c', $this->configPath()],
             ...['-o', sprintf('version=%s', $configVersion)],
@@ -81,15 +81,15 @@ class WorkCommand extends Command
         ], base_path(), [
             'APP_ENV' => $this->laravel->environment(),
             'APP_BASE_PATH' => $this->laravel->basePath(),
-            'LARAVEL_TEMPORAL' => 1,
+            'LARAVEL_TEMPORAL' => '1',
             'TEMPORAL_QUEUE' => $this->queue,
         ]);
 
-        $server->start();
+        $this->server->start();
 
-        $serverStateFile->writeProcessId($server->getPid());
+        $serverStateFile->writeProcessId($this->server->getPid());
 
-        return $this->runServer($server, $inspector);
+        return $this->runServer($this->server, $inspector);
     }
 
     /**

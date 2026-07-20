@@ -70,14 +70,13 @@
         "test": "pest",
         "test-coverage": "pest --coverage",
         "lint": [
-            "pint",
-            "rector process --dry-run",
-            "phpstan analyse"
+            "vendor/bin/rector process --dry-run",
+            "vendor/bin/pint --test",
+            "vendor/bin/phpstan analyse"
         ],
-        "lint:fix": [
-            "pint",
-            "rector process",
-            "phpstan analyse"
+        "format": [
+            "vendor/bin/rector process",
+            "vendor/bin/pint"
         ]
     },
     "config": {

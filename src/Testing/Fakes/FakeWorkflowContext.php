@@ -115,7 +115,6 @@ class FakeWorkflowContext implements WorkflowContextInterface
 
         $reflection = new \ReflectionClass($workflowProxy);
         $properties = collect($reflection->getProperties())
-            ->each(fn (\ReflectionProperty $property) => $property->setAccessible(true))
             ->mapWithKeys(fn (\ReflectionProperty $property) => [$property->getName() => $property->getValue($workflowProxy)]);
 
         return new ChildWorkflowProxy(
@@ -157,7 +156,6 @@ class FakeWorkflowContext implements WorkflowContextInterface
 
         $reflection = new \ReflectionClass($activityProxy);
         $properties = collect($reflection->getProperties())
-            ->each(fn (\ReflectionProperty $property) => $property->setAccessible(true))
             ->mapWithKeys(fn (\ReflectionProperty $property) => [$property->getName() => $property->getValue($activityProxy)]);
 
         return new ActivityProxy(
