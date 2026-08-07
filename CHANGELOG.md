@@ -1,5 +1,13 @@
 # Changelog
 
+## v2.3.2 - 2026-08-07
+
+### What's Changed
+
+* fix: workflows crash when spatie data is not installed by @andrewbroberg in https://github.com/keepsuit/laravel-temporal/pull/79
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/2.3.1...2.3.2
+
 ## v2.3.1 - 2026-07-20
 
 ### What's Changed
