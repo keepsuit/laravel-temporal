@@ -67,7 +67,7 @@ class LaravelPayloadConverter extends JsonConverter
             return $class::from($data);
         }
 
-        if ($reflection->isSubclassOf(Data::class)) {
+        if (class_exists(Data::class) && $reflection->isSubclassOf(Data::class)) {
             /** @var class-string<Data> $class */
             return $class::from($data);
         }
