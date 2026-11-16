@@ -20,6 +20,16 @@ jobs:
         exclude:
           - laravel: ^13.0
             php: 8.2
+        # sha256 of the grpc-php-rs release zips (x86_64, linux-glibc, NTS)
+        include:
+          - php: 8.2
+            grpc_sha256: e24df6fbe41a0dd30267bae2ddfcc4c6616bbb883db38e584b575e85f58c8674
+          - php: 8.3
+            grpc_sha256: 349de8d24f63a8dd26b58ec99fd33b1150937fa518ac9993337b99487f4378a9
+          - php: 8.4
+            grpc_sha256: 1838dcabd424b0a7ae92b26a49476ca8034ea1fbfbb06f3f16c2c1788dc63081
+          - php: 8.5
+            grpc_sha256: 075a4e7b7f83df10978a15c999cbb526ab0109f9c85373810c73ef7b749a2e10
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }}
 
@@ -31,8 +41,21 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, exif, iconv, fileinfo, grpc
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, exif, iconv, fileinfo
           coverage: none
+
+      # Replaces the official ext-grpc, which intermittently segfaults on shutdown
+      - name: Install grpc-php-rs
+        env:
+          GRPC_PHP_RS_VERSION: v0.4.0
+        run: |
+          zip="php_grpc-${GRPC_PHP_RS_VERSION}_php${{ matrix.php }}-x86_64-linux-glibc.zip"
+          curl -fsSL -o "$zip" "https://github.com/extphprs/grpc-php-rs/releases/download/${GRPC_PHP_RS_VERSION}/$zip"
+          echo "${{ matrix.grpc_sha256 }}  $zip" | sha256sum -c -
+          sudo unzip -o "$zip" grpc.so -d "$(php -r 'echo ini_get("extension_dir");')"
+          echo "extension=grpc" | sudo tee "$(php -r 'echo PHP_CONFIG_FILE_SCAN_DIR;')/20-grpc.ini"
+          rm "$zip"
+          php --ri grpc
 
       - name: Setup problem matchers
         run: |
