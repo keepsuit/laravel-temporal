@@ -40,7 +40,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          pie install -n bsn4/grpc:0.4.0
+          sudo --preserve-env=GITHUB_TOKEN "$(command -v pie)" install -n bsn4/grpc:0.4.0
           php --ri grpc
 
       - name: Setup problem matchers
