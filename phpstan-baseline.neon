@@ -43,12 +43,6 @@ parameters:
 			path: src/Testing/Fakes/FakeChildWorkflowStub.php
 
 		-
-			message: '#^Method Keepsuit\\LaravelTemporal\\Testing\\Fakes\\FakeChildWorkflowStub\:\:getResult\(\) has parameter \$returnType with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Testing/Fakes/FakeChildWorkflowStub.php
-
-		-
 			message: '#^Method Keepsuit\\LaravelTemporal\\Testing\\Fakes\\FakeChildWorkflowStub\:\:start\(\) should return Temporal\\Internal\\Transport\\CompletableResultInterface\<Temporal\\Workflow\\WorkflowExecution\> but returns React\\Promise\\PromiseInterface\.$#'
 			identifier: return.type
 			count: 1
@@ -79,13 +73,13 @@ parameters:
 			path: src/Testing/Fakes/FakeWorkflowContext.php
 
 		-
-			message: '#^Method Keepsuit\\LaravelTemporal\\Testing\\Fakes\\FakeWorkflowContext\:\:newActivityStub\(\) should return T of object but returns Temporal\\Internal\\Workflow\\ActivityProxy\<object\>\.$#'
+			message: '#^Method Keepsuit\\LaravelTemporal\\Testing\\Fakes\\FakeWorkflowContext\:\:newActivityStub\(\) should return Temporal\\Internal\\Workflow\\ActivityProxy\<T of object\> but returns Temporal\\Internal\\Workflow\\ActivityProxy\<object\>\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Testing/Fakes/FakeWorkflowContext.php
 
 		-
-			message: '#^Method Keepsuit\\LaravelTemporal\\Testing\\Fakes\\FakeWorkflowContext\:\:newChildWorkflowStub\(\) should return T of object but returns Temporal\\Internal\\Workflow\\ChildWorkflowProxy\<object\>\.$#'
+			message: '#^Method Keepsuit\\LaravelTemporal\\Testing\\Fakes\\FakeWorkflowContext\:\:newChildWorkflowStub\(\) should return Temporal\\Internal\\Workflow\\ChildWorkflowProxy\<T of object\> but returns Temporal\\Internal\\Workflow\\ChildWorkflowProxy\<object\>\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Testing/Fakes/FakeWorkflowContext.php
@@ -101,3 +95,53 @@ parameters:
 			identifier: return.type
 			count: 1
 			path: src/Testing/Fakes/FakeWorkflowContext.php
+
+		-
+			message: '''
+				#^Call to method __construct\(\) of deprecated class Temporal\\Testing\\Downloader\:
+				will be removed in the next major release\.
+				Use dload to get the latest version of the Temporal server or any other ways\.$#
+			'''
+			identifier: method.deprecatedClass
+			count: 1
+			path: src/Testing/TimeSkippingTemporalServer.php
+
+		-
+			message: '''
+				#^Call to method check\(\) of deprecated class Temporal\\Testing\\Downloader\:
+				will be removed in the next major release\.
+				Use dload to get the latest version of the Temporal server or any other ways\.$#
+			'''
+			identifier: method.deprecatedClass
+			count: 1
+			path: src/Testing/TimeSkippingTemporalServer.php
+
+		-
+			message: '''
+				#^Call to method download\(\) of deprecated class Temporal\\Testing\\Downloader\:
+				will be removed in the next major release\.
+				Use dload to get the latest version of the Temporal server or any other ways\.$#
+			'''
+			identifier: method.deprecatedClass
+			count: 1
+			path: src/Testing/TimeSkippingTemporalServer.php
+
+		-
+			message: '''
+				#^Instantiation of deprecated class Temporal\\Testing\\Downloader\:
+				will be removed in the next major release\.
+				Use dload to get the latest version of the Temporal server or any other ways\.$#
+			'''
+			identifier: new.deprecatedClass
+			count: 1
+			path: src/Testing/TimeSkippingTemporalServer.php
+
+		-
+			message: '''
+				#^Parameter \$downloader of method Keepsuit\\LaravelTemporal\\Testing\\TimeSkippingTemporalServer\:\:__construct\(\) has typehint with deprecated class Temporal\\Testing\\Downloader\:
+				will be removed in the next major release\.
+				Use dload to get the latest version of the Temporal server or any other ways\.$#
+			'''
+			identifier: parameter.deprecatedClass
+			count: 1
+			path: src/Testing/TimeSkippingTemporalServer.php
