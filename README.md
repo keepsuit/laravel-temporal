@@ -33,7 +33,7 @@ php artisan temporal:install
 or
 
 ```bash
-./vendor/bin/rr get-binary --filter='^2025.1'
+./vendor/bin/rr get-binary --filter='^3.0'
 ```
 
 > [!NOTE]

@@ -72,8 +72,8 @@ class RoadRunnerBinaryHelper
             (new PhpExecutableFinder)->find(),
             './vendor/bin/rr',
             'get-binary',
-            // RoadRunner 3.x requires temporal/sdk >= 2.20
-            '--filter=^2025.1',
+            // Must match the roadrunner/roadrunner major required by composer.json
+            '--filter=^3.0',
             '-n',
             '--ansi',
         ]), base_path(), null, null, null);
