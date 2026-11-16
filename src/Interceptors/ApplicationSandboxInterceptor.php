@@ -4,6 +4,7 @@ namespace Keepsuit\LaravelTemporal\Interceptors;
 
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Keepsuit\LaravelTemporal\Support\CurrentApplication;
+use Temporal\Exception\Client\ActivityCompletionException;
 use Temporal\Interceptor\ActivityInbound\ActivityInput;
 use Temporal\Interceptor\ActivityInboundInterceptor;
 use Temporal\Interceptor\Trait\ActivityInboundInterceptorTrait;
@@ -38,7 +39,10 @@ class ApplicationSandboxInterceptor implements ActivityInboundInterceptor, Workf
 
             return $response;
         } catch (Throwable $throwable) {
-            $sandbox->make(ExceptionHandler::class)->report($throwable);
+            // Cancel, pause and reset are thrown by heartbeat() to stop the activity, not as failures
+            if (! $throwable instanceof ActivityCompletionException) {
+                $sandbox->make(ExceptionHandler::class)->report($throwable);
+            }
 
             throw $throwable;
         } finally {
