@@ -18,7 +18,7 @@
     "require": {
         "php": "^8.2",
         "composer/class-map-generator": "^1.1",
-        "illuminate/contracts": "^11.0 || ^12.0 || ^13.0",
+        "illuminate/contracts": "^12.0 || ^13.0",
         "roadrunner/cli": "^3.0",
         "roadrunner/roadrunner": "^3.0",
         "spatie/laravel-package-tools": "^1.92",
@@ -31,8 +31,8 @@
         "larastan/larastan": "^3.4",
         "laravel/pint": "^1.17",
         "mockery/mockery": "^1.6",
-        "nesbot/carbon": "^2.63 || ^3.0",
-        "orchestra/testbench": "^9.1 || ^10.0 || ^11.0",
+        "nesbot/carbon": "^3.0",
+        "orchestra/testbench": "^10.0 || ^11.0",
         "pestphp/pest": "^3.0 || ^4.4",
         "pestphp/pest-plugin-laravel": "^3.0 || ^4.1",
         "phpstan/extension-installer": "^1.4",
@@ -84,9 +84,6 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "phpstan/extension-installer": true
-        },
-        "policy": {
-            "advisories": false
         }
     },
     "extra": {
