@@ -80,7 +80,6 @@ trait InteractsWithIO
      */
     protected function handleServerLog(array $debug): void
     {
-        // RoadRunner 2025.x logs lowercase levels, RoadRunner 3.x logs uppercase ones
         if (strtolower($debug['level']) === 'info') {
             $this->raw($debug['msg']);
         }
