@@ -6,7 +6,9 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\Output;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\HttpClient\ScopingHttpClient;
 use Symfony\Component\Process\Process;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Temporal\Testing\Downloader;
 use Temporal\Testing\SystemInfo;
 
@@ -25,9 +27,24 @@ class TimeSkippingTemporalServer implements TemporalServer
     {
         return new static(
             new ConsoleOutput,
-            new Downloader(new Filesystem, HttpClient::create()),
+            new Downloader(new Filesystem, self::githubHttpClient()),
             SystemInfo::detect(),
         );
+    }
+
+    /**
+     * Unauthenticated GitHub API calls are rate limited per IP, which shared CI runners hit quickly.
+     */
+    protected static function githubHttpClient(): HttpClientInterface
+    {
+        $client = HttpClient::create();
+        $token = getenv('GITHUB_TOKEN');
+
+        if (! is_string($token) || $token === '') {
+            return $client;
+        }
+
+        return ScopingHttpClient::forBaseUri($client, 'https://api.github.com/', ['auth_bearer' => $token]);
     }
 
     public function setDebugOutput(bool $debug): static
