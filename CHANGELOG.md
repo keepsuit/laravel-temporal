@@ -1,5 +1,30 @@
 # Changelog
 
+## v2.4.0 - 2026-11-16
+
+### What's Changed
+
+* Support temporal/sdk 2.18 and 2.19 by @cappuc in https://github.com/keepsuit/laravel-temporal/pull/81
+
+#### Fixes
+
+- `rr get-binary` now downloads RoadRunner 3 by default, which this release does not support. Both `temporal:install` and the automatic download therefore install the latest RoadRunner `2025.1.x`. If you download the binary manually, use `./vendor/bin/rr get-binary --filter='^2025.1'`.
+- RoadRunner `3.x` binaries get config version `3` instead of `2.7`.
+- `temporal:work --watch` reloads the workers again. Before, `rr reset` failed because the config version was missing.
+- `temporal:work` also shows worker output that is logged with an uppercase `INFO` level.
+
+#### Upgrade notes
+
+temporal/sdk 2.18 and 2.19 report no breaking changes, but they change some behaviour:
+
+- **2.18:** a method-level `#[MethodRetry]` is now merged with the options passed to the call, and the call options win (temporalio/sdk-php#783).
+- **2.18:** when no update ID is given, the client generates one (UUID v4) (temporalio/sdk-php#773).
+- **2.18 and 2.19:** they add two feature flags, both disabled by default: `FeatureFlags::$propagateCancellationToNewScopes` (2.18) and `FeatureFlags::$settleAwaitOnFirstSettledCondition` (2.19). This package leaves them disabled.
+
+This release is tested with RoadRunner `2025.1.x` only. If your project already has a RoadRunner `3.x` binary, replace it with `2025.1.x`. Support for RoadRunner 3 and temporal/sdk 2.20 will come in the next release.
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/2.3.2...2.4.0
+
 ## v2.3.2 - 2026-08-07
 
 ### What's Changed

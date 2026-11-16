@@ -6,7 +6,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Process\Process;
 
-it('prints worker output logged with info level by any RoadRunner version', function (string $level) {
+it('prints only info level worker output', function (string $level, bool $printed) {
     $buffer = new BufferedOutput;
 
     $command = new WorkCommand;
@@ -14,22 +14,12 @@ it('prints worker output logged with info level by any RoadRunner version', func
 
     (fn () => $this->handleServerLog(['level' => $level, 'msg' => 'worker output', 'logger' => 'server']))->call($command);
 
-    expect($buffer->fetch())->toContain('worker output');
+    expect(str_contains($buffer->fetch(), 'worker output'))->toBe($printed);
 })->with([
-    'RoadRunner 2025.x' => ['info'],
-    'RoadRunner 3.x' => ['INFO'],
+    'RoadRunner 2025.x info' => ['info', true],
+    'RoadRunner 3.x info' => ['INFO', true],
+    'debug' => ['DEBUG', false],
 ]);
-
-it('skips worker output logged with debug level', function () {
-    $buffer = new BufferedOutput;
-
-    $command = new WorkCommand;
-    $command->setOutput(new OutputStyle(new ArrayInput([]), $buffer));
-
-    (fn () => $this->handleServerLog(['level' => 'DEBUG', 'msg' => 'worker output', 'logger' => 'server']))->call($command);
-
-    expect($buffer->fetch())->toBe('');
-});
 
 it('subscribes to SIGINT and SIGTERM', function () {
     expect((new WorkCommand)->getSubscribedSignals())

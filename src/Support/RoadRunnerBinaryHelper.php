@@ -72,6 +72,8 @@ class RoadRunnerBinaryHelper
             (new PhpExecutableFinder)->find(),
             './vendor/bin/rr',
             'get-binary',
+            // Must match the roadrunner/roadrunner major required by composer.json
+            '--filter=^3.0',
             '-n',
             '--ansi',
         ]), base_path(), null, null, null);
