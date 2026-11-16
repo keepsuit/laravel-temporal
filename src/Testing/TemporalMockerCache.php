@@ -32,7 +32,10 @@ final class TemporalMockerCache
     public function __construct(string $host, string $cacheName)
     {
         $this->cache = (new Factory(RPC::create($host)))->select($cacheName);
-        $this->localCache = Collection::make();
+        /** @var Collection<string, mixed> $localCache */
+        $localCache = Collection::make();
+
+        $this->localCache = $localCache;
     }
 
     public static function create(): self
