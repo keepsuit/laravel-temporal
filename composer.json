@@ -19,11 +19,11 @@
         "php": "^8.2",
         "composer/class-map-generator": "^1.1",
         "illuminate/contracts": "^11.0 || ^12.0 || ^13.0",
+        "roadrunner/cli": "^3.0",
+        "roadrunner/roadrunner": "^3.0",
         "spatie/laravel-package-tools": "^1.92",
-        "spiral/roadrunner": "^2025.1.5",
-        "spiral/roadrunner-cli": "^2.6",
         "symfony/process": "^7.2 || ^8.0",
-        "temporal/sdk": "~2.17.0",
+        "temporal/sdk": "~2.20.0",
         "thecodingmachine/safe": "^2.0 || ^3.0"
     },
     "require-dev": {

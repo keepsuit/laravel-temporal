@@ -51,7 +51,14 @@ class RoadRunnerBinaryHelper
 
         $version = explode(' ', (string) $version)[2];
 
-        if (version_compare($version, '2023.1', '>')) {
+        return $this->configVersionFor($version);
+    }
+
+    public function configVersionFor(string $version): string
+    {
+        // RoadRunner 3.0 switched back from calendar versions (2023.x - 2025.x) to semantic versions,
+        // both of them use the "3" config version.
+        if (version_compare($version, '3.0', '>=')) {
             return '3';
         }
 
