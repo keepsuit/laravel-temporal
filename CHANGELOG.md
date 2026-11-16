@@ -1,5 +1,29 @@
 # Changelog
 
+## 2.5.0 - 2026-11-16
+
+### What's Changed
+
+* Support RoadRunner 3 and temporal/sdk 2.20 by @agoalofalife in https://github.com/keepsuit/laravel-temporal/pull/80
+* Drop Laravel 11 support and re-enable composer security advisories by @cappuc in https://github.com/keepsuit/laravel-temporal/pull/82
+* Register schedule and operator clients, stop reporting activity interruptions by @cappuc in https://github.com/keepsuit/laravel-temporal/pull/83
+
+#### Breaking changes
+
+- **Laravel 11 is no longer supported.** The package requires Laravel 12 or 13 and Carbon 3. Composer keeps Laravel 11 apps on 2.4.x.
+- **RoadRunner 3 is required.** The package now depends on `temporal/sdk ~2.20.0`, `roadrunner/roadrunner ^3.0` and `roadrunner/cli ^3.0`. `temporal:install` and the automatic download install RoadRunner `3.0.x`. If your project has a RoadRunner `2025.1.x` binary, replace it.
+- **Read-only workflow callbacks (temporal/sdk 2.20).** A query handler, an update validator, an await condition or a `Workflow::sideEffect()` callback can no longer send commands (start an activity or a timer, signal a workflow, and similar). Such a call now throws `IllegalStateException`: "Workflow calls that send commands are not allowed inside read-only callbacks." These commands broke replay. To keep the previous behaviour while you move the calls, set `\Temporal\Worker\FeatureFlags::$readOnlyWorkflowCallbacks = false;` in a service provider.
+
+#### Added
+
+- `ScheduleClientInterface` and `OperatorClientInterface` are registered in the container. They use the same `temporal.address` and `temporal.tls` config as the workflow client.
+
+#### Changed
+
+- Activities stopped through a heartbeat (canceled, paused or reset) are no longer reported to Laravel's exception handler. The exceptions are still rethrown, so Temporal behaviour is unchanged. If you relied on these errors in your error tracker, they will stop appearing.
+
+**Full Changelog**: https://github.com/keepsuit/laravel-temporal/compare/2.4.0...2.5.0
+
 ## v2.4.0 - 2026-11-16
 
 ### What's Changed
