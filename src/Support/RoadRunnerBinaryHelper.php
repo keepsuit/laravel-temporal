@@ -51,7 +51,7 @@ class RoadRunnerBinaryHelper
 
         $version = explode(' ', (string) $version)[2];
 
-        if (version_compare($version, '2023.1', '>')) {
+        if (version_compare($version, '3.0', '>=')) {
             return '3';
         }
 
@@ -72,6 +72,8 @@ class RoadRunnerBinaryHelper
             (new PhpExecutableFinder)->find(),
             './vendor/bin/rr',
             'get-binary',
+            // RoadRunner 3.x requires temporal/sdk >= 2.20
+            '--filter=^2025.1',
             '-n',
             '--ansi',
         ]), base_path(), null, null, null);

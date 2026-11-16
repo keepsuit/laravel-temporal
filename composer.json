@@ -23,7 +23,7 @@
         "spiral/roadrunner": "^2025.1.5",
         "spiral/roadrunner-cli": "^2.6",
         "symfony/process": "^7.2 || ^8.0",
-        "temporal/sdk": "~2.17.0",
+        "temporal/sdk": "~2.17.0 || ~2.18.0 || ~2.19.0",
         "thecodingmachine/safe": "^2.0 || ^3.0"
     },
     "require-dev": {
@@ -84,6 +84,9 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "phpstan/extension-installer": true
+        },
+        "policy": {
+            "advisories": false
         }
     },
     "extra": {

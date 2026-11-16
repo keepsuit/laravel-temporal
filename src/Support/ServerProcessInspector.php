@@ -41,6 +41,8 @@ class ServerProcessInspector
                 $this->roadRunnerFinder->binaryPath(),
                 'reset',
                 '-o',
+                sprintf('version=%s', $this->roadRunnerFinder->configVersion()),
+                '-o',
                 sprintf('rpc.listen=tcp://%s:%s', $rpcHost, $rpcPort),
             ],
             cwd: base_path()

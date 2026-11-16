@@ -15,7 +15,8 @@ use Symfony\Component\Console\Terminal;
  * @phpstan-type DebugOutput array{
  *      level: string,
  *      msg: string,
- *      ts: float,
+ *      ts?: float,
+ *      time?: string,
  *      logger: string,
  *      "workflow info"?: WorkflowInfoOutput,
  *      "workflow name"?: string,
@@ -79,7 +80,7 @@ trait InteractsWithIO
      */
     protected function handleServerLog(array $debug): void
     {
-        if ($debug['level'] === 'info') {
+        if (strtolower($debug['level']) === 'info') {
             $this->raw($debug['msg']);
         }
     }
