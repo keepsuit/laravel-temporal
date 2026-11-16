@@ -324,6 +324,18 @@ Changes to be made in `config/data.php`:
     ],
 ```
 
+### Temporal clients
+
+The SDK clients are registered in the container and configured with the `address`, `namespace` and `tls` config keys:
+
+- `Temporal\Client\WorkflowClientInterface` to start and manage workflows
+- `Temporal\Client\ScheduleClientInterface` to create and manage [schedules](https://docs.temporal.io/develop/php/workflows/schedules)
+- `Temporal\Client\GRPC\OperatorClientInterface` for operator APIs (namespaces, search attributes, ...)
+
+```php
+$scheduleClient = app(\Temporal\Client\ScheduleClientInterface::class);
+```
+
 ### Interceptors
 
 Temporal interceptors are similar to laravel middleware and can be used to modify inbound and outbound SDK calls.

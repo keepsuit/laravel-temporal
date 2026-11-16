@@ -21,8 +21,13 @@ use Keepsuit\LaravelTemporal\Testing\TemporalTestTime;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Temporal\Client\ClientOptions;
+use Temporal\Client\GRPC\BaseClient;
+use Temporal\Client\GRPC\OperatorClient;
+use Temporal\Client\GRPC\OperatorClientInterface;
 use Temporal\Client\GRPC\ServiceClient;
 use Temporal\Client\GRPC\ServiceClientInterface;
+use Temporal\Client\ScheduleClient;
+use Temporal\Client\ScheduleClientInterface;
 use Temporal\Client\WorkflowClient;
 use Temporal\Client\WorkflowClientInterface;
 use Temporal\DataConverter\BinaryConverter;
@@ -62,26 +67,9 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
             $app['config']->get('temporal.state_file', storage_path('logs/temporal-worker-state.json'))
         ));
 
-        $this->app->scoped(ServiceClientInterface::class, function (Application $app): ServiceClientInterface {
-            $address = config('temporal.address');
+        $this->app->scoped(ServiceClientInterface::class, fn (): ServiceClientInterface => $this->createGrpcClient(ServiceClient::class));
 
-            $clientKey = config('temporal.tls.client_key');
-            $clientCert = config('temporal.tls.client_cert');
-            $rootCa = config('temporal.tls.root_ca');
-            $serverName = config('temporal.tls.server_name');
-
-            if (is_string($clientKey) && $clientKey !== '' && is_string($clientCert) && $clientCert !== '') {
-                return ServiceClient::createSSL(
-                    $address,
-                    $rootCa,
-                    $clientKey,
-                    $clientCert,
-                    $serverName
-                );
-            } else {
-                return ServiceClient::create($address);
-            }
-        });
+        $this->app->scoped(OperatorClientInterface::class, fn (): OperatorClientInterface => $this->createGrpcClient(OperatorClient::class));
 
         $this->app->bind(DataConverterInterface::class, fn (Application $app) => new DataConverter(
             new NullConverter,
@@ -100,6 +88,38 @@ class LaravelTemporalServiceProvider extends PackageServiceProvider
                 config('temporal.interceptors', [])
             ))
         ));
+
+        $this->app->scoped(ScheduleClientInterface::class, fn (Application $app) => ScheduleClient::create(
+            serviceClient: $app->make(ServiceClientInterface::class),
+            options: (new ClientOptions)->withNamespace(config('temporal.namespace')),
+            converter: $app->make(DataConverterInterface::class),
+        ));
+    }
+
+    /**
+     * @template T of BaseClient
+     *
+     * @param  class-string<T>  $class
+     * @return T
+     */
+    protected function createGrpcClient(string $class): BaseClient
+    {
+        $address = config('temporal.address');
+
+        $clientKey = config('temporal.tls.client_key');
+        $clientCert = config('temporal.tls.client_cert');
+
+        if (is_string($clientKey) && $clientKey !== '' && is_string($clientCert) && $clientCert !== '') {
+            return $class::createSSL(
+                $address,
+                config('temporal.tls.root_ca'),
+                $clientKey,
+                $clientCert,
+                config('temporal.tls.server_name')
+            );
+        }
+
+        return $class::create($address);
     }
 
     protected function initTemporalRegistry(Application $app): TemporalRegistry
